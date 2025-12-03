@@ -1,0 +1,1462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UMakFit - Professor Monitoring</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Manrope:600,800|Inter:300,500,400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { -webkit-font-smoothing: antialiased; box-sizing: border-box; }
+        body { font-family: 'Inter', Helvetica, sans-serif; margin: 0; padding: 0; background-color: #f8fafc; }
+        
+        /* Header Styles */
+        .header-top { 
+            background-color: #ffffff; 
+            padding: 15px 0; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08); 
+            position: fixed; 
+            top: 0; 
+            width: 100%; 
+            z-index: 1000; 
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .header-top .container { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+        }
+        .logo-text { 
+            font-family: "Inter", Helvetica; 
+            font-weight: 700; 
+            color: #1e3a8a; 
+            font-size: 24px; 
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .logo-text i {
+            color: #f59e0b;
+            font-size: 26px;
+        }
+        .umak-logo {
+            height: 40px;
+            margin-right: 12px;
+            vertical-align: middle;
+        }
+        
+        /* Profile Dropdown Styles */
+        .header-actions { 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+            position: relative;
+        }
+        .profile-container {
+            position: relative;
+        }
+        .profile-circle {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6 0%, #1e3a8a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .profile-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        .profile-circle:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+        .profile-dropdown {
+            position: absolute;
+            top: 55px;
+            right: 0;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            min-width: 280px;
+            display: none;
+            z-index: 1001;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+        }
+        .profile-dropdown.show {
+            display: block;
+            animation: dropdownSlide 0.3s ease-out;
+        }
+        @keyframes dropdownSlide {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .profile-dropdown-header {
+            padding: 20px;
+            background: linear-gradient(135deg, #3b82f6 0%, #1e3a8a 100%);
+            color: white;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .profile-dropdown-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            border: 3px solid rgba(255,255,255,0.3);
+            overflow: hidden;
+        }
+        .profile-dropdown-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        .profile-dropdown-name {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .profile-dropdown-email {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+        .profile-dropdown-menu {
+            padding: 8px 0;
+        }
+        .profile-dropdown-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #374151;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .profile-dropdown-item:hover {
+            background: #f8fafc;
+            color: #3b82f6;
+        }
+        .profile-dropdown-item i {
+            width: 20px;
+            font-size: 16px;
+        }
+        .profile-dropdown-divider {
+            height: 1px;
+            background: #e2e8f0;
+            margin: 8px 0;
+        }
+        .profile-dropdown-item.logout {
+            color: #dc2626;
+        }
+        .profile-dropdown-item.logout:hover {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        /* Navigation Styles */
+        .nav-section { 
+            background: linear-gradient(180deg, rgba(30, 58, 138, 1) 0%, rgba(59, 130, 246, 1) 100%); 
+            padding: 20px 0; 
+            margin-top: 74px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .nav-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .nav-brand { 
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-family: "Manrope", Helvetica; 
+            font-weight: 800; 
+            font-size: 28px; 
+            background: linear-gradient(90deg, rgba(245, 158, 11, 1) 0%, rgba(255, 229, 0, 1) 100%); 
+            -webkit-background-clip: text; 
+            background-clip: text; 
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+        }
+        .nav-brand-logo {
+            height: 60px;
+            width: auto;
+        }
+        .nav-pills-custom { 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 8px; 
+            padding: 0; 
+            margin: 0;
+        }
+        .nav-pills-custom .nav-link { 
+            font-family: "Manrope", Helvetica; 
+            font-weight: 600; 
+            color: #000000; 
+            font-size: 14px; 
+            padding: 12px 18px;
+            border-radius: 8px; 
+            background-color: #ffffff; 
+            transition: all 0.3s; 
+            border: none; 
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .nav-pills-custom .nav-link.active { 
+            background: linear-gradient(90deg, rgba(251, 191, 36, 1) 0%, rgba(245, 158, 11, 1) 100%); 
+            box-shadow: 0 4px 8px rgba(245, 158, 11, 0.3);
+        }
+        .nav-pills-custom .nav-link:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15); 
+        }
+        
+        /* Main Content */
+        .main-content { 
+            padding: 40px 0 80px 0; 
+            min-height: calc(100vh - 200px); 
+        }
+        
+        /* Page Header */
+        .page-header { 
+            background: white; 
+            border-radius: 16px; 
+            padding: 30px; 
+            margin-bottom: 40px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08); 
+            border: 1px solid #e2e8f0;
+        }
+        .page-header-content {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .page-icon {
+            width: 55px;
+            height: 55px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+        .page-icon.monitoring { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
+        
+        .page-title {
+            font-family: "Inter", Helvetica; 
+            font-weight: 700; 
+            color: #1e3a8a; 
+            font-size: 32px; 
+            margin: 0;
+        }
+        .page-description {
+            font-family: "Inter", Helvetica; 
+            font-weight: 500; 
+            color: #64748b; 
+            font-size: 16px; 
+            margin-top: 10px;
+        }
+        
+        /* Enhanced Monitoring Dashboard Styles */
+        .monitoring-container { 
+            background: white; 
+            border-radius: 16px; 
+            padding: 25px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08); 
+            border: 1px solid #e2e8f0;
+            margin-bottom: 30px;
+        }
+        .monitoring-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 20px; 
+            flex-wrap: wrap; 
+        }
+        .monitoring-title { 
+            font-family: "Inter", Helvetica; 
+            font-weight: 700; 
+            color: #1f2937; 
+            font-size: 22px; 
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .live-indicator { 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            font-family: "Inter", Helvetica; 
+            font-weight: 600; 
+            color: #10b981; 
+            font-size: 14px; 
+            background: #ecfdf5;
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid #d1fae5;
+        }
+        .live-dot { 
+            width: 8px; 
+            height: 8px; 
+            background: #10b981; 
+            border-radius: 50%; 
+            animation: pulse 2s infinite; 
+        }
+        @keyframes pulse { 
+            0%, 100% { opacity: 1; } 
+            50% { opacity: 0.5; } 
+        }
+        
+        /* Stats Cards */
+        .stats-row { 
+            margin-bottom: 40px; 
+        }
+        .stat-card { 
+            border-radius: 16px; 
+            padding: 25px; 
+            color: white; 
+            transition: all 0.3s; 
+            border: none;
+            height: 100%; 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .stat-card:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15); 
+        }
+        .stat-card.purple { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .stat-card.blue { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); }
+        .stat-card.green { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+        .stat-card.orange { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+        .stat-label { 
+            font-family: "Inter", Helvetica; 
+            font-weight: 600; 
+            font-size: 14px; 
+            margin-bottom: 10px; 
+            opacity: 0.95; 
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .stat-value { 
+            font-family: "Inter", Helvetica; 
+            font-weight: 800; 
+            font-size: 32px; 
+        }
+        .stat-change {
+            font-size: 12px;
+            margin-top: 5px;
+            font-weight: 500;
+        }
+        .online-indicator {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 12px;
+            margin-top: 5px;
+            color: #d1fae5;
+        }
+        
+        /* Activity Timeline */
+        .activity-timeline {
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 10px;
+        }
+        .activity-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 15px;
+            border-bottom: 1px solid #e2e8f0;
+            transition: background-color 0.2s;
+        }
+        .activity-item:hover {
+            background-color: #f8fafc;
+        }
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+        .activity-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+            color: white;
+        }
+        .activity-icon.professor {
+            background: #3b82f6;
+        }
+        .activity-icon.student {
+            background: #10b981;
+        }
+        .activity-icon.test {
+            background: #f59e0b;
+        }
+        .activity-icon.system {
+            background: #6b7280;
+        }
+        .activity-content {
+            flex: 1;
+        }
+        .activity-title {
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 4px;
+        }
+        .activity-details {
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 4px;
+        }
+        .activity-time {
+            font-size: 12px;
+            color: #94a3b8;
+            font-weight: 500;
+        }
+        
+        /* Filter Group */
+        .filter-group {
+            display: flex;
+            gap: 10px;
+        }
+        .filter-group select {
+            padding: 8px 15px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        
+        /* Refresh Button */
+        .refresh-btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .refresh-btn:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+        }
+        
+        /* Loading */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .spinner {
+            border: 4px solid #f1f5f9;
+            border-top: 4px solid #3b82f6;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .loading-text {
+            font-family: "Inter", Helvetica;
+            font-weight: 500;
+            color: #475569;
+            font-size: 16px;
+        }
+
+        /* Empty State */
+        .empty-state { 
+            padding: 60px 40px; 
+            text-align: center; 
+        }
+        .empty-icon { 
+            font-size: 64px; 
+            margin-bottom: 20px; 
+            opacity: 0.4; 
+        }
+        .empty-title { 
+            font-family: "Inter", Helvetica; 
+            font-weight: 700; 
+            color: #1f2937; 
+            font-size: 20px; 
+            margin-bottom: 12px; 
+        }
+        .empty-text { 
+            font-family: "Inter", Helvetica; 
+            font-weight: 400; 
+            color: #64748b; 
+            font-size: 14px; 
+            line-height: 1.6; 
+            max-width: 600px; 
+            margin: 0 auto; 
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-top .container { padding: 0 15px; }
+            .logo-text { font-size: 20px; }
+            .nav-pills-custom {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                padding-bottom: 5px;
+            }
+            .monitoring-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="loadingScreen" class="loading">
+        <div class="spinner"></div>
+        <div class="loading-text">Loading System Monitoring...</div>
+    </div>
+    
+    <div id="mainContent" style="display: none;">
+        <div class="header-top">
+            <div class="container">
+                <div class="logo-text">
+                    <img src="umaklogo.png" alt="University of Makati Logo" class="umak-logo">
+                    <span>University of Makati</span>
+                </div>
+                <div class="header-actions">
+                    <div class="profile-container">
+                        <div class="profile-circle" id="profileCircle" onclick="toggleProfileDropdown()">
+                            P
+                        </div>
+                        <div class="profile-dropdown" id="profileDropdown">
+                            <div class="profile-dropdown-header">
+                                <div class="profile-dropdown-avatar" id="profileDropdownAvatar">
+                                    P
+                                </div>
+                                <div class="profile-dropdown-name" id="dropdownName">Professor</div>
+                                <div class="profile-dropdown-email" id="dropdownEmail">professor@umak.edu.ph</div>
+                            </div>
+                            <div class="profile-dropdown-menu">
+                                <a href="#" class="profile-dropdown-item" onclick="showViewProfile(event)">
+                                    <i class="fas fa-user"></i>
+                                    <span>View Profile</span>
+                                </a>
+                                <div class="profile-dropdown-divider"></div>
+                                <a href="#" class="profile-dropdown-item logout" onclick="handleLogout(event)">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    <span>Logout</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="nav-section">
+            <div class="container">
+                <div class="nav-container">
+                    <div class="nav-brand">
+                        <img class="nav-brand-logo" src="logo.png" alt="UMakFit">
+                        UMakFit
+                    </div>
+                    <ul class="nav nav-pills-custom">
+                        <li class="nav-item">
+                            <a class="nav-link" href="professor.html">
+                                <i class="fas fa-tachometer-alt"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="studentmanagement.html">
+                                <i class="fas fa-users"></i> Student Management
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="addactivities.html">
+                                <i class="fas fa-dumbbell"></i> Add Activities
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="addlesson.html">
+                                <i class="fas fa-book-open"></i> Add Lesson
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#">
+                                <i class="fas fa-chart-bar"></i> Monitoring Activities
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="grades.html">
+                                <i class="fas fa-graduation-cap"></i> Grades
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="container">
+                <div id="monitoringPage" class="management-page active">
+                    <div class="page-header">
+                        <div class="page-header-content">
+                            <div class="page-icon monitoring">
+                                <i class="fas fa-desktop"></i>
+                            </div>
+                            <div>
+                                <h1 class="page-title">System Monitoring Dashboard</h1>
+                                <p class="page-description">Real-time monitoring of student activity and system performance</p>
+                                <button class="refresh-btn" onclick="refreshAllData()">
+                                    <i class="fas fa-sync-alt"></i> Refresh Data
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Stats Overview -->
+                    <div class="monitoring-container">
+                        <div class="monitoring-header">
+                            <div class="monitoring-title">
+                                <i class="fas fa-chart-bar"></i> Student Statistics
+                            </div>
+                            <div class="live-indicator">
+                                <div class="live-dot"></div>
+                                <span>Live Updates</span>
+                            </div>
+                        </div>
+                        
+                        <div class="row stats-row g-3">
+                            <div class="col-12 col-sm-6 col-lg-3">
+                                <div class="stat-card blue">
+                                    <div class="stat-label">
+                                        <i class="fas fa-user-graduate"></i> Total Students
+                                    </div>
+                                    <div class="stat-value" id="totalStudentsCount">0</div>
+                                    <div class="stat-change positive">
+                                        <i class="fas fa-user-check"></i> In your sections
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6 col-lg-3">
+                                <div class="stat-card green">
+                                    <div class="stat-label">
+                                        <i class="fas fa-user-graduate"></i> Online Students
+                                    </div>
+                                    <div class="stat-value" id="onlineStudentsCount">0</div>
+                                    <div class="online-indicator">
+                                        <span class="status-dot online"></span>
+                                        <span>Active Now</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6 col-lg-3">
+                                <div class="stat-card purple">
+                                    <div class="stat-label">
+                                        <i class="fas fa-clipboard-check"></i> Tests Completed
+                                    </div>
+                                    <div class="stat-value" id="totalTestsCount">0</div>
+                                    <div class="stat-change">This Semester</div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6 col-lg-3">
+                                <div class="stat-card orange">
+                                    <div class="stat-label">
+                                        <i class="fas fa-running"></i> Active Tests
+                                    </div>
+                                    <div class="stat-value" id="activeTestsCount">0</div>
+                                    <div class="online-indicator">
+                                        <span class="status-dot online"></span>
+                                        <span>In Progress</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity Feed -->
+                    <div class="monitoring-container">
+                        <div class="monitoring-header">
+                            <div class="monitoring-title">
+                                <i class="fas fa-history"></i> Recent Student Activity
+                            </div>
+                            <div class="filter-group">
+                                <select class="form-control" id="activityTypeFilter" onchange="filterActivities()">
+                                    <option value="all">All Activities</option>
+                                    <option value="test">Test Activities</option>
+                                    <option value="student">Student Activities</option>
+                                    <option value="system">System Activities</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="activity-timeline" id="activityTimeline">
+                            <div class="empty-state">
+                                <div class="empty-icon">
+                                    <i class="fas fa-spinner fa-spin"></i>
+                                </div>
+                                <div class="empty-title">Loading Recent Activity</div>
+                                <div class="empty-text">Fetching activity data from the system...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { getFirestore, collection, getDocs, doc, getDoc, query, where, orderBy, limit } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        import { getDatabase, ref, onValue } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAgaLunqEf2gs6dSpF_sz1hV5XQ5Wm52jo",
+            authDomain: "umakfit-e3b1d.firebaseapp.com",
+            projectId: "umakfit-e3b1d",
+            storageBucket: "umakfit-e3b1d.appspot.com",
+            messagingSenderId: "276569891504",
+            appId: "1:276569891504:web:39b1732b519f4d8b785175"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const database = getDatabase(app);
+
+        // Global variables
+        let currentUser = null;
+        let allActivities = [];
+        let assignedSections = [];
+        let allStudents = [];
+
+        // Format time relative to now
+        function formatTimeAgo(date) {
+            const now = new Date();
+            const diffMs = now - date;
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffHours = Math.floor(diffMs / 3600000);
+            const diffDays = Math.floor(diffMs / 86400000);
+
+            if (diffMins < 1) return 'Just now';
+            if (diffMins < 60) return `${diffMins} minute${diffMins > 1 ? 's' : ''} ago`;
+            if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+            if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+            
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+
+        // Load professor's assigned sections
+        async function loadAssignedSections(professorId, professorEmail) {
+            try {
+                assignedSections = [];
+                
+                // Check professorProfiles collection
+                const profileRef = doc(db, 'professorProfiles', professorEmail);
+                const profileDoc = await getDoc(profileRef);
+                
+                if (profileDoc.exists()) {
+                    const profileData = profileDoc.data();
+                    if (profileData.assignedClass) {
+                        assignedSections.push({
+                            id: profileData.assignedClass,
+                            name: profileData.assignedClass,
+                            professorEmail: professorEmail
+                        });
+                    }
+                }
+                
+                // Check sections collection by email
+                const sectionsByEmailQuery = query(
+                    collection(db, 'sections'), 
+                    where('professorEmail', '==', professorEmail)
+                );
+                const sectionsByEmailSnapshot = await getDocs(sectionsByEmailQuery);
+                
+                sectionsByEmailSnapshot.forEach((doc) => {
+                    const sectionData = doc.data();
+                    if (!assignedSections.find(s => s.name === sectionData.name)) {
+                        assignedSections.push({
+                            id: doc.id,
+                            name: sectionData.name,
+                            ...sectionData
+                        });
+                    }
+                });
+                
+                // Check sections collection by UID
+                const sectionsQuery = query(
+                    collection(db, 'sections'), 
+                    where('professorId', '==', professorId)
+                );
+                const sectionsSnapshot = await getDocs(sectionsQuery);
+                
+                sectionsSnapshot.forEach((doc) => {
+                    const sectionData = doc.data();
+                    if (!assignedSections.find(s => s.name === sectionData.name)) {
+                        assignedSections.push({
+                            id: doc.id,
+                            name: sectionData.name,
+                            ...sectionData
+                        });
+                    }
+                });
+                
+                console.log('Assigned sections:', assignedSections);
+                
+            } catch (error) {
+                console.error('Error loading assigned sections:', error);
+            }
+        }
+
+        // Load all students in assigned sections
+        async function loadAllStudents() {
+            try {
+                allStudents = [];
+                const studentIds = new Set();
+                
+                // Load students from all assigned sections
+                for (const section of assignedSections) {
+                    const studentsQuery = query(
+                        collection(db, 'students'),
+                        where('section', '==', section.name)
+                    );
+                    const studentsSnapshot = await getDocs(studentsQuery);
+                    
+                    studentsSnapshot.forEach((doc) => {
+                        const studentData = doc.data();
+                        const uniqueId = studentData.email || studentData.umakId || doc.id;
+                        
+                        if (!studentIds.has(uniqueId)) {
+                            studentIds.add(uniqueId);
+                            allStudents.push({
+                                id: doc.id,
+                                ...studentData,
+                                section: section.name,
+                                uniqueId: uniqueId
+                            });
+                        }
+                    });
+                }
+                
+                console.log('Loaded unique students:', allStudents.length);
+                
+                // Update total students count
+                document.getElementById('totalStudentsCount').textContent = allStudents.length;
+                
+            } catch (error) {
+                console.error('Error loading students:', error);
+            }
+        }
+
+        // Enhanced Recent Activity function with real data from all collections
+        async function loadRecentActivity(professorEmail) {
+            try {
+                console.log('🕒 Loading recent activities from database...');
+                const activityTimeline = document.getElementById('activityTimeline');
+                
+                allActivities = [];
+                let totalTestsCount = 0;
+
+                // 1. Get test submissions from testResults for professor's sections
+                try {
+                    const testResultsRef = collection(db, 'testResults');
+                    const testResultsSnapshot = await getDocs(testResultsRef);
+                    
+                    console.log(`📊 Total testResults documents found: ${testResultsSnapshot.size}`);
+                    
+                    testResultsSnapshot.forEach((docSnap) => {
+                        const data = docSnap.data();
+                        
+                        // Check if this test belongs to professor's sections
+                        const isProfessorsSection = assignedSections.some(section => 
+                            section.name === data.section
+                        );
+                        
+                        if (isProfessorsSection || data.professorEmail === professorEmail) {
+                            console.log('📄 Test Result Document:', docSnap.id, data);
+                            
+                            // Try ALL possible timestamp fields
+                            let time = null;
+                            
+                            if (data.submittedAt) {
+                                time = data.submittedAt.toDate();
+                            } else if (data.completedAt) {
+                                time = data.completedAt.toDate();
+                            } else if (data.timestamp) {
+                                time = data.timestamp.toDate();
+                            } else if (data.createdAt) {
+                                time = data.createdAt.toDate();
+                            } else if (data.date) {
+                                time = data.date.toDate();
+                            } else {
+                                time = new Date();
+                            }
+                            
+                            // Extract student information
+                            const studentName = data.studentName || data.student || data.name || data.userName || 'Student';
+                            const testName = data.testName || data.test || data.assessmentName || data.testType || 'Fitness Assessment';
+                            const section = data.section || data.sectionName || 'Not Specified';
+                            const score = data.score !== undefined && data.score !== null ? data.score : 
+                                         data.totalScore !== undefined && data.totalScore !== null ? data.totalScore :
+                                         data.points !== undefined && data.points !== null ? data.points : null;
+                            
+                            // Create detailed title and description
+                            let title = `${studentName} completed ${testName}`;
+                            let details = '';
+                            
+                            if (score !== null) {
+                                details = `${section} • Score: ${score}% • Assessment completed successfully`;
+                            } else {
+                                details = `${section} • Assessment completed successfully`;
+                            }
+                            
+                            console.log('✅ Adding test activity:', title, details);
+                            
+                            allActivities.push({
+                                type: 'test',
+                                title: title,
+                                details: details,
+                                time: time,
+                                displayTime: formatTimeAgo(time),
+                                timestamp: time.getTime(),
+                                priority: 1
+                            });
+                            
+                            totalTestsCount++;
+                        }
+                    });
+                    
+                    console.log(`✅ Added ${totalTestsCount} test submission activities for professor`);
+                } catch (error) {
+                    console.error('❌ Error loading test results:', error);
+                }
+
+                // Update total tests count
+                document.getElementById('totalTestsCount').textContent = totalTestsCount;
+
+                // 2. Get scheduled tests from professors
+                try {
+                    const scheduledTestsSnapshot = await getDocs(collection(db, 'scheduledTests'));
+                    
+                    scheduledTestsSnapshot.forEach(docSnap => {
+                        const data = docSnap.data();
+                        
+                        // Check if this scheduled test belongs to professor
+                        if (data.professorEmail === professorEmail || 
+                            assignedSections.some(section => section.name === data.section)) {
+                            
+                            let time = null;
+                            
+                            if (data.createdAt) {
+                                time = data.createdAt.toDate();
+                            } else if (data.scheduledAt) {
+                                time = data.scheduledAt.toDate();
+                            } else if (data.timestamp) {
+                                time = data.timestamp.toDate();
+                            } else {
+                                time = new Date();
+                            }
+                            
+                            const professorName = data.professorName || data.professor || 'Professor';
+                            const testName = data.testName || data.name || 'new assessment';
+                            const section = data.section || data.sectionName;
+                            
+                            allActivities.push({
+                                type: 'test',
+                                title: `${professorName} scheduled ${testName}`,
+                                details: section ? `Assigned to ${section} section` : 'New assessment created',
+                                time: time,
+                                displayTime: formatTimeAgo(time),
+                                timestamp: time.getTime(),
+                                priority: 2
+                            });
+                        }
+                    });
+                    console.log(`✅ Found scheduled tests for professor`);
+                } catch (error) {
+                    console.log('ℹ️ No scheduled tests found:', error.message);
+                }
+
+                // 3. Get student enrollments and logins
+                try {
+                    const studentsSnapshot = await getDocs(collection(db, 'students'));
+                    
+                    studentsSnapshot.forEach(docSnap => {
+                        const data = docSnap.data();
+                        const studentName = data.name || data.studentName || 'Student';
+                        const section = data.section || data.sectionName || 'Unknown Section';
+                        
+                        // Only show students from professor's sections
+                        if (assignedSections.some(s => s.name === section)) {
+                            // Student enrollment activity
+                            if (data.createdAt) {
+                                const time = data.createdAt.toDate();
+                                allActivities.push({
+                                    type: 'student',
+                                    title: `${studentName} enrolled in UMakFit`,
+                                    details: `${section} • Account activated and ready`,
+                                    time: time,
+                                    displayTime: formatTimeAgo(time),
+                                    timestamp: time.getTime(),
+                                    priority: 3
+                                });
+                            }
+
+                            // Student login activity
+                            if (data.lastLogin) {
+                                const time = data.lastLogin.toDate();
+                                allActivities.push({
+                                    type: 'student',
+                                    title: `${studentName} logged into the platform`,
+                                    details: `${section} • Accessed student dashboard`,
+                                    time: time,
+                                    displayTime: formatTimeAgo(time),
+                                    timestamp: time.getTime(),
+                                    priority: 4
+                                });
+                            }
+                        }
+                    });
+                    console.log(`✅ Processed student records for professor`);
+                } catch (error) {
+                    console.log('ℹ️ No student records found:', error.message);
+                }
+
+                // 4. Get active tests for professor
+                try {
+                    const activeTestsQuery = query(
+                        collection(db, 'activeTests'),
+                        where('professorEmail', '==', professorEmail)
+                    );
+                    const activeTestsSnapshot = await getDocs(activeTestsQuery);
+                    
+                    document.getElementById('activeTestsCount').textContent = activeTestsSnapshot.size;
+                    
+                } catch (error) {
+                    console.log('ℹ️ No active tests found:', error.message);
+                }
+
+                // Sort all activities - TEST ACTIVITIES ALWAYS FIRST
+                allActivities.sort((a, b) => {
+                    // Test activities (priority 1) always come first
+                    if (a.priority !== b.priority) {
+                        return a.priority - b.priority;
+                    }
+                    // Within same priority, sort by timestamp (newest first)
+                    return b.timestamp - a.timestamp;
+                });
+
+                console.log('📊 Total activities collected:', allActivities.length);
+
+                // Display activities
+                displayActivities(allActivities);
+
+                // Show empty state if no activities
+                if (allActivities.length === 0) {
+                    activityTimeline.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-icon">
+                                <i class="fas fa-inbox"></i>
+                            </div>
+                            <div class="empty-title">No Recent Activity</div>
+                            <div class="empty-text">There are no recent activities to display. Activities will appear here as students interact with the system.</div>
+                        </div>
+                    `;
+                }
+
+            } catch (error) {
+                console.error('❌ Error loading recent activity:', error);
+                const activityTimeline = document.getElementById('activityTimeline');
+                activityTimeline.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="empty-title">Error Loading Activities</div>
+                        <div class="empty-text">Unable to fetch activity data. Please refresh the page to try again.</div>
+                    </div>
+                `;
+            }
+        }
+
+        // Display activities in the timeline
+        function displayActivities(activities) {
+            const activityTimeline = document.getElementById('activityTimeline');
+            activityTimeline.innerHTML = '';
+
+            console.log('🎨 Displaying activities:', activities.length);
+
+            if (activities.length === 0) {
+                activityTimeline.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="fas fa-filter"></i>
+                        </div>
+                        <div class="empty-title">No Activities Found</div>
+                        <div class="empty-text">No test completions or activities found in the database. Activities will appear here when students complete assessments.</div>
+                    </div>
+                `;
+                return;
+            }
+
+            // Show ALL activities (removed the slice limit to show everything)
+            activities.forEach((activity, index) => {
+                console.log(`📝 Activity ${index + 1}:`, activity.title);
+                const activityItem = createActivityItem(activity);
+                activityTimeline.appendChild(activityItem);
+            });
+            
+            console.log(`✅ Displayed ${activities.length} activities in timeline`);
+        }
+
+        // Create activity item with proper formatting
+        function createActivityItem(activity) {
+            const activityItem = document.createElement('div');
+            activityItem.className = 'activity-item';
+            activityItem.setAttribute('data-type', activity.type);
+            
+            let iconClass = 'system';
+            let icon = 'fas fa-info-circle';
+            
+            if (activity.type === 'test') {
+                iconClass = 'test';
+                icon = 'fas fa-clipboard-check';
+            } else if (activity.type === 'professor') {
+                iconClass = 'professor';
+                icon = 'fas fa-user-tie';
+            } else if (activity.type === 'student') {
+                iconClass = 'student';
+                icon = 'fas fa-user-graduate';
+            } else if (activity.type === 'system') {
+                iconClass = 'system';
+                icon = 'fas fa-cog';
+            }
+            
+            activityItem.innerHTML = `
+                <div class="activity-icon ${iconClass}">
+                    <i class="${icon}"></i>
+                </div>
+                <div class="activity-content">
+                    <div class="activity-title">${activity.title}</div>
+                    <div class="activity-details">${activity.details}</div>
+                    <div class="activity-time">${activity.displayTime}</div>
+                </div>
+            `;
+            
+            return activityItem;
+        }
+
+        // Filter activities by type
+        window.filterActivities = function() {
+            const typeFilter = document.getElementById('activityTypeFilter').value;
+            
+            if (typeFilter === 'all') {
+                displayActivities(allActivities);
+            } else {
+                const filtered = allActivities.filter(activity => activity.type === typeFilter);
+                displayActivities(filtered);
+            }
+        };
+
+        // Load user activity stats
+        async function loadUserActivityStats() {
+            try {
+                // Get total students from loaded data
+                const totalStudents = allStudents.length;
+                
+                document.getElementById('totalStudentsCount').textContent = totalStudents;
+                
+                console.log(`📊 Stats - Students: ${totalStudents}`);
+                
+            } catch (error) {
+                console.error('❌ Error loading user stats:', error);
+            }
+        }
+
+        // Setup realtime presence monitoring
+        function setupRealtimePresence() {
+            try {
+                const presenceRef = ref(database, 'presence');
+                onValue(presenceRef, (snapshot) => {
+                    let onlineStudents = 0;
+                    
+                    const presenceData = snapshot.val();
+                    if (presenceData) {
+                        Object.keys(presenceData).forEach(userId => {
+                            const userPresence = presenceData[userId];
+                            if (userPresence.status === 'online' && userPresence.role === 'student') {
+                                // Check if this student is in professor's sections
+                                const studentEmail = userPresence.email;
+                                const isProfessorsStudent = allStudents.some(student => 
+                                    student.email === studentEmail
+                                );
+                                
+                                if (isProfessorsStudent) {
+                                    onlineStudents++;
+                                }
+                            }
+                        });
+                    }
+                    
+                    document.getElementById('onlineStudentsCount').textContent = onlineStudents;
+                    
+                    console.log(`👥 Online Students in Professor's Sections: ${onlineStudents}`);
+                });
+            } catch (error) {
+                console.error('❌ Error setting up presence:', error);
+            }
+        }
+
+        // Load all monitoring data
+        async function loadEnhancedMonitoringData(professorEmail) {
+            await loadUserActivityStats();
+            await loadRecentActivity(professorEmail);
+            setupRealtimePresence();
+        }
+
+        // Refresh all data
+        window.refreshAllData = function() {
+            const refreshBtn = document.querySelector('.refresh-btn');
+            const originalText = refreshBtn.innerHTML;
+            refreshBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Refreshing...';
+            refreshBtn.disabled = true;
+            
+            loadEnhancedMonitoringData(currentUser.email).then(() => {
+                refreshBtn.innerHTML = '<i class="fas fa-check"></i> Refreshed!';
+                setTimeout(() => {
+                    refreshBtn.innerHTML = originalText;
+                    refreshBtn.disabled = false;
+                }, 1500);
+            });
+        };
+
+        // Profile dropdown toggle
+        window.toggleProfileDropdown = function(event) {
+            if (event) event.preventDefault();
+            document.getElementById('profileDropdown').classList.toggle('show');
+        };
+
+        // Navigation functions - UPDATED FOR PROFESSOR
+        window.showViewProfile = function(event) { 
+            if (event) event.preventDefault();
+            alert('Profile view would open here');
+            document.getElementById('profileDropdown').classList.remove('show');
+        };
+
+        window.handleLogout = async function(event) {
+            if (event) event.preventDefault();
+            document.getElementById('profileDropdown').classList.remove('show');
+            
+            if (confirm('Are you sure you want to logout?')) {
+                try {
+                    await signOut(auth);
+                    window.location.href = '/login/index.html';
+                } catch (error) {
+                    console.error('Error logging out:', error);
+                    window.location.href = '/login/index.html';
+                }
+            }
+        };
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const profileContainer = document.querySelector('.profile-container');
+            const profileDropdown = document.getElementById('profileDropdown');
+            if (profileContainer && !profileContainer.contains(event.target)) {
+                profileDropdown.classList.remove('show');
+            }
+        });
+
+        // Initialize when page loads
+        onAuthStateChanged(auth, async (user) => {
+            const loadingScreen = document.getElementById('loadingScreen');
+            const mainContent = document.getElementById('mainContent');
+
+            if (user) {
+                try {
+                    console.log('=== PROFESSOR AUTHENTICATION ===');
+                    console.log('User authenticated:', user.email);
+                    console.log('User UID:', user.uid);
+                    
+                    // Normalize email
+                    const userEmail = user.email.toLowerCase();
+                    
+                    let professorData = null;
+                    let userRole = null;
+                    
+                    // Step 1: Check users collection by UID
+                    console.log('Step 1: Checking users collection...');
+                    const userRef = doc(db, 'users', user.uid);
+                    const userDoc = await getDoc(userRef);
+                    
+                    if (userDoc.exists()) {
+                        const userData = userDoc.data();
+                        userRole = userData.role;
+                        console.log('✓ User found, role:', userRole);
+                        
+                        // Verify this is a professor account
+                        if (userRole !== 'professor' && userRole !== 'professor') {
+                            console.error('❌ Not a professor account, role is:', userRole);
+                            alert('This account is not authorized to access the professor dashboard.');
+                            await signOut(auth);
+                            window.location.href = '/login/index.html';
+                            return;
+                        }
+                        
+                        professorData = userData;
+                        console.log('✓ Professor data loaded from users collection');
+                        
+                    } else {
+                        // Step 2: Try email lookup
+                        console.log('Step 2: User not found by UID, checking email lookup...');
+                        const emailKey = userEmail.replace(/\./g, '_');
+                        const emailLookupRef = doc(db, 'usersByEmail', emailKey);
+                        const emailLookupSnap = await getDoc(emailLookupRef);
+                        
+                        if (emailLookupSnap.exists()) {
+                            const emailData = emailLookupSnap.data();
+                            userRole = emailData.role;
+                            console.log('✓ Found via email lookup, role:', userRole);
+                            
+                            if (userRole !== 'professor' && userRole !== 'professor') {
+                                console.error('❌ Not a professor account');
+                                alert('This account is not authorized to access the professor dashboard.');
+                                await signOut(auth);
+                                window.location.href = '/login/index.html';
+                                return;
+                            }
+                            
+                            // Get actual user data
+                            if (emailData.uid) {
+                                const actualUserRef = doc(db, 'users', emailData.uid);
+                                const actualUserSnap = await getDoc(actualUserRef);
+                                if (actualUserSnap.exists()) {
+                                    professorData = actualUserSnap.data();
+                                }
+                            }
+                        } else {
+                            // Step 3: Check professorProfiles as fallback
+                            console.log('Step 3: Checking professorProfiles...');
+                            const profileRef = doc(db, 'professorProfiles', userEmail);
+                            const profileSnap = await getDoc(profileRef);
+                            
+                            if (profileSnap.exists()) {
+                                professorData = profileSnap.data();
+                                userRole = 'professor';
+                                console.log('✓ Found in professorProfiles, auto-setting role to professor');
+                                
+                                // Create user record with professor role
+                                await setDoc(doc(db, 'users', user.uid), {
+                                    ...professorData,
+                                    role: 'professor',
+                                    uid: user.uid,
+                                    updatedAt: new Date()
+                                }, { merge: true });
+                                
+                            } else {
+                                throw new Error('Professor profile not found. Please contact the administrator.');
+                            }
+                        }
+                    }
+                    
+                    if (!professorData) {
+                        throw new Error('Unable to load professor data.');
+                    }
+                    
+                    // Set current professor
+                    currentUser = { 
+                        id: user.uid, 
+                        email: userEmail,
+                        ...professorData 
+                    };
+                    console.log('✓ Current professor set:', currentUser);
+                    
+                    // Update profile display
+                    const initial = professorData.name ? professorData.name.charAt(0).toUpperCase() : 'P';
+                    document.getElementById('profileCircle').textContent = initial;
+                    document.getElementById('profileDropdownAvatar').textContent = initial;
+                    document.getElementById('dropdownName').textContent = professorData.name || professorData.displayName || 'Professor';
+                    document.getElementById('dropdownEmail').textContent = userEmail;
+                    
+                    // Load professor's assigned sections
+                    await loadAssignedSections(user.uid, userEmail);
+                    
+                    // Load all students in assigned sections
+                    await loadAllStudents();
+                    
+                    // Load monitoring data
+                    await loadEnhancedMonitoringData(userEmail);
+                    
+                    loadingScreen.style.display = 'none';
+                    mainContent.style.display = 'block';
+                    
+                } catch (error) {
+                    console.error('=== ERROR IN AUTHENTICATION ===');
+                    console.error('Error:', error);
+                    console.error('Error message:', error.message);
+                    
+                    loadingScreen.style.display = 'none';
+                    alert(error.message || 'Error loading dashboard. Please try again.');
+                    await signOut(auth);
+                    window.location.href = '/login/index.html';
+                }
+            } else {
+                console.log('No user authenticated, redirecting to login...');
+                window.location.href = '/login/index.html';
+            }
+        });
+    </script>
+</body>
+</html>

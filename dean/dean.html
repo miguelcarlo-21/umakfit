@@ -2930,93 +2930,87 @@ window.filterAccountsByRole = function() {
         };
 
         // Assign professor to section
-        window.assignProfessorToSection = async function() {
-            const professorSelect = document.getElementById('assignProfessorSelect');
-            const professorId = professorSelect.value;
+      // Assign professor to section - FIXED VERSION
+window.assignProfessorToSection = async function() {
+    const professorSelect = document.getElementById('assignProfessorSelect');
+    const professorId = professorSelect.value;
+    
+    if (!professorId || !currentSectionToAssign) {
+        alert('❌ Please select a professor.');
+        return;
+    }
+
+    try {
+        const selectedOption = professorSelect.options[professorSelect.selectedIndex];
+        const professorEmail = selectedOption.getAttribute('data-email');
+        const professorName = selectedOption.getAttribute('data-name');
+        
+        console.log('=== ASSIGNING PROFESSOR ===');
+        console.log('Professor ID:', professorId);
+        console.log('Section:', currentSectionToAssign.name);
+        console.log('Section data:', currentSectionToAssign);
+
+        // Make sure college field is defined
+        const sectionCollege = currentSectionToAssign.college || 'Not Specified';
+        
+        // Update section with professor info
+        const sectionRef = doc(db, 'sections', currentSectionToAssign.id);
+        await updateDoc(sectionRef, {
+            professorId: professorId,
+            professorEmail: professorEmail,
+            professorName: professorName,
+            updatedAt: serverTimestamp()
+        });
+        console.log('✓ Section updated');
+
+        // Update professor with section info
+        const professorRef = doc(db, 'users', professorId);
+        const professorDoc = await getDoc(professorRef);
+        
+        if (professorDoc.exists()) {
+            const currentData = professorDoc.data();
+            const currentSections = currentData.assignedSections || [];
             
-            if (!professorId || !currentSectionToAssign) {
-                alert('❌ Please select a professor.');
-                return;
+            // Add section name if not already in the array
+            if (!currentSections.includes(currentSectionToAssign.name)) {
+                currentSections.push(currentSectionToAssign.name);
             }
-
-            try {
-                const selectedOption = professorSelect.options[professorSelect.selectedIndex];
-                const professorEmail = selectedOption.getAttribute('data-email');
-                const professorName = selectedOption.getAttribute('data-name');
-                
-                console.log('=== ASSIGNING PROFESSOR ===');
-                console.log('Professor ID:', professorId);
-                console.log('Section:', currentSectionToAssign.name);
-
-                // Update section with professor info
-                const sectionRef = doc(db, 'sections', currentSectionToAssign.id);
-                await updateDoc(sectionRef, {
-                    professorId: professorId,
-                    professorEmail: professorEmail,
-                    professorName: professorName,
-                    updatedAt: serverTimestamp()
-                });
-                console.log('✓ Section updated');
-
-                // Update professor with section info
-                const professorRef = doc(db, 'users', professorId);
-                const professorDoc = await getDoc(professorRef);
-                
-                if (professorDoc.exists()) {
-                    const currentData = professorDoc.data();
-                    const currentSections = currentData.assignedSections || [];
-                    
-                    if (!currentSections.includes(currentSectionToAssign.name)) {
-                        currentSections.push(currentSectionToAssign.name);
-                    }
-                    
-                    await updateDoc(professorRef, {
-                        assignedSections: currentSections,
-                        assignedClass: currentSectionToAssign.name,
-                        college: currentSectionToAssign.college,
-                        totalStudents: currentSectionToAssign.studentCount || 0,
-                        updatedAt: serverTimestamp()
-                    });
-                    console.log('✓ Professor updated');
-                }
-
-                console.log('=== ASSIGNMENT COMPLETE ===');
-
-                alert(`✅ SUCCESS!\n\nProfessor: ${professorName}\nAssigned to: ${currentSectionToAssign.name}\n\nSection: ${currentSectionToAssign.name}\nCollege: ${currentSectionToAssign.college}\nSchool Year: ${currentSectionToAssign.academicYear}\n\nProfessor can now see this section in their dashboard.`);
-                
-                closeAssignProfessorModal();
-                await loadSections();
-                
-            } catch (error) {
-                console.error('=== ERROR IN ASSIGNMENT ===');
-                console.error('Error:', error);
-                alert(`❌ Error assigning professor: ${error.message}`);
+            
+            // Prepare update data
+            const updateData = {
+                assignedSections: currentSections,
+                assignedClass: currentSectionToAssign.name,
+                updatedAt: serverTimestamp()
+            };
+            
+            // Only add college if it has a value
+            if (sectionCollege && sectionCollege !== 'Not Specified') {
+                updateData.college = sectionCollege;
             }
-        };
+            
+            // Add totalStudents only if it exists in the section
+            if (currentSectionToAssign.studentCount !== undefined) {
+                updateData.totalStudents = currentSectionToAssign.studentCount;
+            }
+            
+            await updateDoc(professorRef, updateData);
+            console.log('✓ Professor updated');
+        }
 
-        // Refresh functions
-        window.refreshDashboardData = async function() {
-            console.log('🔄 Refreshing dashboard data...');
-            await loadDashboardStats();
-            showAlert('preAssessmentAlert', '✅ Dashboard refreshed successfully!', 'success');
-        };
+        console.log('=== ASSIGNMENT COMPLETE ===');
 
-        window.refreshPreAssessments = async function() {
-            await loadPreAssessments();
-            showAlert('preAssessmentAlert', '✅ Pre-assessments refreshed!', 'success');
-        };
-
-        window.refreshPostAssessments = async function() {
-            await loadPostAssessments();
-            showAlert('postAssessmentAlert', '✅ Post-assessments refreshed!', 'success');
-        };
-
-        window.refreshAccounts = async function() {
-            await loadAllAccounts();
-            document.getElementById('roleFilter').value = 'all';
-            document.getElementById('searchAccounts').value = '';
-            showAlert('accountAlert', '✅ Accounts refreshed!', 'success');
-        };
+        alert(`✅ SUCCESS!\n\nProfessor: ${professorName}\nAssigned to: ${currentSectionToAssign.name}\n\nSection: ${currentSectionToAssign.name}\nCollege: ${sectionCollege}\nSchool Year: ${currentSectionToAssign.academicYear || 'N/A'}\n\nProfessor can now see this section in their dashboard.`);
+        
+        closeAssignProfessorModal();
+        await loadSections();
+        
+    } catch (error) {
+        console.error('=== ERROR IN ASSIGNMENT ===');
+        console.error('Error:', error);
+        console.error('Section data:', currentSectionToAssign);
+        alert(`❌ Error assigning professor: ${error.message}\n\nCheck console for details.`);
+    }
+};
 
         // Alert function
         function showAlert(alertId, message, type) {

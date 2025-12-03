@@ -30,7 +30,7 @@
                 transform: translateY(0);
             }
         }
-        
+
         .slide-down {
             animation: slideDown 0.3s ease;
         }
@@ -137,6 +137,14 @@
                         <a href="./progress.html" class="px-3 xl:px-4 py-2.5 xl:py-3 bg-white/20 text-white rounded-lg font-semibold text-sm flex items-center gap-2 hover:bg-white/30 transition-all">
                             <i class="bi bi-graph-up"></i> 
                             <span class="hidden xl:inline">Progress</span>
+                        </a>
+                        <a href="./studentlesson.html" class="px-3 xl:px-4 py-2.5 xl:py-3 bg-white/20 text-white rounded-lg font-semibold text-sm flex items-center gap-2 hover:bg-white/30 transition-all">
+                            <i class="bi bi-book"></i> 
+                            <span class="hidden xl:inline">Lessons</span>
+                        </a>
+                        <a href="./studentgrades.html" class="px-3 xl:px-4 py-2.5 xl:py-3 bg-white/20 text-white rounded-lg font-semibold text-sm flex items-center gap-2 hover:bg-white/30 transition-all">
+                            <i class="bi bi-award"></i> 
+                            <span class="hidden xl:inline">Grades</span>
                         </a>
                         <a href="#" class="px-3 xl:px-4 py-2.5 xl:py-3 bg-white/20 text-white rounded-lg font-semibold text-sm flex items-center gap-2 hover:bg-white/30 transition-all">
                             <i class="bi bi-book"></i> 
@@ -279,8 +287,14 @@
                     <a href="./progress.html" class="block px-3 sm:px-4 py-2.5 sm:py-3 bg-white/20 text-white rounded-lg font-semibold text-sm">
                         <i class="bi bi-graph-up mr-2"></i> Progress
                     </a>
+                    <a href="./studentlesson.html" class="block px-3 sm:px-4 py-2.5 sm:py-3 bg-white/20 text-white rounded-lg font-semibold text-sm">
+                         <i class="bi bi-book mr-2"></i> Lessons
+                    </a>
+                    <a href="./studentgrades.html" class="block px-3 sm:px-4 py-2.5 sm:py-3 bg-white/20 text-white rounded-lg font-semibold text-sm">
+                        <i class="bi bi-award mr-2"></i> Grades
+                    </a>
                     <a href="#" class="block px-3 sm:px-4 py-2.5 sm:py-3 bg-white/20 text-white rounded-lg font-semibold text-sm">
-                        <i class="bi bi-book mr-2"></i> Learn
+                        <i class="bi bi-book mr-2"></i> Achievements
                     </a>
                 </div>
             </div>
@@ -560,8 +574,35 @@
         let currentTest = null;
         let allTestResults = [];
         let showAllResults = false;
-        const VISIBLE_RESULTS_COUNT = 2;
 
+        const VISIBLE_RESULTS_COUNT = 2;
+            const testCategories = {
+            'Cardiorespiratory Endurance': {
+                tests: ['3-Minute Step Test', '1-Mile Run', '1 Mile Run', 'BMI Assessment'],
+                icon: 'https://c.animaapp.com/HN7hFbsr/img/image-148@2x.png',
+                subtitle: 'Heart and lung fitness tests'
+            },
+            'Muscular Strength': {
+                tests: ['Push-Up Test', 'Grip Strength'],
+                icon: 'https://c.animaapp.com/HN7hFbsr/img/image-149@2x.png',
+                subtitle: 'Maximum force tests'
+            },
+            'Muscular Endurance': {
+                tests: ['Curl-Up Test', 'Push-up Test', 'Plank Hold'],
+                icon: 'https://c.animaapp.com/HN7hFbsr/img/image-150@2x.png',
+                subtitle: 'Repeated contractions tests'
+            },
+            'Flexibility': {
+                tests: ['Sit-and-Reach', 'Shoulder Flexibility'],
+                icon: 'https://c.animaapp.com/HN7hFbsr/img/image-48@2x.png',
+                subtitle: 'Range of motion tests'
+            },
+            'Body Composition': {
+                tests: ['BMI Assessment', 'Skinfold Caliper Measurements'],
+                icon: 'https://c.animaapp.com/HN7hFbsr/img/image-151@2x.png',
+                subtitle: 'Body fat and mass tests'
+            }
+        };
         // DOM Elements
         const loadingScreen = document.getElementById('loadingScreen');
         const mainContent = document.getElementById('mainContent');
@@ -579,37 +620,48 @@
 
         // Event Listeners
         document.addEventListener('DOMContentLoaded', () => {
-            // Mobile menu toggle
-            if (mobileMenuButton) {
-                mobileMenuButton.addEventListener('click', toggleMobileMenu);
-            }
-            
-            // Notification dropdowns
-            if (notificationBellBtn) {
-                notificationBellBtn.addEventListener('click', toggleNotificationDropdown);
-            }
-            
-            if (notificationBellBtnMobile) {
-                notificationBellBtnMobile.addEventListener('click', toggleNotificationDropdown);
-            }
-            
-            // Profile dropdowns
-            if (profilePictureBtn) {
-                profilePictureBtn.addEventListener('click', toggleProfileDropdown);
-            }
-            
-            if (profilePictureBtnMobile) {
-                profilePictureBtnMobile.addEventListener('click', toggleProfileDropdown);
-            }
-            
-            // Export results
-            if (exportResultsBtn) {
-                exportResultsBtn.addEventListener('click', exportAllResults);
-            }
-            
-            // Close dropdowns when clicking outside
-            document.addEventListener('click', closeAllDropdowns);
-        });
+    // Mobile menu toggle
+    if (mobileMenuButton) {
+        mobileMenuButton.addEventListener('click', toggleMobileMenu);
+    }
+    
+    // Notification dropdowns
+    if (notificationBellBtn) {
+        notificationBellBtn.addEventListener('click', toggleNotificationDropdown);
+    }
+    
+    if (notificationBellBtnMobile) {
+        notificationBellBtnMobile.addEventListener('click', toggleNotificationDropdown);
+    }
+    
+    // Profile dropdowns
+    if (profilePictureBtn) {
+        profilePictureBtn.addEventListener('click', toggleProfileDropdown);
+    }
+    
+    if (profilePictureBtnMobile) {
+        profilePictureBtnMobile.addEventListener('click', toggleProfileDropdown);
+    }
+    
+    // Export results
+    if (exportResultsBtn) {
+        exportResultsBtn.addEventListener('click', exportAllResults);
+    }
+    
+    // ADD THESE LOGOUT EVENT LISTENERS:
+    // Logout buttons - Desktop
+    document.querySelectorAll('#profileDropdown [class*="text-red-500"]').forEach(btn => {
+        btn.addEventListener('click', handleLogout);
+    });
+    
+    // Logout buttons - Mobile
+    document.querySelectorAll('#profileDropdownMobile [class*="text-red-500"]').forEach(btn => {
+        btn.addEventListener('click', handleLogout);
+    });
+    
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', closeAllDropdowns);
+});
 
         // Mobile menu toggle
         function toggleMobileMenu() {
@@ -617,37 +669,54 @@
         }
 
         // Notification dropdown
-        function toggleNotificationDropdown() {
-            const isMobile = window.innerWidth < 1024; // lg breakpoint
-            const dropdown = isMobile ? notificationDropdownMobile : notificationDropdown;
-            
-            dropdown.classList.toggle('hidden');
-            if (!dropdown.classList.contains('hidden')) {
-                loadNotificationDropdown();
-                updateNavNotificationCount(0);
-            }
-        }
+        function toggleNotificationDropdown(event) {
+    event?.stopPropagation();
+    const isMobile = window.innerWidth < 1024;
+    const dropdown = isMobile ? notificationDropdownMobile : notificationDropdown;
+    
+    const isHidden = dropdown.classList.contains('hidden');
+    
+    if (isHidden) {
+        dropdown.classList.remove('hidden');
+        document.body.classList.add('dropdown-open');
+        loadNotificationDropdown();
+        updateNavNotificationCount(0);
+        closeProfileDropdown();
+    } else {
+        dropdown.classList.add('hidden');
+        document.body.classList.remove('dropdown-open');
+    }
+}
 
         function closeNotificationDropdown() {
-            notificationDropdown.classList.add('hidden');
-            notificationDropdownMobile.classList.add('hidden');
-        }
+    notificationDropdown.classList.add('hidden');
+    notificationDropdownMobile.classList.add('hidden');
+    document.body.classList.remove('dropdown-open');
+}
 
         // Profile dropdown
-        function toggleProfileDropdown() {
-            const isMobile = window.innerWidth < 1024; // lg breakpoint
-            const dropdown = isMobile ? profileDropdownMobile : profileDropdown;
-            
-            dropdown.classList.toggle('hidden');
-            if (!dropdown.classList.contains('hidden')) {
-                closeNotificationDropdown();
-            }
-        }
+        function toggleProfileDropdown(event) {
+    event?.stopPropagation();
+    const isMobile = window.innerWidth < 1024;
+    const dropdown = isMobile ? profileDropdownMobile : profileDropdown;
+    
+    const isHidden = dropdown.classList.contains('hidden');
+    
+    if (isHidden) {
+        dropdown.classList.remove('hidden');
+        document.body.classList.add('dropdown-open');
+        closeNotificationDropdown();
+    } else {
+        dropdown.classList.add('hidden');
+        document.body.classList.remove('dropdown-open');
+    }
+}
 
         function closeProfileDropdown() {
-            profileDropdown.classList.add('hidden');
-            profileDropdownMobile.classList.add('hidden');
-        }
+    profileDropdown.classList.add('hidden');
+    profileDropdownMobile.classList.add('hidden');
+    document.body.classList.remove('dropdown-open');
+}
 
         // Close all dropdowns when clicking outside
         function closeAllDropdowns(event) {
@@ -668,57 +737,66 @@
 
         // Logout function
         async function handleLogout() {
-            if (confirm('Are you sure you want to logout?')) {
-                try {
-                    await signOut(auth);
-                    window.location.href = '../login/index.html';
-                } catch (error) {
-                    console.error('Error logging out:', error);
-                    alert('Error logging out. Please try again.');
-                }
-            }
+    if (confirm('Are you sure you want to logout?')) {
+        try {
+            await signOut(auth);
+            window.location.href = '../login/index.html';
+        } catch (error) {
+            console.error('Error logging out:', error);
+            alert('Error logging out. Please try again.');
         }
-
+    }
+}
+            function initializeCharts() {
+    initializeFitnessOverviewChart();
+    initializePerformanceRadarChart();
+}
         // Initialize charts
-        function initializeCharts() {
-            initializeFitnessOverviewChart();
-            initializePerformanceRadarChart();
-        }
-
         function initializeFitnessOverviewChart() {
     const canvas = document.getElementById('fitnessOverviewChart');
     if (!canvas) return;
 
     const ctx = canvas.getContext('2d');
     
-    // Sample data - this will be replaced with real data
-    const sampleData = {
-        labels: ['Cardio\nEndurance', 'Strength', 'Flexibility', 'Core\nStability'],
-        scores: [78, 80, 72, 82]
-    };
-
     window.fitnessOverviewChart = new Chart(ctx, {
-        type: 'bar',
+        type: 'line',  // Changed to line chart for better progress visualization
         data: {
-            labels: sampleData.labels,
+            labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Current'],
             datasets: [{
-                label: 'Current Score',
-                data: sampleData.scores,
-                backgroundColor: [
-                    'rgba(239, 68, 68, 0.8)',   // Red for Cardio
-                    'rgba(59, 130, 246, 0.8)',  // Blue for Strength
-                    'rgba(16, 185, 129, 0.8)',  // Green for Flexibility
-                    'rgba(139, 92, 246, 0.8)'   // Purple for Core
-                ],
-                borderColor: [
-                    '#ef4444',
-                    '#3b82f6',
-                    '#10b981',
-                    '#8b5cf6'
-                ],
-                borderWidth: 2,
-                borderRadius: 8,
-                barThickness: 60
+                label: 'Cardiorespiratory',
+                data: [0, 0, 0, 0, 0],
+                borderColor: '#3b82f6',
+                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                tension: 0.4,
+                fill: true
+            }, {
+                label: 'Muscular Strength',
+                data: [0, 0, 0, 0, 0],
+                borderColor: '#ef4444',
+                backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                tension: 0.4,
+                fill: true
+            }, {
+                label: 'Muscular Endurance',
+                data: [0, 0, 0, 0, 0],
+                borderColor: '#10b981',
+                backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                tension: 0.4,
+                fill: true
+            }, {
+                label: 'Flexibility',
+                data: [0, 0, 0, 0, 0],
+                borderColor: '#f59e0b',
+                backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                tension: 0.4,
+                fill: true
+            }, {
+                label: 'Body Composition',
+                data: [0, 0, 0, 0, 0],
+                borderColor: '#a855f7',
+                backgroundColor: 'rgba(168, 85, 247, 0.1)',
+                tension: 0.4,
+                fill: true
             }]
         },
         options: {
@@ -726,21 +804,22 @@
             maintainAspectRatio: false,
             plugins: {
                 legend: {
-                    display: false
+                    display: true,
+                    position: 'top',
+                    labels: {
+                        padding: 10,
+                        font: { size: 11, weight: '600' },
+                        usePointStyle: true
+                    }
                 },
                 tooltip: {
-                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    backgroundColor: 'rgba(0, 0, 0, 0.9)',
                     padding: 12,
-                    titleFont: {
-                        size: 13,
-                        weight: 'bold'
-                    },
-                    bodyFont: {
-                        size: 12
-                    },
+                    titleFont: { size: 13, weight: 'bold' },
+                    bodyFont: { size: 12 },
                     callbacks: {
                         label: function(context) {
-                            return `Score: ${context.parsed.y}/100`;
+                            return `${context.dataset.label}: ${context.parsed.y}/100`;
                         }
                     }
                 }
@@ -749,257 +828,323 @@
                 y: {
                     beginAtZero: true,
                     max: 100,
-                    grid: {
-                        color: 'rgba(0, 0, 0, 0.05)'
-                    },
+                    grid: { color: 'rgba(0, 0, 0, 0.05)' },
                     ticks: {
-                        font: {
-                            size: 11,
-                            weight: '600'
-                        },
-                        stepSize: 20,
-                        callback: function(value) {
-                            return value;
-                        }
+                        font: { size: 11, weight: '600' },
+                        stepSize: 20
                     },
                     title: {
                         display: true,
                         text: 'Score (0-100)',
-                        font: {
-                            size: 12,
-                            weight: '700'
-                        }
+                        font: { size: 12, weight: '700' }
                     }
                 },
                 x: {
-                    grid: {
-                        display: false
-                    },
+                    grid: { display: false },
                     ticks: {
-                        font: {
-                            size: 11,
-                            weight: '600'
-                        }
+                        font: { size: 11, weight: '600' }
                     }
                 }
             },
             animation: {
-                duration: 1000,
-                easing: 'easeInOutQuart'
+                duration: 1200,
+                easing: 'easeOutQuart'
             }
         }
     });
 }
 
         function initializePerformanceRadarChart() {
-            const canvas = document.getElementById('performanceRadarChart');
-            if (!canvas) return;
+    const canvas = document.getElementById('performanceRadarChart');
+    if (!canvas) return;
 
-            const ctx = canvas.getContext('2d');
-            
-            // Sample data - this will be replaced with real data
-            const sampleData = {
-                labels: ['Cardio Endurance', 'Strength', 'Flexibility', 'Core Stability', 'Consistency'],
-                datasets: [{
-                    label: 'Current Performance',
-                    data: [78, 80, 72, 82, 75],
-                    backgroundColor: 'rgba(59, 130, 246, 0.2)',
-                    borderColor: '#3b82f6',
-                    pointBackgroundColor: '#3b82f6',
-                    pointBorderColor: '#fff',
-                    pointHoverBackgroundColor: '#fff',
-                    pointHoverBorderColor: '#3b82f6',
-                    borderWidth: 2
-                }, {
-                    label: 'Target Performance',
-                    data: [85, 85, 80, 85, 90],
-                    backgroundColor: 'rgba(16, 185, 129, 0.2)',
-                    borderColor: '#10b981',
-                    pointBackgroundColor: '#10b981',
-                    pointBorderColor: '#fff',
-                    pointHoverBackgroundColor: '#fff',
-                    pointHoverBorderColor: '#10b981',
-                    borderWidth: 2,
-                    borderDash: [5, 5]
-                }]
-            };
+    const ctx = canvas.getContext('2d');
+    
+    // Sample data matching 5 categories
+    const sampleData = {
+        labels: [
+            'Cardiorespiratory Endurance',
+            'Muscular Strength',
+            'Muscular Endurance',
+            'Flexibility',
+            'Body Composition'
+        ],
+        datasets: [{
+            label: 'Current Performance',
+            data: [0, 0, 0, 0, 0],
+            backgroundColor: 'rgba(59, 130, 246, 0.2)',
+            borderColor: '#3b82f6',
+            pointBackgroundColor: '#3b82f6',
+            pointBorderColor: '#fff',
+            pointHoverBackgroundColor: '#fff',
+            pointHoverBorderColor: '#3b82f6',
+            borderWidth: 2
+        }, {
+            label: 'Target Performance',
+            data: [85, 85, 85, 85, 85],
+            backgroundColor: 'rgba(16, 185, 129, 0.2)',
+            borderColor: '#10b981',
+            pointBackgroundColor: '#10b981',
+            pointBorderColor: '#fff',
+            pointHoverBackgroundColor: '#fff',
+            pointHoverBorderColor: '#10b981',
+            borderWidth: 2,
+            borderDash: [5, 5]
+        }]
+    };
 
-            window.performanceRadarChart = new Chart(ctx, {
-                type: 'radar',
-                data: sampleData,
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                            labels: {
-                                padding: 15,
-                                font: {
-                                    size: 11,
-                                    weight: '600'
-                                }
-                            }
-                        },
-                        tooltip: {
-                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                            padding: 10,
-                            titleFont: {
-                                size: 11,
-                                weight: 'bold'
-                            },
-                            bodyFont: {
-                                size: 10
-                            }
-                        }
-                    },
-                    scales: {
-                        r: {
-                            beginAtZero: true,
-                            max: 100,
-                            ticks: {
-                                stepSize: 20,
-                                font: {
-                                    size: 9
-                                }
-                            },
-                            pointLabels: {
-                                font: {
-                                    size: 10,
-                                    weight: '600'
-                                }
-                            },
-                            grid: {
-                                color: 'rgba(0, 0, 0, 0.1)'
-                            }
-                        }
-                    },
-                    elements: {
-                        line: {
-                            borderWidth: 2
+    window.performanceRadarChart = new Chart(ctx, {
+        type: 'radar',
+        data: sampleData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        padding: 15,
+                        font: {
+                            size: 11,
+                            weight: '600'
                         }
                     }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    padding: 10,
+                    titleFont: {
+                        size: 11,
+                        weight: 'bold'
+                    },
+                    bodyFont: {
+                        size: 10
+                    }
                 }
-            });
+            },
+            scales: {
+                r: {
+                    beginAtZero: true,
+                    max: 100,
+                    ticks: {
+                        stepSize: 20,
+                        font: {
+                            size: 9
+                        }
+                    },
+                    pointLabels: {
+                        font: {
+                            size: 10,
+                            weight: '600'
+                        }
+                    },
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.1)'
+                    }
+                }
+            },
+            elements: {
+                line: {
+                    borderWidth: 2
+                }
+            }
         }
+    });
+}
 
         // Update charts with real data
         async function updateChartsWithRealData() {
-            try {
-                if (!studentData || !studentData.email) return;
+    try {
+        if (!studentData || !studentData.email) return;
 
-                const resultsQuery = query(
-                    collection(db, 'testResults'),
-                    where('studentEmail', '==', studentData.email),
-                    where('status', '==', 'completed'),
-                    orderBy('submittedAt', 'asc')
-                );
-                
-                const resultsSnapshot = await getDocs(resultsQuery);
-                
-                const categoryData = {
-                    'Cardio Endurance': [],
-                    'Strength': [],
-                    'Flexibility': [],
-                    'Core Stability': []
-                };
-                
-                // Group results by category and calculate scores
-                resultsSnapshot.forEach((doc) => {
-                    const result = doc.data();
-                    const category = getCategoryForTest(result.testName);
-                    const score = result.score || calculateTestScore(result.testName, result.resultData);
-                    const timestamp = result.submittedAt?.toDate?.() || new Date(result.date);
-                    
-                    if (category && categoryData[category]) {
-                        categoryData[category].push({
-                            score: score,
-                            timestamp: timestamp,
-                            date: timestamp.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-                        });
-                    }
+        const resultsQuery = query(
+            collection(db, 'testResults'),
+            where('studentEmail', '==', studentData.email),
+            where('status', '==', 'completed'),
+            orderBy('submittedAt', 'asc')
+        );
+        
+        const resultsSnapshot = await getDocs(resultsQuery);
+        
+        const categoryData = {
+            'Cardiorespiratory Endurance': [],
+            'Muscular Strength': [],
+            'Muscular Endurance': [],
+            'Flexibility': [],
+            'Body Composition': []
+        };
+        
+        console.log('📊 Processing test results for charts...');
+        
+        // Group results by category with timestamps
+        resultsSnapshot.forEach((doc) => {
+            const result = doc.data();
+            const category = getCategoryForTest(result.testName);
+            
+            // Use stored score if available, otherwise calculate
+            const score = result.score || calculateTestScore(
+                result.testName, 
+                result.resultData || result.result, 
+                result.testTarget
+            );
+            
+            const timestamp = result.submittedAt?.toDate?.() || new Date(result.date);
+            
+            console.log(`📝 Test: ${result.testName} → Category: ${category} → Score: ${score}`);
+            
+            if (categoryData[category]) {
+                categoryData[category].push({
+                    score: score,
+                    timestamp: timestamp,
+                    testName: result.testName
                 });
-                
-                // Update fitness overview chart
-                if (window.fitnessOverviewChart) {
-    // Calculate average scores for each category
-    const categoryAverages = {
-        'Cardio Endurance': getAverageScore(categoryData['Cardio Endurance']),
-        'Strength': getAverageScore(categoryData['Strength']),
-        'Flexibility': getAverageScore(categoryData['Flexibility']),
-        'Core Stability': getAverageScore(categoryData['Core Stability'])
-    };
-    
-        window.fitnessOverviewChart.data.datasets[0].data = [
-        categoryAverages['Cardio Endurance'],
-        categoryAverages['Strength'],
-        categoryAverages['Flexibility'],
-        categoryAverages['Core Stability']
-    ];
-                    window.fitnessOverviewChart.update();
-}
-                
-                // Update radar chart with current performance
-                if (window.performanceRadarChart) {
-                    const currentPerformance = [
-                        getLatestScore(categoryData['Cardio Endurance']),
-                        getLatestScore(categoryData['Strength']),
-                        getLatestScore(categoryData['Flexibility']),
-                        getLatestScore(categoryData['Core Stability']),
-                        calculateConsistencyScore(categoryData)
-                    ];
-                    
-                    window.performanceRadarChart.data.datasets[0].data = currentPerformance;
-                    window.performanceRadarChart.update();
+            }
+        });
+        
+        console.log('📊 Final category data:', categoryData);
+        
+        // Update Fitness Overview Chart (Line Chart showing progress over time)
+        if (window.fitnessOverviewChart) {
+            // Sort all tests by date to create timeline
+            const allTests = [];
+            Object.entries(categoryData).forEach(([category, tests]) => {
+                tests.forEach(test => {
+                    allTests.push({ ...test, category });
+                });
+            });
+            
+            allTests.sort((a, b) => a.timestamp - b.timestamp);
+            
+            // Group by time periods (last 5 data points)
+            const timePoints = Math.min(5, allTests.length || 1);
+            const labels = [];
+            const dataByCategory = {
+                'Cardiorespiratory Endurance': [],
+                'Muscular Strength': [],
+                'Muscular Endurance': [],
+                'Flexibility': [],
+                'Body Composition': []
+            };
+            
+            if (allTests.length > 0) {
+                // Create time-based labels
+                for (let i = 0; i < timePoints; i++) {
+                    const index = Math.floor((i / timePoints) * allTests.length);
+                    const test = allTests[Math.min(index, allTests.length - 1)];
+                    labels.push(test.timestamp.toLocaleDateString('en-US', { 
+                        month: 'short', 
+                        day: 'numeric' 
+                    }));
                 }
                 
-            } catch (error) {
-                console.error('Error updating charts with real data:', error);
+                // Calculate progressive averages for each category
+                Object.keys(dataByCategory).forEach(category => {
+                    const categoryTests = categoryData[category];
+                    
+                    for (let i = 0; i < timePoints; i++) {
+                        if (categoryTests.length > 0) {
+                            const upToIndex = Math.min(
+                                Math.floor((i + 1) / timePoints * categoryTests.length),
+                                categoryTests.length
+                            );
+                            const relevantTests = categoryTests.slice(0, upToIndex || 1);
+                            const avg = relevantTests.reduce((sum, t) => sum + t.score, 0) / relevantTests.length;
+                            dataByCategory[category].push(Math.round(avg));
+                        } else {
+                            dataByCategory[category].push(0);
+                        }
+                    }
+                });
+            } else {
+                // No data yet
+                labels.push('No Data');
+                Object.keys(dataByCategory).forEach(category => {
+                    dataByCategory[category].push(0);
+                });
             }
+            
+            window.fitnessOverviewChart.data.labels = labels;
+            window.fitnessOverviewChart.data.datasets[0].data = dataByCategory['Cardiorespiratory Endurance'];
+            window.fitnessOverviewChart.data.datasets[1].data = dataByCategory['Muscular Strength'];
+            window.fitnessOverviewChart.data.datasets[2].data = dataByCategory['Muscular Endurance'];
+            window.fitnessOverviewChart.data.datasets[3].data = dataByCategory['Flexibility'];
+            window.fitnessOverviewChart.data.datasets[4].data = dataByCategory['Body Composition'];
+            
+            window.fitnessOverviewChart.update('active');
+            console.log('✅ Fitness Overview Chart updated');
         }
+        
+        // Update Performance Radar Chart
+        if (window.performanceRadarChart) {
+            const currentPerformance = [
+                getLatestScore(categoryData['Cardiorespiratory Endurance']),
+                getLatestScore(categoryData['Muscular Strength']),
+                getLatestScore(categoryData['Muscular Endurance']),
+                getLatestScore(categoryData['Flexibility']),
+                getLatestScore(categoryData['Body Composition'])
+            ];
+            
+            console.log('📊 Current Performance:', currentPerformance);
+            
+            window.performanceRadarChart.data.datasets[0].data = currentPerformance;
+            window.performanceRadarChart.data.datasets[1].data = [85, 85, 85, 85, 85];
+            
+            window.performanceRadarChart.update();
+            console.log('✅ Performance Radar Chart updated');
+        }
+        
+    } catch (error) {
+        console.error('❌ Error updating charts:', error);
+    }
+}
 
         // Helper function to categorize tests
         function getCategoryForTest(testName) {
-            const normalized = testName.toLowerCase().trim();
-            
-            console.log('🔍 Categorizing test:', testName, '→', normalized);
-            
-            // Flexibility tests
-            if (normalized.includes('sit-and-reach') || 
-                normalized.includes('sit and reach') ||
-                normalized.includes('flexibility')) {
-                console.log('✅ Category: Flexibility');
-                return 'Flexibility';
-            }
-            // Strength tests
-            else if (normalized.includes('push-up') || 
-                     normalized.includes('pushup') || 
-                     normalized.includes('push up') ||
-                     normalized.includes('grip')) {
-                console.log('✅ Category: Strength');
-                return 'Strength';
-            }
-            // Cardio tests
-            else if (normalized.includes('step') || 
-                     normalized.includes('run') || 
-                     normalized.includes('cardio') || 
-                     normalized.includes('mile')) {
-                console.log('✅ Category: Cardio Endurance');
-                return 'Cardio Endurance';
-            }
-            // Core tests
-            else if (normalized.includes('plank') || 
-                     normalized.includes('sit-up') || 
-                     normalized.includes('situp') ||
-                     normalized.includes('sit up') ||
-                     normalized.includes('core')) {
-                console.log('✅ Category: Core Stability');
-                return 'Core Stability';
-            }
-            
-            console.log('❌ No category found');
-            return null;
+    const normalized = testName.toLowerCase().trim();
+    
+    console.log('🔍 Categorizing test:', testName, '→', normalized);
+    
+    // Check each category's test list
+    for (const [category, data] of Object.entries(testCategories)) {
+        if (data.tests.some(t => 
+            normalized.includes(t.toLowerCase()) || 
+            t.toLowerCase().includes(normalized)
+        )) {
+            console.log('✅ Category:', category);
+            return category;
         }
+    }
+    
+    // Fallback categorization
+    if (normalized.includes('sit-and-reach') || 
+        normalized.includes('sit and reach') ||
+        normalized.includes('flexibility') ||
+        normalized.includes('shoulder')) {
+        console.log('✅ Category: Flexibility (fallback)');
+        return 'Flexibility';
+    } else if (normalized.includes('push-up') || 
+               normalized.includes('pushup') || 
+               normalized.includes('push up') ||
+               normalized.includes('grip')) {
+        console.log('✅ Category: Muscular Strength (fallback)');
+        return 'Muscular Strength';
+    } else if (normalized.includes('curl-up') ||
+               normalized.includes('curl up') ||
+               normalized.includes('plank')) {
+        console.log('✅ Category: Muscular Endurance (fallback)');
+        return 'Muscular Endurance';
+    } else if (normalized.includes('step') || 
+               normalized.includes('run') || 
+               normalized.includes('cardio') || 
+               normalized.includes('mile') ||
+               normalized.includes('bmi')) {
+        console.log('✅ Category: Cardiorespiratory Endurance (fallback)');
+        return 'Cardiorespiratory Endurance';
+    }
+    
+    console.log('❌ No category found, defaulting to Cardiorespiratory Endurance');
+    return 'Cardiorespiratory Endurance';
+}
         
         function generateTimeLabels(categoryData) {
             // Generate time labels based on available data
@@ -1028,11 +1173,14 @@
             if (categoryData.length === 0) return 0;
             return categoryData[categoryData.length - 1].score;
         }
-        function getAverageScore(categoryData) {
-    if (categoryData.length === 0) return 0;
+            function getAverageScore(categoryData) {
+    if (!categoryData || categoryData.length === 0) return 0;
     const sum = categoryData.reduce((total, item) => total + item.score, 0);
-    return Math.round(sum / categoryData.length);
+    const average = sum / categoryData.length;
+    console.log(`📊 Average for category: ${categoryData.length} tests, sum: ${sum}, avg: ${average}`);
+    return Math.round(average);
 }
+       
         function calculateConsistencyScore(categoryData) {
             const allScores = [];
             Object.values(categoryData).forEach(category => {
@@ -1535,113 +1683,81 @@
 
         // Calculate strongest category
         async function calculateStrongestCategory() {
-            try {
-                const resultsQuery = query(
-                    collection(db, 'testResults'),
-                    where('studentEmail', '==', studentData.email),
-                    where('status', '==', 'completed')
-                );
+    try {
+        const resultsQuery = query(
+            collection(db, 'testResults'),
+            where('studentEmail', '==', studentData.email),
+            where('status', '==', 'completed')
+        );
 
-                const resultsSnapshot = await getDocs(resultsQuery);
+        const resultsSnapshot = await getDocs(resultsQuery);
 
-                // Check if there are any results
-                if (resultsSnapshot.empty) {
-                    document.getElementById('strongestCategory').textContent = 'No Data Yet';
-                    document.getElementById('strongestCategoryScore').textContent = 'Complete tests to see your strongest area';
-                    return;
-                }
-
-                // Define test categories
-                const testCategories = {
-                    'Cardio Endurance': {
-                        tests: ['3-Minute Step Test', '1-Mile Run', '1 Mile Run', 'BMI Assessment'],
-                        icon: 'https://c.animaapp.com/HN7hFbsr/img/image-148@2x.png',
-                        subtitle: 'Cardiovascular fitness tests'
-                    },
-                    'Strength': {
-                        tests: ['Push-Up Test', 'Grip Strength', 'Push-up Test'],
-                        icon: 'https://c.animaapp.com/HN7hFbsr/img/image-149@2x.png',
-                        subtitle: 'Muscular strength tests'
-                    },
-                    'Flexibility': {
-                        tests: ['Sit-and-Reach', 'Shoulder Flexibility'],
-                        icon: 'https://c.animaapp.com/HN7hFbsr/img/image-48@2x.png',
-                        subtitle: 'Range of motion tests'
-                    },
-                    'Core Stability': {
-                        tests: ['Plank Hold', 'Sit-Up Test'],
-                        icon: 'https://c.animaapp.com/HN7hFbsr/img/image-150@2x.png',
-                        subtitle: 'Core strength tests'
-                    }
-                };
-
-                // Initialize category scores
-                const categoryScores = {};
-                Object.keys(testCategories).forEach(category => {
-                    categoryScores[category] = {
-                        totalScore: 0,
-                        testCount: 0,
-                        averageScore: 0
-                    };
-                });
-
-                // Calculate scores for each category
-                resultsSnapshot.forEach((doc) => {
-                    const result = doc.data();
-                    const score = result.score || calculateTestScore(result.testName, result.resultData);
-                    
-                    // Find which category this test belongs to
-                    for (const [category, data] of Object.entries(testCategories)) {
-                        if (data.tests.some(test => 
-                            result.testName.toLowerCase().includes(test.toLowerCase()) ||
-                            test.toLowerCase().includes(result.testName.toLowerCase())
-                        )) {
-                            categoryScores[category].totalScore += score;
-                            categoryScores[category].testCount++;
-                            break;
-                        }
-                    }
-                });
-
-                // Calculate average scores for each category
-                Object.keys(categoryScores).forEach(category => {
-                    if (categoryScores[category].testCount > 0) {
-                        categoryScores[category].averageScore = 
-                            categoryScores[category].totalScore / categoryScores[category].testCount;
-                    }
-                });
-
-                // Find the category with the highest average score
-                let strongestCategory = null;
-                let highestAverageScore = -1;
-
-                Object.entries(categoryScores).forEach(([category, data]) => {
-                    if (data.testCount > 0 && data.averageScore > highestAverageScore) {
-                        highestAverageScore = data.averageScore;
-                        strongestCategory = category;
-                    }
-                });
-
-                // Update the UI
-                if (strongestCategory && highestAverageScore > 0) {
-                    document.getElementById('strongestCategory').textContent = strongestCategory;
-                    document.getElementById('strongestCategoryScore').textContent = 
-                        `Average Score: ${Math.round(highestAverageScore)}/100 (${categoryScores[strongestCategory].testCount} test${categoryScores[strongestCategory].testCount > 1 ? 's' : ''})`;
-                } else {
-                    document.getElementById('strongestCategory').textContent = 'No Data';
-                    document.getElementById('strongestCategoryScore').textContent = 'Complete tests to see your strongest area';
-                }
-
-                // Debug log
-                console.log('Category Scores:', categoryScores);
-                console.log('Strongest Category:', strongestCategory, 'Score:', highestAverageScore);
-
-            } catch (error) {
-                console.error('Error calculating strongest category:', error);
-                document.getElementById('strongestCategory').textContent = 'Error';
-                document.getElementById('strongestCategoryScore').textContent = 'Unable to calculate';
-            }
+        if (resultsSnapshot.empty) {
+            document.getElementById('strongestCategory').textContent = 'No Data Yet';
+            document.getElementById('strongestCategoryScore').textContent = 'Complete tests to see your strongest area';
+            return;
         }
+
+        // Initialize category scores using the same categories
+        const categoryScores = {};
+        Object.keys(testCategories).forEach(category => {
+            categoryScores[category] = {
+                totalScore: 0,
+                testCount: 0,
+                averageScore: 0
+            };
+        });
+
+        // Calculate scores using getCategoryForTest function
+        resultsSnapshot.forEach((doc) => {
+            const result = doc.data();
+            const score = result.score || calculateTestScore(result.testName, result.resultData || result.result, result.testTarget);
+            const category = getCategoryForTest(result.testName);
+            
+            if (categoryScores[category]) {
+                categoryScores[category].totalScore += score;
+                categoryScores[category].testCount++;
+            }
+        });
+
+        // Calculate average scores
+        Object.keys(categoryScores).forEach(category => {
+            if (categoryScores[category].testCount > 0) {
+                categoryScores[category].averageScore = 
+                    categoryScores[category].totalScore / categoryScores[category].testCount;
+            }
+        });
+
+        // Find strongest category
+        let strongestCategory = null;
+        let highestAverageScore = -1;
+
+        Object.entries(categoryScores).forEach(([category, data]) => {
+            if (data.testCount > 0 && data.averageScore > highestAverageScore) {
+                highestAverageScore = data.averageScore;
+                strongestCategory = category;
+            }
+        });
+
+        // Update UI
+        if (strongestCategory && highestAverageScore > 0) {
+            document.getElementById('strongestCategory').textContent = strongestCategory;
+            document.getElementById('strongestCategoryScore').textContent = 
+                `Average Score: ${Math.round(highestAverageScore)}/100 (${categoryScores[strongestCategory].testCount} test${categoryScores[strongestCategory].testCount > 1 ? 's' : ''})`;
+        } else {
+            document.getElementById('strongestCategory').textContent = 'No Data';
+            document.getElementById('strongestCategoryScore').textContent = 'Complete tests to see your strongest area';
+        }
+
+        console.log('📊 Category Scores:', categoryScores);
+        console.log('🏆 Strongest Category:', strongestCategory, 'Score:', highestAverageScore);
+
+    } catch (error) {
+        console.error('Error calculating strongest category:', error);
+        document.getElementById('strongestCategory').textContent = 'Error';
+        document.getElementById('strongestCategoryScore').textContent = 'Unable to calculate';
+    }
+}
 
         // Calculate week streak
         function calculateWeekStreak(tests) {
@@ -1984,191 +2100,191 @@
 }
 
         // Calculate test score
-        function calculateTestScore(testName, result, testTarget = null) {
-            const normalized = testName.toLowerCase().trim();
-            
-            // Extract numeric value from result
-            let numericValue = 0;
-            
-            if (typeof result === 'object' && result !== null) {
-                // Handle object results (from dashboard)
-                numericValue = result.repetitions || result.time || result.distance || result.value || result.score || 0;
-            } else if (typeof result === 'string') {
-                // Handle string results (from test history)
-                const match = result.match(/(\d+\.?\d*)/);
-                if (match) {
-                    numericValue = parseFloat(match[1]);
-                } else {
-                    numericValue = parseFloat(result) || 0;
-                }
-            } else {
-                // Handle number results
-                numericValue = parseFloat(result) || 0;
-            }
-            
-            console.log(`🔢 Score Calculation: ${testName} → Value: ${numericValue}, Target: ${testTarget}`);
-            
-            // Use test target if available for more accurate scoring
-            if (testTarget && testTarget > 0) {
-                if (normalized.includes('push-up') || normalized.includes('pushup') || 
-                    normalized.includes('sit-up') || normalized.includes('situp')) {
-                    const reps = numericValue;
-                    const percentage = (reps / testTarget) * 100;
-                    let score = Math.min(100, Math.max(50, percentage));
-                    
-                    // Apply grading curve for better distribution
-                    if (percentage >= 100) score = 100;
-                    else if (percentage >= 90) score = 95;
-                    else if (percentage >= 80) score = 90;
-                    else if (percentage >= 70) score = 85;
-                    else if (percentage >= 60) score = 80;
-                    else if (percentage >= 50) score = 75;
-                    
-                    console.log(`💪 Strength Test: ${reps}/${testTarget} reps → ${score}%`);
-                    return Math.round(score);
-                    
-                } else if (normalized.includes('plank')) {
-                    let seconds = 0;
-                    if (typeof result === 'string' && result.includes(':')) {
-                        const [mins, secs] = result.split(':').map(Number);
-                        seconds = (mins * 60) + (secs || 0);
-                    } else {
-                        seconds = numericValue;
-                    }
-                    
-                    const percentage = (seconds / testTarget) * 100;
-                    let score = Math.min(100, Math.max(50, percentage));
-                    
-                    // Apply grading curve
-                    if (percentage >= 100) score = 100;
-                    else if (percentage >= 90) score = 95;
-                    else if (percentage >= 80) score = 90;
-                    else if (percentage >= 70) score = 85;
-                    else if (percentage >= 60) score = 80;
-                    else if (percentage >= 50) score = 75;
-                    
-                    console.log(`⏱️ Plank Test: ${seconds}s/${testTarget}s → ${score}%`);
-                    return Math.round(score);
-                    
-                } else if (normalized.includes('sit-and-reach')) {
-                    const distance = numericValue;
-                    const percentage = (distance / testTarget) * 100;
-                    let score = Math.min(100, Math.max(50, percentage));
-                    
-                    // Apply grading curve
-                    if (percentage >= 100) score = 100;
-                    else if (percentage >= 90) score = 95;
-                    else if (percentage >= 80) score = 90;
-                    else if (percentage >= 70) score = 85;
-                    else if (percentage >= 60) score = 80;
-                    else if (percentage >= 50) score = 75;
-                    
-                    console.log(`📏 Flexibility Test: ${distance}cm/${testTarget}cm → ${score}%`);
-                    return Math.round(score);
-                }
-            }
-            
-            // Fallback to standard scoring if no target available
-            if (normalized.includes('push-up') || normalized.includes('pushup')) {
-                const reps = numericValue;
-                if (reps >= 40) return 100;
-                if (reps >= 35) return 95;
-                if (reps >= 30) return 90;
-                if (reps >= 25) return 85;
-                if (reps >= 20) return 80;
-                if (reps >= 15) return 75;
-                if (reps >= 10) return 70;
-                if (reps >= 5) return 65;
-                return 60;
-                
-            } else if (normalized.includes('sit-up') || normalized.includes('situp')) {
-                const reps = numericValue;
-                if (reps >= 50) return 100;
-                if (reps >= 45) return 95;
-                if (reps >= 40) return 90;
-                if (reps >= 35) return 85;
-                if (reps >= 30) return 80;
-                if (reps >= 25) return 75;
-                if (reps >= 20) return 70;
-                if (reps >= 15) return 65;
-                return 60;
-                
-            } else if (normalized.includes('plank')) {
-                let seconds = 0;
-                if (typeof result === 'string' && result.includes(':')) {
-                    const [mins, secs] = result.split(':').map(Number);
-                    seconds = (mins * 60) + (secs || 0);
-                } else {
-                    seconds = numericValue;
-                }
-                
-                if (seconds >= 180) return 100;   // 3 minutes
-                if (seconds >= 150) return 95;    // 2.5 minutes
-                if (seconds >= 120) return 90;    // 2 minutes
-                if (seconds >= 100) return 85;    // 1.66 minutes
-                if (seconds >= 80) return 80;     // 1.33 minutes
-                if (seconds >= 60) return 75;     // 1 minute
-                if (seconds >= 45) return 70;     // 45 seconds
-                if (seconds >= 30) return 65;     // 30 seconds
-                return 60;
-                
-            } else if (normalized.includes('step test') || normalized.includes('3-minute')) {
-                const heartRate = numericValue;
-                if (heartRate <= 70) return 100;   // Excellent
-                if (heartRate <= 80) return 95;    // Very Good
-                if (heartRate <= 90) return 90;    // Good
-                if (heartRate <= 100) return 85;   // Above Average
-                if (heartRate <= 110) return 80;   // Average
-                if (heartRate <= 120) return 75;   // Below Average
-                if (heartRate <= 130) return 70;   // Poor
-                return 65;                         // Very Poor
-                
-            } else if (normalized.includes('mile') || normalized.includes('run')) {
-                let totalSeconds = 0;
-                if (typeof result === 'string' && result.includes(':')) {
-                    const [minutes, seconds] = result.split(':').map(Number);
-                    totalSeconds = (minutes * 60) + (seconds || 0);
-                } else {
-                    totalSeconds = numericValue;
-                }
-                
-                if (totalSeconds <= 360) return 100;   // 6 minutes
-                if (totalSeconds <= 420) return 95;    // 7 minutes
-                if (totalSeconds <= 480) return 90;    // 8 minutes
-                if (totalSeconds <= 540) return 85;    // 9 minutes
-                if (totalSeconds <= 600) return 80;    // 10 minutes
-                if (totalSeconds <= 660) return 75;    // 11 minutes
-                if (totalSeconds <= 720) return 70;    // 12 minutes
-                if (totalSeconds <= 780) return 65;    // 13 minutes
-                return 60;
-                
-            } else if (normalized.includes('sit-and-reach')) {
-                const distance = numericValue;
-                if (distance >= 25) return 100;   // Excellent
-                if (distance >= 20) return 95;    // Very Good
-                if (distance >= 15) return 90;    // Good
-                if (distance >= 10) return 85;    // Above Average
-                if (distance >= 5) return 80;     // Average
-                if (distance >= 0) return 75;     // Below Average
-                if (distance >= -5) return 70;    // Poor
-                return 65;                        // Very Poor
-                
-            } else if (normalized.includes('grip')) {
-                const strength = numericValue;
-                if (strength >= 60) return 100;   // Excellent
-                if (strength >= 55) return 95;    // Very Good
-                if (strength >= 50) return 90;    // Good
-                if (strength >= 45) return 85;    // Above Average
-                if (strength >= 40) return 80;    // Average
-                if (strength >= 35) return 75;    // Below Average
-                if (strength >= 30) return 70;    // Poor
-                return 65;                        // Very Poor
-            }
-            
-            // Default score for unknown tests
-            console.log(`❓ Unknown test type: ${testName}, using default score`);
-            return 75;
+       function calculateTestScore(testName, result, testTarget = null) {
+    const normalized = testName.toLowerCase().trim();
+    
+    // Extract numeric value from result
+    let numericValue = 0;
+    
+    if (typeof result === 'object' && result !== null) {
+        numericValue = result.repetitions || result.time || result.distance || result.value || result.score || 0;
+    } else if (typeof result === 'string') {
+        const match = result.match(/(\d+\.?\d*)/);
+        if (match) {
+            numericValue = parseFloat(match[1]);
+        } else {
+            numericValue = parseFloat(result) || 0;
         }
+    } else {
+        numericValue = parseFloat(result) || 0;
+    }
+    
+    console.log(`🔢 Score Calculation: ${testName} → Value: ${numericValue}, Target: ${testTarget}`);
+    
+    // Use test target if available for more accurate scoring
+    if (testTarget && testTarget > 0) {
+        if (normalized.includes('push-up') || normalized.includes('pushup') || 
+            normalized.includes('sit-up') || normalized.includes('situp') ||
+            normalized.includes('curl-up') || normalized.includes('curl up')) {
+            const percentage = (numericValue / testTarget) * 100;
+            let score = Math.min(100, Math.max(50, percentage));
+            
+            if (percentage >= 100) score = 100;
+            else if (percentage >= 90) score = 95;
+            else if (percentage >= 80) score = 90;
+            else if (percentage >= 70) score = 85;
+            else if (percentage >= 60) score = 80;
+            else if (percentage >= 50) score = 75;
+            
+            console.log(`💪 Strength Test: ${numericValue}/${testTarget} reps → ${score}%`);
+            return Math.round(score);
+        } else if (normalized.includes('bmi')) {
+            const bmi = numericValue;
+            if (bmi >= 18.5 && bmi <= 24.9) return 100;
+            if (bmi >= 17.0 && bmi < 18.5) return 85;
+            if (bmi >= 25.0 && bmi < 27.0) return 85;
+            if (bmi >= 16.0 && bmi < 17.0) return 70;
+            if (bmi >= 27.0 && bmi < 30.0) return 70;
+            if (bmi >= 15.0 && bmi < 16.0) return 60;
+            if (bmi >= 30.0 && bmi < 35.0) return 60;
+            return 50;
+        } else if (normalized.includes('plank')) {
+            let seconds = 0;
+            if (typeof result === 'string' && result.includes(':')) {
+                const [mins, secs] = result.split(':').map(Number);
+                seconds = (mins * 60) + (secs || 0);
+            } else {
+                seconds = numericValue;
+            }
+            
+            const percentage = (seconds / testTarget) * 100;
+            let score = Math.min(100, Math.max(50, percentage));
+            
+            if (percentage >= 100) score = 100;
+            else if (percentage >= 90) score = 95;
+            else if (percentage >= 80) score = 90;
+            else if (percentage >= 70) score = 85;
+            else if (percentage >= 60) score = 80;
+            else if (percentage >= 50) score = 75;
+            
+            console.log(`⏱️ Plank Test: ${seconds}s/${testTarget}s → ${score}%`);
+            return Math.round(score);
+        } else if (normalized.includes('sit-and-reach')) {
+            const distance = numericValue;
+            const percentage = (distance / testTarget) * 100;
+            let score = Math.min(100, Math.max(50, percentage));
+            
+            if (percentage >= 100) score = 100;
+            else if (percentage >= 90) score = 95;
+            else if (percentage >= 80) score = 90;
+            else if (percentage >= 70) score = 85;
+            else if (percentage >= 60) score = 80;
+            else if (percentage >= 50) score = 75;
+            
+            console.log(`📏 Flexibility Test: ${distance}cm/${testTarget}cm → ${score}%`);
+            return Math.round(score);
+        } else if (normalized.includes('grip')) {
+            const strength = numericValue;
+            const percentage = (strength / testTarget) * 100;
+            let score = Math.min(100, Math.max(50, percentage));
+            
+            if (percentage >= 100) score = 100;
+            else if (percentage >= 90) score = 95;
+            else if (percentage >= 80) score = 90;
+            else if (percentage >= 70) score = 85;
+            else if (percentage >= 60) score = 80;
+            else if (percentage >= 50) score = 75;
+            
+            console.log(`💪 Grip Test: ${strength}kg/${testTarget}kg → ${score}%`);
+            return Math.round(score);
+        } else if (normalized.includes('mile') || normalized.includes('run')) {
+            let totalSeconds = 0;
+            if (typeof result === 'string' && result.includes(':')) {
+                const [minutes, seconds] = result.split(':').map(Number);
+                totalSeconds = (minutes * 60) + (seconds || 0);
+            } else {
+                totalSeconds = numericValue;
+            }
+            
+            // Lower time is better
+            const percentage = (testTarget / totalSeconds) * 100;
+            let score = Math.min(100, Math.max(50, percentage));
+            
+            if (percentage >= 100) score = 100;
+            else if (percentage >= 90) score = 95;
+            else if (percentage >= 80) score = 90;
+            else if (percentage >= 70) score = 85;
+            else if (percentage >= 60) score = 80;
+            else if (percentage >= 50) score = 75;
+            
+            return Math.round(score);
+        } else if (normalized.includes('step test') || normalized.includes('3-minute')) {
+            // Lower heart rate is better
+            const percentage = (testTarget / numericValue) * 100;
+            let score = Math.min(100, Math.max(50, percentage));
+            
+            if (percentage >= 100) score = 100;
+            else if (percentage >= 90) score = 95;
+            else if (percentage >= 80) score = 90;
+            else if (percentage >= 70) score = 85;
+            else if (percentage >= 60) score = 80;
+            else if (percentage >= 50) score = 75;
+            
+            return Math.round(score);
+        }
+    }
+    
+    // Fallback scoring without target
+    if (normalized.includes('push-up') || normalized.includes('pushup')) {
+        if (numericValue >= 40) return 100;
+        if (numericValue >= 35) return 95;
+        if (numericValue >= 30) return 90;
+        if (numericValue >= 25) return 85;
+        if (numericValue >= 20) return 80;
+        if (numericValue >= 15) return 75;
+        return 70;
+    } else if (normalized.includes('curl-up') || normalized.includes('curl up')) {
+        if (numericValue >= 75) return 100;
+        if (numericValue >= 60) return 95;
+        if (numericValue >= 50) return 90;
+        if (numericValue >= 40) return 85;
+        if (numericValue >= 30) return 80;
+        return 75;
+    } else if (normalized.includes('plank')) {
+        let seconds = 0;
+        if (typeof result === 'string' && result.includes(':')) {
+            const [mins, secs] = result.split(':').map(Number);
+            seconds = (mins * 60) + (secs || 0);
+        } else {
+            seconds = numericValue;
+        }
+        
+        if (seconds >= 180) return 100;
+        if (seconds >= 150) return 95;
+        if (seconds >= 120) return 90;
+        if (seconds >= 100) return 85;
+        if (seconds >= 80) return 80;
+        if (seconds >= 60) return 75;
+        return 70;
+    } else if (normalized.includes('sit-and-reach')) {
+        if (numericValue >= 25) return 100;
+        if (numericValue >= 20) return 95;
+        if (numericValue >= 15) return 90;
+        if (numericValue >= 10) return 85;
+        if (numericValue >= 5) return 80;
+        return 75;
+    } else if (normalized.includes('grip')) {
+        if (numericValue >= 60) return 100;
+        if (numericValue >= 55) return 95;
+        if (numericValue >= 50) return 90;
+        if (numericValue >= 45) return 85;
+        if (numericValue >= 40) return 80;
+        return 75;
+    }
+    
+    console.log(`❓ Unknown test type: ${testName}, using default score of 75`);
+    return 75;
+}
 
         // Get rating
         function getRating(score) {
@@ -2306,8 +2422,9 @@
 
         // Start test
         function startTest(testId) {
-            alert('Starting test: ' + testId);
-        }
+    // Redirect to test details page
+    window.location.href = `./testdetails.html?testId=${testId}`;
+}
 
         // View test details
         function viewTestDetails(testId) {
@@ -2356,9 +2473,10 @@
                     }
                     
                     await loadStudentData(user);
-                    initializeCharts();
+                    initializeCharts(); // Initialize charts first
                     await loadTestHistory();
                     await updatePerformanceSummary();
+                    await updateChartsWithRealData(); // Then populate with real data
                     await loadUpcomingTests();
                     
                     loadingScreen.classList.add('hidden');

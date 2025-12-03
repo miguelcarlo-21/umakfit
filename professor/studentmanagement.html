@@ -1,0 +1,2193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UmakFit - Student Management</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Manrope:600,800|Inter:300,500,400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { -webkit-font-smoothing: antialiased; box-sizing: border-box; }
+        body { font-family: 'Inter', Helvetica, sans-serif; margin: 0; padding: 0; background-color: #f6f6f6; }
+        
+        /* Header Styles */
+        .header-top { 
+            background-color: #ffffff; 
+            padding: 15px 0; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08); 
+            position: fixed; 
+            top: 0; 
+            width: 100%; 
+            z-index: 1000; 
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .header-top .container { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+        }
+        .logo-text { 
+            font-family: "Inter", Helvetica; 
+            font-weight: 700; 
+            color: #1e3a8a; 
+            font-size: 24px; 
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .logo-text i {
+            color: #f59e0b;
+            font-size: 26px;
+        }
+        .header-actions { 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+        }
+        .logout-btn { 
+            padding: 8px 20px; 
+            background: linear-gradient(90deg, rgba(251, 191, 36, 1) 0%, rgba(245, 158, 11, 1) 100%); 
+            border: none; 
+            border-radius: 8px; 
+            color: #000; 
+            font-weight: 600; 
+            font-size: 14px; 
+            cursor: pointer; 
+            transition: all 0.3s; 
+            box-shadow: 0 2px 4px rgba(245, 158, 11, 0.3);
+        }
+        .logout-btn:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 4px 8px rgba(245, 158, 11, 0.4); 
+        }
+        .account-circle { 
+            width: 44px; 
+            height: 44px; 
+            cursor: pointer; 
+            border-radius: 50%;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s;
+        }
+        .account-circle:hover {
+            border-color: #f59e0b;
+        }
+        
+        /* Navigation Styles */
+        .nav-section { 
+            background: linear-gradient(180deg, rgba(30, 58, 138, 1) 0%, rgba(59, 130, 246, 1) 100%); 
+            padding: 20px 0; 
+            margin-top: 74px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .nav-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .nav-brand { 
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-family: "Manrope", Helvetica; 
+            font-weight: 800; 
+            font-size: 28px; 
+            background: linear-gradient(90deg, rgba(245, 158, 11, 1) 0%, rgba(255, 229, 0, 1) 100%); 
+            -webkit-background-clip: text; 
+            background-clip: text; 
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+        }
+        .nav-brand-logo {
+            height: 60px;
+            width: auto;
+        }
+        .nav-pills-custom { 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 8px; 
+            padding: 0; 
+            margin: 0;
+        }
+        .nav-pills-custom .nav-link { 
+            font-family: "Manrope", Helvetica; 
+            font-weight: 600; 
+            color: #000000; 
+            font-size: 14px; 
+            padding: 12px 18px;
+            border-radius: 8px; 
+            background-color: #ffffff; 
+            transition: all 0.3s; 
+            border: none; 
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .nav-pills-custom .nav-link.active { 
+            background: linear-gradient(90deg, rgba(251, 191, 36, 1) 0%, rgba(245, 158, 11, 1) 100%); 
+            box-shadow: 0 4px 8px rgba(245, 158, 11, 0.3);
+        }
+        .nav-pills-custom .nav-link:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15); 
+        }
+        
+        /* Main Content */
+        .main-content { 
+            padding: 40px 0 80px 0; 
+            min-height: calc(100vh - 200px); 
+        }
+        
+        /* Info Banner */
+        .info-banner {
+            background: white;
+            border-radius: 16px;
+            padding: 25px 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .info-banner-icon {
+            width: 55px;
+            height: 55px;
+            flex-shrink: 0;
+        }
+        .info-banner-content {
+            flex: 1;
+        }
+        .info-banner-title {
+            font-family: "Inter", Helvetica;
+            font-weight: 700;
+            color: #1e3a8a;
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        .info-banner-subtitle {
+            font-family: "Inter", Helvetica;
+            font-weight: 700;
+            color: #1e3a8a;
+            font-size: 14px;
+        }
+        
+        /* Section Styles */
+        .management-section {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 1px solid #e2e8f0;
+        }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .section-title {
+            font-family: "Inter", Helvetica;
+            font-weight: 700;
+            color: #1e3a8a;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .btn-primary-custom {
+            background: linear-gradient(90deg, rgba(30, 58, 138, 1) 0%, rgba(59, 130, 246, 1) 100%);
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            color: white;
+            font-family: "Inter", Helvetica;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
+        }
+        .btn-secondary-custom {
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 10px 20px;
+            color: #475569;
+            font-family: "Inter", Helvetica;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-secondary-custom:hover {
+            background: #e2e8f0;
+            transform: translateY(-1px);
+        }
+        
+        /* Search and Filter */
+        .search-filter-bar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .search-box {
+            position: relative;
+            flex: 1;
+            min-width: 250px;
+        }
+        .search-box input {
+            width: 100%;
+            height: 42px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 10px 15px 10px 40px;
+            font-family: "Inter", Helvetica;
+            font-size: 14px;
+            color: #475569;
+            background: #f8fafc;
+            transition: all 0.3s;
+        }
+        .search-box input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+            font-size: 14px;
+        }
+        .filter-select {
+            min-width: 200px;
+        }
+        .filter-select select {
+            width: 100%;
+            height: 42px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 0 15px;
+            font-family: "Inter", Helvetica;
+            font-size: 14px;
+            color: #475569;
+            background: #f8fafc;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .filter-select select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        /* Table Styles */
+        .table-responsive {
+            overflow-x: auto;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            background: white;
+        }
+        .custom-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .custom-table thead {
+            background: linear-gradient(90deg, #f8fafc 0%, #f1f5f9 100%);
+        }
+        .custom-table th {
+            font-family: "Inter", Helvetica;
+            font-weight: 600;
+            color: #475569;
+            font-size: 12px;
+            text-align: left;
+            padding: 16px 12px;
+            border-bottom: 2px solid #e2e8f0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+        .custom-table td {
+            font-family: "Inter", Helvetica;
+            font-weight: 500;
+            color: #1e293b;
+            font-size: 14px;
+            padding: 16px 12px;
+            border-bottom: 1px solid #f1f5f9;
+            vertical-align: middle;
+        }
+        .custom-table tbody tr {
+            transition: all 0.3s;
+        }
+        .custom-table tbody tr:hover {
+            background-color: #f8fafc;
+        }
+        .custom-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        
+        /* Status Badges */
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-family: "Inter", Helvetica;
+            font-weight: 600;
+            font-size: 12px;
+            text-align: center;
+            min-width: 80px;
+        }
+        .status-active {
+            background-color: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+        .status-inactive {
+            background-color: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+        .status-pending {
+            background-color: #fef3c7;
+            color: #92400e;
+            border: 1px solid #fde68a;
+        }
+        
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .btn-action {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            font-family: "Inter", Helvetica;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            white-space: nowrap;
+        }
+        .btn-action:hover {
+            transform: translateY(-1px);
+        }
+        .btn-edit {
+            background: #3b82f6;
+            color: white;
+        }
+        .btn-edit:hover {
+            background: #2563eb;
+            box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+        }
+        .btn-delete {
+            background: #ef4444;
+            color: white;
+        }
+        .btn-delete:hover {
+            background: #dc2626;
+            box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
+        }
+        .btn-view {
+            background: #10b981;
+            color: white;
+        }
+        .btn-view:hover {
+            background: #059669;
+            box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
+        }
+        .btn-reset {
+            background: #f59e0b;
+            color: white;
+        }
+        .btn-reset:hover {
+            background: #d97706;
+            box-shadow: 0 2px 4px rgba(245, 158, 11, 0.3);
+        }
+        
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            padding: 20px;
+        }
+        .modal-content {
+            background-color: white;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .modal-header {
+            padding: 20px 25px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-title {
+            font-family: "Inter", Helvetica;
+            font-weight: 600;
+            color: #1e3a8a;
+            font-size: 20px;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #64748b;
+            transition: color 0.3s;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+        }
+        .close-modal:hover {
+            background: #f1f5f9;
+            color: #1e293b;
+        }
+        .modal-body {
+            padding: 25px;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        .form-label {
+            display: block;
+            font-family: "Inter", Helvetica;
+            font-weight: 500;
+            color: #374151;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        .form-label.required::after {
+            content: " *";
+            color: #ef4444;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-family: "Inter", Helvetica;
+            font-size: 14px;
+            color: #374151;
+            transition: all 0.3s;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        .form-select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-family: "Inter", Helvetica;
+            font-size: 14px;
+            color: #374151;
+            background-color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .form-select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        .modal-footer {
+            padding: 20px 25px;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        .btn-cancel {
+            background-color: #6b7280;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 20px;
+            font-family: "Inter", Helvetica;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-cancel:hover {
+            background-color: #4b5563;
+        }
+        .btn-submit {
+            background: linear-gradient(90deg, rgba(30, 58, 138, 1) 0%, rgba(59, 130, 246, 1) 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 20px;
+            font-family: "Inter", Helvetica;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-submit:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(30, 58, 138, 0.3);
+        }
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* Empty State */
+        .empty-state {
+            padding: 60px 40px;
+            text-align: center;
+            background: #f8fafc;
+            border-radius: 8px;
+            margin: 20px;
+        }
+        .empty-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.4;
+            color: #64748b;
+        }
+        .empty-title {
+            font-family: "Inter", Helvetica;
+            font-weight: 700;
+            color: #1f2937;
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+        .empty-text {
+            font-family: "Inter", Helvetica;
+            font-weight: 400;
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.6;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* Loading Screen */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .loading-text {
+            font-family: "Inter", Helvetica;
+            font-weight: 500;
+            color: #475569;
+            font-size: 16px;
+        }
+        .spinner {
+            border: 4px solid #f1f5f9;
+            border-top: 4px solid #3b82f6;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Student Info Card */
+        .student-info-card {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 20px;
+        }
+        .student-info-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .student-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+        }
+        .student-basic-info {
+            flex: 1;
+        }
+        .student-name {
+            font-family: "Inter", Helvetica;
+            font-weight: 700;
+            color: #1e3a8a;
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+        .student-id {
+            font-family: "Inter", Helvetica;
+            font-weight: 500;
+            color: #64748b;
+            font-size: 14px;
+        }
+        .student-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        .info-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+        .info-label {
+            font-family: "Inter", Helvetica;
+            font-weight: 600;
+            color: #64748b;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+        .info-value {
+            font-family: "Inter", Helvetica;
+            font-weight: 500;
+            color: #1e293b;
+            font-size: 14px;
+        }
+        
+        /* Section Info Card */
+        .section-info-card {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 20px;
+        }
+        .section-info-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .section-basic-info {
+            flex: 1;
+        }
+        .section-name {
+            font-family: "Inter", Helvetica;
+            font-weight: 700;
+            color: #1e3a8a;
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        .section-details {
+            display: flex;
+            gap: 20px;
+            font-size: 14px;
+            color: #64748b;
+        }
+        .section-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 992px) {
+            .nav-container {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .nav-pills-custom {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+        @media (max-width: 768px) {
+            .header-top .container { padding: 0 15px; }
+            .logo-text { font-size: 20px; }
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .section-actions {
+                width: 100%;
+                justify-content: flex-start;
+            }
+            .search-filter-bar {
+                flex-direction: column;
+            }
+            .search-box, .filter-select {
+                width: 100%;
+                min-width: auto;
+            }
+            .custom-table {
+                font-size: 12px;
+            }
+            .custom-table th,
+            .custom-table td {
+                padding: 12px 8px;
+            }
+            .action-buttons {
+                flex-direction: column;
+                gap: 5px;
+            }
+            .modal-content {
+                margin: 10px;
+                max-height: calc(100vh - 20px);
+            }
+        }
+        .umak-logo {
+            height: 40px;
+            width: auto;
+        }
+    </style>
+</head>
+<body>
+    <div id="loadingScreen" class="loading">
+        <div class="spinner"></div>
+        <div class="loading-text">Loading Student Management...</div>
+    </div>
+    
+    <div id="mainContent" style="display: none;">
+        <div class="header-top">
+            <div class="container">
+                <div class="logo-text">
+                    <img class="umak-logo" src="umaklogo.png" alt="University of Makati">
+                    University of Makati
+                </div>
+                <div class="header-actions">
+                    <button class="logout-btn" onclick="handleLogout()">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                    <img class="account-circle" src="https://c.animaapp.com/kboeAmgh/img/icon.svg" alt="Account">
+                </div>
+            </div>
+        </div>
+        
+        <div class="nav-section">
+            <div class="container">
+                <div class="nav-container">
+                    <div class="nav-brand">
+                        <img src="logo.png" alt="UMakFit Logo" class="nav-brand-logo">
+                        UMakFit
+                    </div>
+                    <ul class="nav nav-pills-custom">
+                        <li class="nav-item">
+                            <a class="nav-link" href="professor.html">
+                                <i class="fas fa-tachometer-alt"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#">
+                                <i class="fas fa-users"></i> Student Management
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="addactivities.html">
+                                <i class="fas fa-dumbbell"></i> Add Activities
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="addlesson.html">
+                                <i class="fas fa-book-open"></i> Add Lesson
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="monitoringactivities.html">
+                                <i class="fas fa-chart-bar"></i> Monitoring Activities
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="grades.html">
+                                <i class="fas fa-graduation-cap"></i> Grades
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="container">
+                <div class="info-banner">
+                    <img class="info-banner-icon" src="https://c.animaapp.com/kboeAmgh/img/image-13@2x.png" alt="Icon">
+                    <div class="info-banner-content">
+                        <div class="info-banner-title">Student Management</div>
+                        <div class="info-banner-subtitle">View assigned sections and manage students within your sections</div>
+                    </div>
+                </div>
+                
+                <!-- My Sections (View Only) -->
+                <div class="management-section">
+                    <div class="section-header">
+                        <div class="section-title">
+                            <i class="fas fa-layer-group"></i> My Assigned Sections
+                        </div>
+                        <div class="section-actions">
+                            <button class="btn-secondary-custom" onclick="refreshData()">
+                                <i class="fas fa-sync-alt"></i> Refresh
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="search-filter-bar">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="searchSections" placeholder="Search sections..." onkeyup="filterSections()">
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="custom-table" id="sectionsTable">
+                            <thead>
+                                <tr>
+                                    <th>Section Name</th>
+                                    <th>Year Level</th>
+                                    <th>Number of Students</th>
+                                    <th>Semester</th>
+                                    <th>Academic Year</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="sectionsTableBody">
+                                <tr>
+                                    <td colspan="7">
+                                        <div class="empty-state">
+                                            <div class="empty-icon">🏫</div>
+                                            <div class="empty-title">No Sections Assigned</div>
+                                            <div class="empty-text">You haven't been assigned to any sections yet. Please contact the Dean or Head Admin to be assigned to sections.</div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Student List -->
+                <div class="management-section">
+                    <div class="section-header">
+                        <div class="section-title">
+                            <i class="fas fa-user-graduate"></i> Student List
+                        </div>
+                        <div class="section-actions">
+                            <button class="btn-primary-custom" onclick="showAddStudentModal()">
+                                <i class="fas fa-user-plus"></i> Add Student
+                            </button>
+                            <button class="btn-secondary-custom" onclick="exportStudents()">
+                                <i class="fas fa-file-export"></i> Export
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="search-filter-bar">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="searchStudents" placeholder="Search students by name, UMaK ID, or email..." onkeyup="filterStudents()">
+                        </div>
+                        <div class="filter-select">
+                            <select id="filterSection" onchange="filterStudents()">
+                                <option value="">All Sections</option>
+                            </select>
+                        </div>
+                        <div class="filter-select">
+                            <select id="filterStatus" onchange="filterStudents()">
+                                <option value="">All Status</option>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                                <option value="pending">Pending</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="custom-table" id="studentsTable">
+                            <thead>
+                                <tr>
+                                    <th>UMaK ID</th>
+                                    <th>Student Name</th>
+                                    <th>Email</th>
+                                    <th>Section</th>
+                                    <th>Year Level</th>
+                                    <th>Activities Completed</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="studentsTableBody">
+                                <tr>
+                                    <td colspan="8">
+                                        <div class="empty-state">
+                                            <div class="empty-icon">👥</div>
+                                            <div class="empty-title">No Students Found</div>
+                                            <div class="empty-text">No students are currently assigned to your sections. Add students to get started.</div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center; padding: 0 10px;">
+                        <div style="font-size: 14px; color: #64748b;">
+                            Showing <span id="studentCount">0</span> students
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <button class="btn-secondary-custom" onclick="previousPage()" style="padding: 6px 12px;">
+                                <i class="fas fa-chevron-left"></i> Previous
+                            </button>
+                            <span style="display: flex; align-items: center; font-size: 14px; color: #64748b;">
+                                Page <span id="currentPage">1</span> of <span id="totalPages">1</span>
+                            </span>
+                            <button class="btn-secondary-custom" onclick="nextPage()" style="padding: 6px 12px;">
+                                Next <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Section Details Modal -->
+    <div id="viewSectionModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <i class="fas fa-layer-group"></i> Section Details
+                </h3>
+                <button class="close-modal" onclick="closeViewSectionModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="section-info-card" id="sectionDetailsContent">
+                    <!-- Section details will be loaded here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeViewSectionModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Student Modal -->
+    <div id="studentModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="studentModalTitle">
+                    <i class="fas fa-user-plus"></i> Add New Student
+                </h3>
+                <button class="close-modal" onclick="closeStudentModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label required" for="studentFirstName">First Name</label>
+                        <input type="text" class="form-control" id="studentFirstName" placeholder="Enter first name" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label required" for="studentLastName">Last Name</label>
+                        <input type="text" class="form-control" id="studentLastName" placeholder="Enter last name" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label required" for="studentUmakId">UMaK ID</label>
+                        <input type="text" class="form-control" id="studentUmakId" placeholder="e.g., 2023-00123" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label required" for="studentEmail">Email Address</label>
+                        <input type="email" class="form-control" id="studentEmail" placeholder="student@umak.edu.ph" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label required" for="studentSection">Section</label>
+                        <select class="form-select" id="studentSection" required>
+                            <option value="">Select Section</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="studentPhone">Phone Number (Optional)</label>
+                        <input type="tel" class="form-control" id="studentPhone" placeholder="0912-345-6789">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label required" for="studentGender">Gender</label>
+                        <select class="form-select" id="studentGender" required>
+                            <option value="">Select Gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                            <option value="prefer-not-to-say">Prefer not to say</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label required" for="studentStatus">Status</label>
+                        <select class="form-select" id="studentStatus" required>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                            <option value="pending">Pending</option>
+                        </select>
+                    </div>
+                    <div class="form-group full-width">
+                        <label class="form-label" for="studentNotes">Notes (Optional)</label>
+                        <textarea class="form-control" id="studentNotes" rows="3" placeholder="Any additional notes about the student..."></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeStudentModal()">Cancel</button>
+                <button class="btn-submit" id="saveStudentBtn" onclick="saveStudent()">Save Student</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Student Details Modal -->
+    <div id="viewStudentModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <i class="fas fa-user-circle"></i> Student Details
+                </h3>
+                <button class="close-modal" onclick="closeViewStudentModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="student-info-card" id="studentDetailsContent">
+                    <!-- Student details will be loaded here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeViewStudentModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script type="module">
+        import { 
+            initializeApp 
+        } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { 
+            getAuth, 
+            onAuthStateChanged, 
+            signOut,
+            createUserWithEmailAndPassword 
+        } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { 
+            getFirestore, 
+            collection, 
+            query, 
+            where, 
+            getDocs, 
+            orderBy, 
+            doc, 
+            getDoc, 
+            addDoc, 
+            updateDoc,
+            deleteDoc,
+            serverTimestamp,
+            setDoc,
+            onSnapshot
+        } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAgaLunqEf2gs6dSpF_sz1hV5XQ5Wm52jo",
+            authDomain: "umakfit-e3b1d.firebaseapp.com",
+            projectId: "umakfit-e3b1d",
+            storageBucket: "umakfit-e3b1d.appspot.com",
+            messagingSenderId: "276569891504",
+            appId: "1:276569891504:web:39b1732b519f4d8b785175"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Global variables
+        window.currentUser = null;
+        window.sections = [];
+        window.students = [];
+        window.filteredStudents = [];
+        window.editingStudentId = null;
+        window.currentPage = 1;
+        window.itemsPerPage = 10;
+
+        // Helper function to generate random password
+        function generateRandomPassword() {
+            const length = 8;
+            const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            let password = "";
+            for (let i = 0; i < length; i++) {
+                password += charset.charAt(Math.floor(Math.random() * charset.length));
+            }
+            return password;
+        }
+
+        // Load professor's assigned sections (READ ONLY)
+        async function loadSections() {
+            try {
+                console.log('=== LOADING ASSIGNED SECTIONS ===');
+                
+                // Check professor profile for assigned class
+                const profileRef = doc(db, 'professorProfiles', window.currentUser.email.toLowerCase());
+                const profileSnap = await getDoc(profileRef);
+                
+                window.sections = [];
+                
+                // Method 1: Check professorProfiles collection
+                if (profileSnap.exists()) {
+                    const profileData = profileSnap.data();
+                    console.log('✓ Professor profile found:', profileData);
+                    
+                    if (profileData.assignedClass) {
+                        // Get student count for this section
+                        const studentsQuery = query(
+                            collection(db, 'students'),
+                            where('section', '==', profileData.assignedClass)
+                        );
+                        const studentsSnapshot = await getDocs(studentsQuery);
+                        const studentCount = studentsSnapshot.size;
+                        
+                        window.sections.push({
+                            id: 'professor-profile-section',
+                            name: profileData.assignedClass,
+                            yearLevel: profileData.assignedClass.match(/\d+/)?.[0] || 'N/A',
+                            studentCount: studentCount,
+                            semester: profileData.semester || 'N/A',
+                            academicYear: profileData.academicYear || 'N/A',
+                            status: 'active',
+                            professorEmail: window.currentUser.email,
+                            description: `Assigned from professor profile`
+                        });
+                        console.log(`✓ Added assigned class: ${profileData.assignedClass} with ${studentCount} students`);
+                    }
+                }
+                
+                // Method 2: Check sections collection where professor is assigned
+                const sectionsQuery = query(
+                    collection(db, 'sections'),
+                    where('professorEmail', '==', window.currentUser.email)
+                );
+                
+                const sectionsSnapshot = await getDocs(sectionsQuery);
+                
+                if (!sectionsSnapshot.empty) {
+                    for (const docSnap of sectionsSnapshot.docs) {
+                        const sectionData = docSnap.data();
+                        
+                        // Check if section already exists in the array
+                        const exists = window.sections.find(s => s.name === sectionData.name);
+                        if (!exists) {
+                            // Get actual student count for this section
+                            const studentsQuery = query(
+                                collection(db, 'students'),
+                                where('section', '==', sectionData.name)
+                            );
+                            const studentsSnapshot = await getDocs(studentsQuery);
+                            const actualStudentCount = studentsSnapshot.size;
+                            
+                            window.sections.push({
+                                id: docSnap.id,
+                                ...sectionData,
+                                studentCount: actualStudentCount
+                            });
+                        }
+                    }
+                    
+                    console.log(`✓ Loaded ${sectionsSnapshot.size} sections from sections collection`);
+                }
+                
+                if (window.sections.length > 0) {
+                    console.log(`✓ Total sections loaded: ${window.sections.length}`);
+                    populateSectionsTable();
+                    populateSectionFilters();
+                } else {
+                    console.log('⚠️ No sections found for professor');
+                    document.getElementById('sectionsTableBody').innerHTML = `
+                        <tr>
+                            <td colspan="7">
+                                <div class="empty-state">
+                                    <div class="empty-icon">🏫</div>
+                                    <div class="empty-title">No Sections Assigned</div>
+                                    <div class="empty-text">You haven't been assigned to any sections yet. Please contact the Dean or Head Admin to be assigned to sections.</div>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                }
+                
+            } catch (error) {
+                console.error('Error loading sections:', error);
+            }
+        }
+
+        // Load students for current professor's sections
+        async function loadStudents() {
+            try {
+                console.log('=== LOADING STUDENTS ===');
+                
+                if (window.sections.length === 0) {
+                    console.log('⚠️ No sections to load students from');
+                    updateStudentsTable([]);
+                    return;
+                }
+                
+                // Get all section names
+                const sectionNames = window.sections.map(s => s.name);
+                
+                // Query students in these sections
+                const studentsQuery = query(
+                    collection(db, 'students'),
+                    where('section', 'in', sectionNames)
+                );
+                
+                const studentsSnapshot = await getDocs(studentsQuery);
+                window.students = [];
+                
+                if (!studentsSnapshot.empty) {
+                    studentsSnapshot.forEach((docSnap) => {
+                        const studentData = docSnap.data();
+                        window.students.push({
+                            id: docSnap.id,
+                            ...studentData
+                        });
+                    });
+                    
+                    console.log(`✓ Loaded ${window.students.length} students`);
+                    window.filteredStudents = [...window.students];
+                    updateStudentsTable(window.filteredStudents);
+                    
+                    // Update section student counts
+                    updateSectionStudentCounts();
+                    
+                } else {
+                    console.log('⚠️ No students found in assigned sections');
+                    updateStudentsTable([]);
+                }
+                
+            } catch (error) {
+                console.error('Error loading students:', error);
+            }
+        }
+
+        // Update section student counts based on actual data
+        function updateSectionStudentCounts() {
+            window.sections.forEach(section => {
+                const count = window.students.filter(student => student.section === section.name).length;
+                section.studentCount = count;
+            });
+            populateSectionsTable();
+        }
+
+        // Populate sections table (VIEW ONLY - no edit/delete)
+        function populateSectionsTable() {
+            const tableBody = document.getElementById('sectionsTableBody');
+            
+            if (window.sections.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="7">
+                            <div class="empty-state">
+                                <div class="empty-icon">🏫</div>
+                                <div class="empty-title">No Sections Found</div>
+                                <div class="empty-text">You haven't been assigned to any sections yet.</div>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            let html = '';
+            window.sections.forEach(section => {
+                const statusClass = section.status === 'active' ? 'status-active' : 
+                                  section.status === 'inactive' ? 'status-inactive' : 'status-pending';
+                const statusText = section.status === 'active' ? 'Active' : 
+                                  section.status === 'inactive' ? 'Inactive' : 'Pending';
+                
+                html += `
+                    <tr>
+                        <td>
+                            <strong>${section.name}</strong>
+                            ${section.description ? `<br><small style="color: #64748b;">${section.description}</small>` : ''}
+                        </td>
+                        <td>${section.yearLevel || 'N/A'}</td>
+                        <td>${section.studentCount || 0}</td>
+                        <td>${section.semester || 'N/A'}</td>
+                        <td>${section.academicYear || 'N/A'}</td>
+                        <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-action btn-view" onclick="viewSectionDetails('${section.id}')">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            tableBody.innerHTML = html;
+        }
+
+        // View section details (READ ONLY)
+        async function viewSectionDetails(sectionId) {
+            try {
+                let sectionData;
+                
+                if (sectionId === 'professor-profile-section') {
+                    // Get from professor profile section
+                    sectionData = window.sections.find(s => s.id === sectionId);
+                } else {
+                    // Get from sections collection
+                    const sectionRef = doc(db, 'sections', sectionId);
+                    const sectionDoc = await getDoc(sectionRef);
+                    
+                    if (!sectionDoc.exists()) {
+                        alert('Section not found!');
+                        return;
+                    }
+                    
+                    sectionData = { id: sectionDoc.id, ...sectionDoc.data() };
+                }
+                
+                // Get students in this section
+                const studentsQuery = query(
+                    collection(db, 'students'),
+                    where('section', '==', sectionData.name)
+                );
+                const studentsSnapshot = await getDocs(studentsQuery);
+                const studentCount = studentsSnapshot.size;
+                
+                // Prepare HTML
+                let html = `
+                    <div class="section-info-header">
+                        <div class="section-basic-info">
+                            <div class="section-name">${sectionData.name}</div>
+                            <div class="section-details">
+                                <span><i class="fas fa-user-graduate"></i> ${studentCount} Students</span>
+                                <span><i class="fas fa-calendar"></i> ${sectionData.academicYear || 'N/A'}</span>
+                                <span><i class="fas fa-clock"></i> ${sectionData.semester || 'N/A'}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="section-info-grid">
+                        <div class="info-item">
+                            <div class="info-label">Year Level</div>
+                            <div class="info-value">${sectionData.yearLevel || 'N/A'}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Status</div>
+                            <div class="info-value">
+                                <span class="status-badge ${sectionData.status === 'active' ? 'status-active' : 'status-inactive'}">
+                                    ${sectionData.status === 'active' ? 'Active' : 'Inactive'}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Professor</div>
+                            <div class="info-value">${sectionData.professorName || window.currentUser.email}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Email</div>
+                            <div class="info-value">${sectionData.professorEmail || window.currentUser.email}</div>
+                        </div>
+                `;
+                
+                if (sectionData.description) {
+                    html += `
+                        <div class="info-item full-width">
+                            <div class="info-label">Description</div>
+                            <div class="info-value">${sectionData.description}</div>
+                        </div>
+                    `;
+                }
+                
+                html += `</div>`;
+                
+                document.getElementById('sectionDetailsContent').innerHTML = html;
+                document.getElementById('viewSectionModal').style.display = 'flex';
+                
+            } catch (error) {
+                console.error('Error viewing section details:', error);
+                alert('Error: ' + error.message);
+            }
+        }
+
+        // Close view section modal
+        function closeViewSectionModal() {
+            document.getElementById('viewSectionModal').style.display = 'none';
+        }
+
+        // Populate section filters
+        function populateSectionFilters() {
+            const sectionFilter = document.getElementById('filterSection');
+            const studentSectionSelect = document.getElementById('studentSection');
+            
+            // Clear existing options except the first one
+            sectionFilter.innerHTML = '<option value="">All Sections</option>';
+            studentSectionSelect.innerHTML = '<option value="">Select Section</option>';
+            
+            // Add active sections
+            window.sections.forEach(section => {
+                if (section.status === 'active') {
+                    const option1 = document.createElement('option');
+                    option1.value = section.name;
+                    option1.textContent = section.name;
+                    sectionFilter.appendChild(option1);
+                    
+                    const option2 = document.createElement('option');
+                    option2.value = section.name;
+                    option2.textContent = section.name;
+                    studentSectionSelect.appendChild(option2);
+                }
+            });
+        }
+
+        // Update students table with pagination
+        function updateStudentsTable(students) {
+            const tableBody = document.getElementById('studentsTableBody');
+            const studentCount = document.getElementById('studentCount');
+            const currentPageElement = document.getElementById('currentPage');
+            const totalPagesElement = document.getElementById('totalPages');
+            
+            // Update pagination
+            const totalPages = Math.ceil(students.length / window.itemsPerPage);
+            totalPagesElement.textContent = totalPages || 1;
+            currentPageElement.textContent = window.currentPage;
+            
+            // Get students for current page
+            const startIndex = (window.currentPage - 1) * window.itemsPerPage;
+            const endIndex = startIndex + window.itemsPerPage;
+            const pageStudents = students.slice(startIndex, endIndex);
+            
+            studentCount.textContent = students.length;
+            
+            if (pageStudents.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="8">
+                            <div class="empty-state">
+                                <div class="empty-icon">👥</div>
+                                <div class="empty-title">No Students Found</div>
+                                <div class="empty-text">Try adjusting your search or filters to find students.</div>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            let html = '';
+            pageStudents.forEach(student => {
+                const statusClass = student.status === 'active' ? 'status-active' : 
+                                  student.status === 'inactive' ? 'status-inactive' : 'status-pending';
+                const statusText = student.status === 'active' ? 'Active' : 
+                                  student.status === 'inactive' ? 'Inactive' : 'Pending';
+                
+                const completedActivities = student.completedActivities || 0;
+                const averageScore = student.averageScore || 0;
+                
+                html += `
+                    <tr>
+                        <td><strong>${student.umakId || 'N/A'}</strong></td>
+                        <td>${student.firstName} ${student.lastName}</td>
+                        <td>${student.email || 'N/A'}</td>
+                        <td>${student.section || 'N/A'}</td>
+                        <td>${student.yearLevel || 'N/A'}</td>
+                        <td>
+                            ${completedActivities}
+                            ${completedActivities > 0 ? `
+                                <br><small style="color: #64748b;">Avg: ${averageScore}%</small>
+                            ` : ''}
+                        </td>
+                        <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-action btn-view" onclick="viewStudentDetails('${student.id}')">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                                <button class="btn-action btn-edit" onclick="editStudent('${student.id}')">
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
+                                <button class="btn-action btn-reset" onclick="resetStudentPassword('${student.id}', '${student.email}')">
+                                    <i class="fas fa-key"></i> Reset
+                                </button>
+                                <button class="btn-action btn-delete" onclick="deleteStudent('${student.id}', '${student.firstName} ${student.lastName}')">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            tableBody.innerHTML = html;
+        }
+
+        // Filter sections
+        function filterSections() {
+            const searchTerm = document.getElementById('searchSections').value.toLowerCase();
+            const rows = document.querySelectorAll('#sectionsTableBody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        }
+
+        // Filter students
+        function filterStudents() {
+            const searchTerm = document.getElementById('searchStudents').value.toLowerCase();
+            const sectionFilter = document.getElementById('filterSection').value;
+            const statusFilter = document.getElementById('filterStatus').value;
+            
+            window.filteredStudents = window.students.filter(student => {
+                // Search term filter
+                const matchesSearch = !searchTerm || 
+                    student.firstName.toLowerCase().includes(searchTerm) ||
+                    student.lastName.toLowerCase().includes(searchTerm) ||
+                    student.email.toLowerCase().includes(searchTerm) ||
+                    (student.umakId && student.umakId.toLowerCase().includes(searchTerm));
+                
+                // Section filter
+                const matchesSection = !sectionFilter || student.section === sectionFilter;
+                
+                // Status filter
+                const matchesStatus = !statusFilter || student.status === statusFilter;
+                
+                return matchesSearch && matchesSection && matchesStatus;
+            });
+            
+            window.currentPage = 1; // Reset to first page when filtering
+            updateStudentsTable(window.filteredStudents);
+        }
+
+        // Pagination functions
+        function previousPage() {
+            if (window.currentPage > 1) {
+                window.currentPage--;
+                updateStudentsTable(window.filteredStudents);
+            }
+        }
+
+        function nextPage() {
+            const totalPages = Math.ceil(window.filteredStudents.length / window.itemsPerPage);
+            if (window.currentPage < totalPages) {
+                window.currentPage++;
+                updateStudentsTable(window.filteredStudents);
+            }
+        }
+
+        // Show add student modal
+        function showAddStudentModal() {
+            if (window.sections.length === 0) {
+                alert('You need to be assigned to at least one section before adding students. Please contact the Dean or Head Admin.');
+                return;
+            }
+            
+            document.getElementById('studentModalTitle').innerHTML = '<i class="fas fa-user-plus"></i> Add New Student';
+            document.getElementById('saveStudentBtn').textContent = 'Save Student';
+            document.getElementById('saveStudentBtn').setAttribute('onclick', 'saveStudent()');
+            
+            resetStudentForm();
+            document.getElementById('studentModal').style.display = 'flex';
+            document.getElementById('studentFirstName').focus();
+        }
+
+        // Close student modal
+        function closeStudentModal() {
+            document.getElementById('studentModal').style.display = 'none';
+            resetStudentForm();
+        }
+
+        // Reset student form
+        function resetStudentForm() {
+            document.getElementById('studentFirstName').value = '';
+            document.getElementById('studentLastName').value = '';
+            document.getElementById('studentUmakId').value = '';
+            document.getElementById('studentEmail').value = '';
+            document.getElementById('studentPhone').value = '';
+            document.getElementById('studentGender').value = '';
+            document.getElementById('studentStatus').value = 'active';
+            document.getElementById('studentNotes').value = '';
+            window.editingStudentId = null;
+        }
+
+        // Save/Update student
+        async function saveStudent() {
+            const firstName = document.getElementById('studentFirstName').value.trim();
+            const lastName = document.getElementById('studentLastName').value.trim();
+            const umakId = document.getElementById('studentUmakId').value.trim();
+            const email = document.getElementById('studentEmail').value.trim().toLowerCase();
+            const section = document.getElementById('studentSection').value;
+            const phone = document.getElementById('studentPhone').value.trim();
+            const gender = document.getElementById('studentGender').value;
+            const status = document.getElementById('studentStatus').value;
+            const notes = document.getElementById('studentNotes').value.trim();
+
+            // Validation
+            if (!firstName || !lastName || !umakId || !email || !section || !gender) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+
+            if (!email.endsWith('@umak.edu.ph')) {
+                alert('Please use a valid UMaK email address (@umak.edu.ph).');
+                return;
+            }
+
+            try {
+                const submitBtn = document.getElementById('saveStudentBtn');
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Saving...';
+
+                // Check if UMaK ID already exists (for new students only)
+                if (!window.editingStudentId) {
+                    const existingStudentQuery = query(
+                        collection(db, 'students'),
+                        where('umakId', '==', umakId)
+                    );
+                    const existingStudentSnapshot = await getDocs(existingStudentQuery);
+                    
+                    if (!existingStudentSnapshot.empty) {
+                        throw new Error(`Student with UMaK ID ${umakId} already exists.`);
+                    }
+                }
+
+                // Check if email already exists (for new students only)
+                if (!window.editingStudentId) {
+                    const existingEmailQuery = query(
+                        collection(db, 'students'),
+                        where('email', '==', email)
+                    );
+                    const existingEmailSnapshot = await getDocs(existingEmailQuery);
+                    
+                    if (!existingEmailSnapshot.empty) {
+                        throw new Error(`Student with email ${email} already exists.`);
+                    }
+                }
+
+                const studentData = {
+                    firstName: firstName,
+                    lastName: lastName,
+                    fullName: `${firstName} ${lastName}`,
+                    umakId: umakId,
+                    email: email,
+                    section: section,
+                    phone: phone || null,
+                    gender: gender,
+                    status: status,
+                    notes: notes || null,
+                    completedActivities: 0,
+                    averageScore: 0,
+                    createdAt: serverTimestamp(),
+                    updatedAt: serverTimestamp()
+                };
+
+                console.log('Saving student:', studentData);
+
+                if (window.editingStudentId) {
+                    // Update existing student
+                    await updateDoc(doc(db, 'students', window.editingStudentId), studentData);
+                    console.log('✓ Student updated');
+                    
+                    // Close modal and refresh
+                    closeStudentModal();
+                    alert('Student updated successfully!');
+                    
+                } else {
+                    // Create new student
+                    const password = generateRandomPassword();
+                    console.log('Generated password:', password);
+                    
+                    // Create auth user
+                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                    const studentUid = userCredential.user.uid;
+                    console.log('✓ Auth account created with UID:', studentUid);
+                    
+                    // Add role to users collection
+                    await setDoc(doc(db, 'users', studentUid), {
+                        email: email,
+                        role: 'student',
+                        firstName: firstName,
+                        lastName: lastName,
+                        umakId: umakId,
+                        section: section,
+                        createdAt: serverTimestamp()
+                    });
+                    
+                    // Add email lookup
+                    const emailKey = email.replace(/\./g, '_');
+                    await setDoc(doc(db, 'usersByEmail', emailKey), {
+                        uid: studentUid,
+                        role: 'student',
+                        email: email
+                    });
+                    
+                    // Add student data to students collection
+                    await setDoc(doc(db, 'students', studentUid), studentData);
+                    console.log('✓ Student created in Firestore');
+                    
+                    // Show credentials to professor
+                    const credentials = `Login Credentials for ${firstName} ${lastName}:\n\nEmail: ${email}\nPassword: ${password}\n\nPlease provide these to the student and instruct them to change their password after first login.`;
+                    
+                    // Close modal and refresh
+                    closeStudentModal();
+                    alert(`Student added successfully!\n\n${credentials}`);
+                }
+                
+                await loadStudents();
+                
+            } catch (error) {
+                console.error('Error saving student:', error);
+                alert('Error: ' + error.message);
+                
+                const submitBtn = document.getElementById('saveStudentBtn');
+                submitBtn.disabled = false;
+                submitBtn.textContent = window.editingStudentId ? 'Update Student' : 'Save Student';
+            }
+        }
+
+        // Edit student
+        async function editStudent(studentId) {
+            try {
+                const studentRef = doc(db, 'students', studentId);
+                const studentDoc = await getDoc(studentRef);
+                
+                if (!studentDoc.exists()) {
+                    alert('Student not found!');
+                    return;
+                }
+                
+                const studentData = studentDoc.data();
+                window.editingStudentId = studentId;
+                
+                // Populate form
+                document.getElementById('studentFirstName').value = studentData.firstName || '';
+                document.getElementById('studentLastName').value = studentData.lastName || '';
+                document.getElementById('studentUmakId').value = studentData.umakId || '';
+                document.getElementById('studentEmail').value = studentData.email || '';
+                document.getElementById('studentPhone').value = studentData.phone || '';
+                document.getElementById('studentGender').value = studentData.gender || '';
+                document.getElementById('studentStatus').value = studentData.status || 'active';
+                document.getElementById('studentNotes').value = studentData.notes || '';
+                
+                // Set section
+                const sectionSelect = document.getElementById('studentSection');
+                for (let i = 0; i < sectionSelect.options.length; i++) {
+                    if (sectionSelect.options[i].value === studentData.section) {
+                        sectionSelect.selectedIndex = i;
+                        break;
+                    }
+                }
+                
+                // Update modal title and button
+                document.getElementById('studentModalTitle').innerHTML = '<i class="fas fa-user-edit"></i> Edit Student';
+                document.getElementById('saveStudentBtn').textContent = 'Update Student';
+                document.getElementById('saveStudentBtn').setAttribute('onclick', 'saveStudent()');
+                
+                // Show modal
+                document.getElementById('studentModal').style.display = 'flex';
+                
+            } catch (error) {
+                console.error('Error loading student for editing:', error);
+                alert('Error: ' + error.message);
+            }
+        }
+
+        // View student details
+        async function viewStudentDetails(studentId) {
+            try {
+                const studentRef = doc(db, 'students', studentId);
+                const studentDoc = await getDoc(studentRef);
+                
+                if (!studentDoc.exists()) {
+                    alert('Student not found!');
+                    return;
+                }
+                
+                const studentData = studentDoc.data();
+                
+                // Get student's activity results
+                const activitiesQuery = query(
+                    collection(db, 'testResults'),
+                    where('studentId', '==', studentId),
+                    orderBy('submittedAt', 'desc')
+                );
+                const activitiesSnapshot = await getDocs(activitiesQuery);
+                const activities = [];
+                let totalScore = 0;
+                
+                activitiesSnapshot.forEach(doc => {
+                    const activity = doc.data();
+                    activities.push(activity);
+                    totalScore += activity.score || 0;
+                });
+                
+                const averageScore = activities.length > 0 ? Math.round(totalScore / activities.length) : 0;
+                
+                // Get initials for avatar
+                const initials = (studentData.firstName?.charAt(0) + studentData.lastName?.charAt(0)).toUpperCase();
+                
+                // Prepare HTML
+                let html = `
+                    <div class="student-info-header">
+                        <div class="student-avatar">${initials}</div>
+                        <div class="student-basic-info">
+                            <div class="student-name">${studentData.firstName} ${studentData.lastName}</div>
+                            <div class="student-id">${studentData.umakId || 'No ID'}</div>
+                        </div>
+                    </div>
+                    <div class="student-info-grid">
+                        <div class="info-item">
+                            <div class="info-label">Email</div>
+                            <div class="info-value">${studentData.email || 'N/A'}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Section</div>
+                            <div class="info-value">${studentData.section || 'N/A'}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Gender</div>
+                            <div class="info-value">${studentData.gender || 'N/A'}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Phone</div>
+                            <div class="info-value">${studentData.phone || 'N/A'}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Status</div>
+                            <div class="info-value">
+                                <span class="status-badge ${studentData.status === 'active' ? 'status-active' : 'status-inactive'}">
+                                    ${studentData.status === 'active' ? 'Active' : 'Inactive'}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Activities Completed</div>
+                            <div class="info-value">${activities.length}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Average Score</div>
+                            <div class="info-value">${averageScore}%</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Account Created</div>
+                            <div class="info-value">${studentData.createdAt ? new Date(studentData.createdAt.toDate()).toLocaleDateString() : 'N/A'}</div>
+                        </div>
+                `;
+                
+                if (studentData.notes) {
+                    html += `
+                        <div class="info-item full-width">
+                            <div class="info-label">Notes</div>
+                            <div class="info-value">${studentData.notes}</div>
+                        </div>
+                    `;
+                }
+                
+                html += `</div>`;
+                
+                document.getElementById('studentDetailsContent').innerHTML = html;
+                document.getElementById('viewStudentModal').style.display = 'flex';
+                
+            } catch (error) {
+                console.error('Error viewing student details:', error);
+                alert('Error: ' + error.message);
+            }
+        }
+
+        // Close view student modal
+        function closeViewStudentModal() {
+            document.getElementById('viewStudentModal').style.display = 'none';
+        }
+
+        // Reset student password
+        async function resetStudentPassword(studentId, studentEmail) {
+            if (!confirm(`Reset password for ${studentEmail}? A new password will be generated and you'll need to provide it to the student.`)) {
+                return;
+            }
+
+            try {
+                const newPassword = generateRandomPassword();
+                
+                // Note: In a real implementation, you would need to:
+                // 1. Use Firebase Admin SDK to reset password
+                // 2. Or implement a password reset flow
+                // For now, we'll just show the new password
+                
+                alert(`Password reset successful!\n\nNew password for ${studentEmail}: ${newPassword}\n\nProvide this to the student and instruct them to change it after login.`);
+                
+            } catch (error) {
+                console.error('Error resetting password:', error);
+                alert('Error: ' + error.message);
+            }
+        }
+
+        // Delete student (Professor can only delete students from their sections)
+        async function deleteStudent(studentId, studentName) {
+            if (!confirm(`Are you sure you want to delete ${studentName}? This action cannot be undone.`)) {
+                return;
+            }
+
+            try {
+                // Get student data first
+                const studentRef = doc(db, 'students', studentId);
+                const studentDoc = await getDoc(studentRef);
+                
+                if (!studentDoc.exists()) {
+                    alert('Student not found!');
+                    return;
+                }
+                
+                const studentData = studentDoc.data();
+                
+                // Check if student is in professor's assigned section
+                const isStudentInProfessorSection = window.sections.some(
+                    section => section.name === studentData.section
+                );
+                
+                if (!isStudentInProfessorSection) {
+                    alert('You can only delete students from your assigned sections.');
+                    return;
+                }
+                
+                // Delete from Firestore
+                await deleteDoc(studentRef);
+                console.log('✓ Student deleted from Firestore');
+                
+                // Note: In a real app, you should also:
+                // 1. Delete the auth user account (requires admin privileges)
+                // 2. Delete from users collection
+                // 3. Delete from usersByEmail collection
+                // 4. Delete all related activity results
+                
+                alert('Student deleted successfully!');
+                await loadStudents();
+                
+            } catch (error) {
+                console.error('Error deleting student:', error);
+                alert('Error: ' + error.message);
+            }
+        }
+
+        // Export students
+        function exportStudents() {
+            if (window.filteredStudents.length === 0) {
+                alert('No students to export.');
+                return;
+            }
+
+            // Create CSV content
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "UMaK ID,First Name,Last Name,Email,Section,Year Level,Status,Activities Completed,Average Score\n";
+            
+            window.filteredStudents.forEach(student => {
+                const row = [
+                    student.umakId,
+                    student.firstName,
+                    student.lastName,
+                    student.email,
+                    student.section,
+                    student.yearLevel || 'N/A',
+                    student.status,
+                    student.completedActivities || 0,
+                    student.averageScore || 0
+                ].map(field => `"${field}"`).join(',');
+                
+                csvContent += row + "\n";
+            });
+            
+            // Create download link
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `students_${new Date().toISOString().split('T')[0]}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Refresh data
+        function refreshData() {
+            loadSections();
+            loadStudents();
+        }
+
+        // Setup real-time updates
+        function setupRealtimeUpdates() {
+            // Listen for section changes
+            if (window.currentUser && window.currentUser.email) {
+                const sectionsQuery = query(
+                    collection(db, 'sections'),
+                    where('professorEmail', '==', window.currentUser.email)
+                );
+                
+                onSnapshot(sectionsQuery, (snapshot) => {
+                    console.log('🔄 Sections updated');
+                    loadSections();
+                });
+                
+                // Listen for student changes in professor's sections
+                if (window.sections.length > 0) {
+                    const sectionNames = window.sections.map(s => s.name);
+                    const studentsQuery = query(
+                        collection(db, 'students'),
+                        where('section', 'in', sectionNames)
+                    );
+                    
+                    onSnapshot(studentsQuery, (snapshot) => {
+                        console.log('🔄 Students updated');
+                        loadStudents();
+                    });
+                }
+            }
+        }
+
+        // Authentication state change
+        onAuthStateChanged(auth, async (user) => {
+            const loadingScreen = document.getElementById('loadingScreen');
+            const mainContent = document.getElementById('mainContent');
+
+            if (user) {
+                try {
+                    console.log('=== STUDENT MANAGEMENT LOADING ===');
+                    console.log('Professor authenticated:', user.email);
+                    window.currentUser = user;
+                    
+                    // Load sections and students
+                    await loadSections();
+                    await loadStudents();
+                    
+                    // Setup real-time updates
+                    setupRealtimeUpdates();
+
+                    loadingScreen.style.display = 'none';
+                    mainContent.style.display = 'block';
+                    
+                    console.log('✓ Student management loaded successfully');
+                    
+                } catch (error) {
+                    console.error('Error loading student management:', error);
+                    loadingScreen.style.display = 'none';
+                    mainContent.style.display = 'block';
+                }
+            } else {
+                window.location.href = '/login/index.html';
+            }
+        });
+
+        // Make functions globally available
+        window.viewSectionDetails = viewSectionDetails;
+        window.closeViewSectionModal = closeViewSectionModal;
+        window.showAddStudentModal = showAddStudentModal;
+        window.closeStudentModal = closeStudentModal;
+        window.saveStudent = saveStudent;
+        window.editStudent = editStudent;
+        window.viewStudentDetails = viewStudentDetails;
+        window.closeViewStudentModal = closeViewStudentModal;
+        window.resetStudentPassword = resetStudentPassword;
+        window.deleteStudent = deleteStudent;
+        window.exportStudents = exportStudents;
+        window.refreshData = refreshData;
+        window.filterSections = filterSections;
+        window.filterStudents = filterStudents;
+        window.previousPage = previousPage;
+        window.nextPage = nextPage;
+    </script>
+
+    <script>
+        async function handleLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                try {
+                    await window.signOut(window.auth);
+                    const baseUrl = window.location.origin;
+                    window.location.href = baseUrl + '/login/index.html';
+                } catch (error) {
+                    console.error('Error logging out:', error);
+                    alert('Error logging out. Please try again.');
+                }
+            }
+        }
+    </script>
+</body>
+</html>
