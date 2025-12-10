@@ -909,11 +909,6 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/secretary/secretary.html#importSection">
-                        <i class="fas fa-file-import"></i> Import Students
-                    </a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link active" href="#">
                         <i class="fas fa-chalkboard-teacher"></i> Professor Management
                     </a>
@@ -1111,20 +1106,27 @@
                 console.log('=== PROFESSOR MANAGEMENT AUTHENTICATION ===');
                 console.log('User authenticated:', user.email);
                 
-                // Check if user is a secretary
-                const userRef = doc(db, 'users', user.uid);
-                const userDoc = await getDoc(userRef);
+                // Check if user is a secretary - FIXED: Check by email in users collection
+                const usersQuery = query(
+                    collection(db, 'users'),
+                    where('email', '==', user.email)
+                );
+                const usersSnapshot = await getDocs(usersQuery);
                 
-                if (!userDoc.exists()) {
+                if (usersSnapshot.empty) {
                     throw new Error('Access denied. Secretary account required.');
                 }
                 
-                const userData = userDoc.data();
+                const userData = usersSnapshot.docs[0].data();
                 if (userData.role !== 'secretary' && userData.role !== 'college_secretary') {
                     throw new Error('Access denied. Secretary account required.');
                 }
                 
-                currentSecretary = { id: user.uid, ...userData };
+                currentSecretary = { 
+                    id: usersSnapshot.docs[0].id, 
+                    ...userData,
+                    name: userData.name || userData.email || 'Secretary'  // Ensure name is defined
+                };
                 console.log('✓ Secretary authenticated:', currentSecretary);
                 
                 // Load sections and professors
@@ -1251,9 +1253,16 @@
             professorsSnapshot.forEach(doc => {
                 const professorData = doc.data();
                 const professorKey = professorData.name ? professorData.name.trim().toLowerCase() : '';
+                const professorEmail = professorData.email ? professorData.email.trim().toLowerCase() : '';
                 
                 if (professorKey) {
                     professorMap.set(professorKey, {
+                        id: doc.id,
+                        ...professorData,
+                        source: 'professors_collection'
+                    });
+                } else if (professorEmail) {
+                    professorMap.set(professorEmail, {
                         id: doc.id,
                         ...professorData,
                         source: 'professors_collection'
@@ -1284,7 +1293,7 @@
                         // Generate email (first letter of first name + last name)
                         let email = '';
                         if (firstName && lastName) {
-                            const emailPrefix = firstName.charAt(0).toLowerCase() + lastName.toLowerCase();
+                            const emailPrefix = firstName.charAt(0).toLowerCase() + lastName.toLowerCase().replace(/\s+/g, '');
                             email = `${emailPrefix}@umak.edu.ph`;
                         }
                         
@@ -1477,7 +1486,7 @@
             showLoading('Converting imported professor...');
             
             // Create full professor record
-            const newProfessorId = `prof_${email.replace(/[^a-zA-Z0-9]/g, '_')}`;
+            const newProfessorId = email.toLowerCase().replace(/\./g, '_');
             
             const professorData = {
                 name: professor.name,
@@ -1490,7 +1499,7 @@
                 convertedFromSection: true,
                 originalSectionProfessorId: professorId,
                 createdBy: currentSecretary.id,
-                createdByName: currentSecretary.name,
+                createdByName: currentSecretary.name || 'System',
                 createdAt: serverTimestamp(),
                 updatedAt: serverTimestamp(),
                 isActive: true
@@ -1501,7 +1510,7 @@
             await setDoc(professorRef, professorData);
             
             // Add to users collection for login
-            const userRef = doc(db, 'users', email.toLowerCase().replace(/\./g, '_'));
+            const userRef = doc(db, 'users', newProfessorId);
             await setDoc(userRef, {
                 uid: newProfessorId,
                 email: email.toLowerCase(),
@@ -1690,10 +1699,10 @@
         
         const fullName = `${lastName}, ${firstName} ${middleInitial}`.trim();
         
-        // Check if professor already exists in professors collection
+        // Check if professor already exists in professors collection by email
         const existingProfessorQuery = query(
             collection(db, 'professors'),
-            where('email', '==', email)
+            where('email', '==', email.toLowerCase())
         );
         const existingProfessorSnap = await getDocs(existingProfessorQuery);
         
@@ -1723,18 +1732,18 @@
             }
         });
         
-        // Prepare professor data
+        // Prepare professor data - FIXED: Ensure all fields have values
         const professorData = {
             name: fullName,
             email: email,
             lastName: lastName,
             firstName: firstName,
-            middleInitial: middleInitial,
+            middleInitial: middleInitial || '',
             college: 'College of Human Kinetics',
             status: 'active',
             role: 'professor',
             createdBy: currentSecretary.id,
-            createdByName: currentSecretary.name,
+            createdByName: currentSecretary.name || 'System',  // Provide default value
             createdAt: serverTimestamp(),
             updatedAt: serverTimestamp(),
             isActive: true
@@ -1743,8 +1752,11 @@
         try {
             showLoading('Adding professor...');
             
-            // Generate professor ID
-            const professorId = `prof_${email.replace(/[^a-zA-Z0-9]/g, '_')}`;
+            // Generate professor ID - use email as document ID for consistency
+            const professorId = email.toLowerCase().replace(/\./g, '_');
+            
+            console.log('Adding professor with ID:', professorId);
+            console.log('Professor data:', professorData);
             
             // Add to professors collection
             const professorRef = doc(db, 'professors', professorId);
@@ -1759,8 +1771,8 @@
                 });
             }
             
-            // Add to users collection for login
-            const userRef = doc(db, 'users', email.replace(/\./g, '_'));
+            // Add to users collection for login - use same ID
+            const userRef = doc(db, 'users', professorId);
             await setDoc(userRef, {
                 uid: professorId,
                 email: email,
@@ -1784,7 +1796,7 @@
         } catch (error) {
             console.error('Error adding professor:', error);
             hideLoading();
-            showToast('Error', 'Failed to add professor. Please try again.', 'error');
+            showToast('Error', 'Failed to add professor: ' + error.message, 'error');
         }
     }
 

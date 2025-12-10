@@ -198,16 +198,41 @@
             cursor: pointer;
             transition: all 0.3s;
             flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .custom-checkbox:hover {
             background: #eff6ff;
         }
 
+        .custom-checkbox.checked {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            border-color: #3b82f6;
+        }
+
+        .checkbox-svg {
+            width: 14px;
+            height: 14px;
+            stroke: white;
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            fill: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .custom-checkbox.checked .checkbox-svg {
+            opacity: 1;
+        }
+
         .agreement-text {
             color: #475569;
             font-size: 14px;
             line-height: 1.6;
+            user-select: none;
         }
 
         .agreement-text strong {
@@ -337,7 +362,7 @@
 <body>
     <div class="loading-overlay" id="loadingOverlay">
         <div class="spinner"></div>
-        <div style="color: #1e3a8a; font-weight: 600;">Processing...</div>
+        <div style="color: #1e3a8a; font-weight: 600;" id="loadingText">Processing...</div>
     </div>
 
     <div class="privacy-container">
@@ -456,8 +481,11 @@
             
             <div class="agreement-section">
                 <div class="checkbox-wrapper" onclick="toggleCheckbox()">
-                    <input type="checkbox" id="agreeCheckbox" class="custom-checkbox" style="display: none;">
-                    <div class="custom-checkbox" id="checkboxDisplay"></div>
+                    <div class="custom-checkbox" id="checkboxDisplay">
+                        <svg class="checkbox-svg" viewBox="0 0 24 24">
+                            <path d="M20 6L9 17L4 12" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
                     <div class="agreement-text">
                         I have read and understood the Data Privacy Agreement. I hereby give my <strong>free, 
                         informed, and voluntary consent</strong> to the University of Makati to collect, use, 
@@ -471,7 +499,7 @@
                     Decline
                 </button>
                 <button class="btn btn-accept" id="acceptBtn" onclick="handleAccept()" disabled>
-                    I Accept - Continue to Profile Setup
+                    I Accept - Continue to Dashboard
                 </button>
             </div>
         </div>
@@ -480,7 +508,7 @@
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
         import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-        import { getFirestore, doc, updateDoc, getDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        import { getFirestore, doc, updateDoc, getDoc, collection, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
         const firebaseConfig = {
             apiKey: "AIzaSyAgaLunqEf2gs6dSpF_sz1hV5XQ5Wm52jo",
@@ -500,80 +528,111 @@
         window.doc = doc;
         window.updateDoc = updateDoc;
         window.getDoc = getDoc;
+        window.collection = collection;
+        window.query = query;
+        window.where = where;
+        window.getDocs = getDocs;
         window.signOut = signOut;
 
         let currentUser = null;
+        let currentStudentId = null;
         let isChecked = false;
+
+        // Find student by email
+        async function findStudentByEmail(email) {
+            try {
+                console.log('🔍 Looking for student with email:', email);
+                const studentsQuery = window.query(
+                    window.collection(window.db, 'students'),
+                    window.where('email', '==', email.toLowerCase())
+                );
+                const studentsSnapshot = await window.getDocs(studentsQuery);
+                
+                if (!studentsSnapshot.empty) {
+                    const studentDoc = studentsSnapshot.docs[0];
+                    console.log('✅ Found student:', studentDoc.id);
+                    return {
+                        id: studentDoc.id,
+                        data: studentDoc.data()
+                    };
+                }
+                
+                console.log('❌ No student found with email:', email);
+                return null;
+                
+            } catch (error) {
+                console.error('Error finding student by email:', error);
+                return null;
+            }
+        }
 
         onAuthStateChanged(auth, async (user) => {
             if (!user) {
                 console.log('❌ No user logged in');
                 alert('Please log in first');
-                window.location.href = 'index.html';
+                window.location.href = '/login/index.html';
                 return;
             }
 
             currentUser = user;
             console.log('=== DATA PRIVACY PAGE ===');
             console.log('User:', user.email);
-            console.log('Firebase Email Verified:', user.emailVerified);
 
-            // Check student record
-            const studentRef = doc(db, 'students', user.uid);
-            const studentSnap = await getDoc(studentRef);
-
-            if (studentSnap.exists()) {
-                const studentData = studentSnap.data();
-                console.log('Email Verified (Firestore):', studentData.emailVerified);
-                console.log('Privacy Accepted:', studentData.privacyAccepted);
-                console.log('Profile Complete:', studentData.profileComplete);
-
-                // If email not verified, send back to verification
-                if (!studentData.emailVerified) {
-                    console.log('⚠️ Email not verified, redirecting to OTP verification');
-                    alert('Please verify your email first');
-                    window.location.href = 'otp-verification.html';
-                    return;
-                }
-
-                // If privacy already accepted, go to profile setup
-                if (studentData.privacyAccepted) {
-                    console.log('✓ Privacy already accepted, redirecting to profile setup');
-                    window.location.href = 'profilesetup.html';
-                    return;
-                }
-
-                console.log('✓ User ready to accept privacy policy');
-            } else {
-                console.log('⚠️ No student record found, redirecting to login');
-                alert('Please log in first');
-                window.location.href = 'index.html';
+            // Find student by email
+            const studentInfo = await findStudentByEmail(user.email);
+            
+            if (!studentInfo) {
+                console.log('❌ Student not found in system');
+                alert('Your account is not registered. Please contact your college secretary.');
+                await window.signOut(window.auth);
+                window.location.href = '/login/index.html';
+                return;
             }
+
+            currentStudentId = studentInfo.id;
+            
+            console.log('Student ID:', studentInfo.id);
+            console.log('Email Verified:', studentInfo.data.emailVerified);
+            console.log('Privacy Accepted:', studentInfo.data.privacyAccepted);
+
+            // If email not verified, send back to verification
+            if (!studentInfo.data.emailVerified) {
+                console.log('⚠️ Email not verified, redirecting to OTP verification');
+                alert('Please verify your email first');
+                window.location.href = 'otp-verification.html';
+                return;
+            }
+
+            // If privacy already accepted, go to dashboard
+            if (studentInfo.data.privacyAccepted) {
+                console.log('✓ Privacy already accepted, redirecting to dashboard');
+                window.location.href = '/student/studentDashboard.html';
+                return;
+            }
+
+            console.log('✓ User ready to accept privacy policy');
         });
 
         window.toggleCheckbox = function() {
             isChecked = !isChecked;
-            const checkbox = document.getElementById('agreeCheckbox');
             const checkboxDisplay = document.getElementById('checkboxDisplay');
             const acceptBtn = document.getElementById('acceptBtn');
-
-            checkbox.checked = isChecked;
             
             if (isChecked) {
-                checkboxDisplay.style.background = 'linear-gradient(135deg, #3b82f6, #2563eb)';
-                checkboxDisplay.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin: auto;"><path d="M20 6L9 17L4 12" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+                checkboxDisplay.classList.add('checked');
                 acceptBtn.disabled = false;
             } else {
-                checkboxDisplay.style.background = '';
-                checkboxDisplay.innerHTML = '';
+                checkboxDisplay.classList.remove('checked');
                 acceptBtn.disabled = true;
             }
+            
+            console.log('Checkbox state:', isChecked);
         };
 
         window.handleDecline = async function() {
             if (confirm('If you decline, you will not be able to use UMakFit. Are you sure you want to decline?')) {
                 await window.signOut(window.auth);
-                window.location.href = 'index.html';
+                window.location.href = '/login/index.html';
             }
         };
 
@@ -583,27 +642,50 @@
                 return;
             }
 
-            if (!currentUser) {
+            if (!currentUser || !currentStudentId) {
                 showError('Session expired. Please log in again.');
                 return;
             }
 
             console.log('=== ACCEPTING PRIVACY POLICY ===');
+            console.log('User:', currentUser.email);
+            console.log('Student ID:', currentStudentId);
+            
             document.getElementById('loadingOverlay').style.display = 'flex';
+            document.getElementById('loadingText').textContent = 'Saving your acceptance...';
 
             try {
-                const studentRef = window.doc(window.db, 'students', currentUser.uid);
+                // Update student record
+                const studentRef = window.doc(window.db, 'students', currentStudentId);
                 
                 await window.updateDoc(studentRef, {
                     privacyAccepted: true,
-                    privacyAcceptedAt: new Date().toISOString()
+                    privacyAcceptedAt: new Date().toISOString(),
+                    uid: currentUser.uid,
+                    lastLogin: new Date().toISOString(),
+                    isActive: true
                 });
 
                 console.log('✓ Privacy policy accepted successfully');
-                console.log('→ Redirecting to profilesetup.html');
+
+                // Also update users collection
+                try {
+                    const userRef = window.doc(window.db, 'users', currentUser.uid);
+                    await window.updateDoc(userRef, {
+                        privacyAccepted: true,
+                        lastLogin: new Date().toISOString(),
+                        isActive: true
+                    }, { merge: true });
+                    console.log('✓ Users collection updated');
+                } catch (error) {
+                    console.log('Note: Could not update users collection:', error);
+                }
+
+                console.log('→ Redirecting to dashboard');
+                document.getElementById('loadingText').textContent = 'Redirecting to dashboard...';
 
                 setTimeout(() => {
-                    window.location.href = 'profilesetup.html';
+                    window.location.href = '/student/studentDashboard.html';
                 }, 1000);
 
             } catch (error) {

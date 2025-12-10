@@ -217,33 +217,6 @@
             font-size: 12px;
             color: #1e40af;
         }
-
-        .config-section {
-            background: #f8fafc;
-            border-radius: 12px;
-            padding: 15px;
-            margin-top: 20px;
-            text-align: left;
-        }
-
-        .config-section h3 {
-            font-size: 16px;
-            color: #1e3a8a;
-            margin-bottom: 10px;
-        }
-
-        .config-section p {
-            font-size: 12px;
-            color: #64748b;
-            margin-bottom: 10px;
-        }
-
-        .config-section ul {
-            font-size: 12px;
-            color: #64748b;
-            padding-left: 20px;
-            margin-bottom: 10px;
-        }
     </style>
 </head>
 <body>
@@ -297,13 +270,12 @@
         <div class="status-info" id="statusInfo">
             <strong>Status:</strong> Initializing...
         </div>
-
-        
+    </div>
 
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-        import { getFirestore, doc, updateDoc, getDoc, setDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { getFirestore, doc, updateDoc, getDoc, setDoc, collection, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
         const firebaseConfig = {
             apiKey: "AIzaSyAgaLunqEf2gs6dSpF_sz1hV5XQ5Wm52jo",
@@ -329,9 +301,13 @@
         window.updateDoc = updateDoc;
         window.getDoc = getDoc;
         window.setDoc = setDoc;
-        window.signOut = signOut;
+        window.collection = collection;
+        window.query = query;
+        window.where = where;
+        window.getDocs = getDocs;
 
         let currentUser = null;
+        let currentStudentId = null; // Store the student document ID
         let currentOTP = null;
         let resendCountdown = 60;
         let countdownInterval = null;
@@ -341,21 +317,24 @@
             return Math.floor(100000 + Math.random() * 900000).toString();
         }
 
-        // Store OTP in Firestore
+        // Store OTP in Firestore with email as document ID
         async function storeOTP(otp) {
-            const otpRef = window.doc(window.db, 'otps', currentUser.uid);
+            // Use email (with underscores) as document ID for OTP storage
+            const otpDocId = currentUser.email.replace(/\./g, '_');
+            const otpRef = window.doc(window.db, 'otps', otpDocId);
             const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
             
             await window.setDoc(otpRef, {
                 otp: otp,
                 email: currentUser.email,
+                userId: currentUser.uid,
                 expiresAt: expiresAt,
                 attempts: 0,
                 createdAt: new Date()
-            });
+            }, { merge: true }); // Use merge to update if exists
         }
 
-        // Send OTP via EmailJS - FIXED VERSION
+        // Send OTP via EmailJS
         async function sendOTPEmail(email, otp) {
             console.log('📧 Attempting to send OTP to:', email);
             console.log('🔑 OTP Generated:', otp);
@@ -383,20 +362,20 @@
                     day: 'numeric'
                 });
 
-                // EmailJS template parameters - Match your template exactly
+                // EmailJS template parameters
                 const templateParams = {
                     to_email: email,
-                    passcode: otp, // This matches {(passcode)} in your template
-                    email: email, // This matches {(email)} in your template
-                    time: formattedTime // This matches {(time())} in your template
+                    passcode: otp,
+                    email: email,
+                    time: formattedTime
                 };
 
                 console.log('📤 Sending email with parameters:', templateParams);
 
-                // Send email using EmailJS - Use correct service and template IDs
+                // Send email using EmailJS
                 const response = await emailjs.send(
-                    'service_j1jvhff',   // Your Service ID from screenshot
-                    'umakfit-otp',       // Your Template ID from screenshot
+                    'service_j1jvhff',   // Your Service ID
+                    'umakfit-otp',       // Your Template ID
                     templateParams
                 );
 
@@ -414,18 +393,10 @@
                 if (error.text) {
                     detailedError = error.text;
                     console.error('EmailJS Error Text:', error.text);
-                    
-                    // Handle specific Gmail API scope error
-                    if (error.text.includes('insufficient authentication scopes')) {
-                        detailedError = 'Gmail service needs reconfiguration. Please reconnect your Gmail service in EmailJS with proper permissions.';
-                    }
                 }
                 if (error.message) {
                     detailedError = error.message;
                     console.error('EmailJS Error Message:', error.message);
-                }
-                if (error.status) {
-                    console.error('EmailJS Status Code:', error.status);
                 }
                 
                 document.getElementById('statusInfo').innerHTML = 
@@ -440,7 +411,9 @@
 
         // Verify OTP from Firestore
         async function verifyStoredOTP(otpCode) {
-            const otpRef = window.doc(window.db, 'otps', currentUser.uid);
+            // Get OTP using email as document ID
+            const otpDocId = currentUser.email.replace(/\./g, '_');
+            const otpRef = window.doc(window.db, 'otps', otpDocId);
             const otpSnap = await window.getDoc(otpRef);
 
             if (!otpSnap.exists()) {
@@ -464,12 +437,16 @@
             // Verify OTP
             if (otpData.otp === otpCode) {
                 // OTP is correct - mark as verified
-                await window.setDoc(otpRef, { verified: true }, { merge: true });
+                await window.setDoc(otpRef, { 
+                    verified: true,
+                    verifiedAt: new Date() 
+                }, { merge: true });
                 return { success: true };
             } else {
                 // Increment attempts
                 await window.setDoc(otpRef, {
-                    attempts: (otpData.attempts || 0) + 1
+                    attempts: (otpData.attempts || 0) + 1,
+                    lastAttempt: new Date()
                 }, { merge: true });
                 return { success: false, error: 'Invalid verification code' };
             }
@@ -542,6 +519,34 @@
             return Array.from(inputs).map(input => input.value).join('');
         }
 
+        // Find student by email
+        async function findStudentByEmail(email) {
+            try {
+                console.log('🔍 Looking for student with email:', email);
+                const studentsQuery = window.query(
+                    window.collection(window.db, 'students'),
+                    window.where('email', '==', email.toLowerCase())
+                );
+                const studentsSnapshot = await window.getDocs(studentsQuery);
+                
+                if (!studentsSnapshot.empty) {
+                    const studentDoc = studentsSnapshot.docs[0];
+                    console.log('✅ Found student:', studentDoc.id);
+                    return {
+                        id: studentDoc.id,
+                        data: studentDoc.data()
+                    };
+                }
+                
+                console.log('❌ No student found with email:', email);
+                return null;
+                
+            } catch (error) {
+                console.error('Error finding student by email:', error);
+                return null;
+            }
+        }
+
         // Verify OTP
         window.verifyOTP = async function() {
             const otpCode = getOTPCode();
@@ -558,12 +563,31 @@
                 if (result.success) {
                     showSuccess('Email verified successfully!');
                     
-                    // Update Firestore student record
-                    const studentRef = window.doc(window.db, 'students', currentUser.uid);
-                    await window.updateDoc(studentRef, {
-                        emailVerified: true,
-                        emailVerifiedAt: new Date().toISOString()
-                    });
+                    // Find student by email
+                    const studentInfo = await findStudentByEmail(currentUser.email);
+                    
+                    if (studentInfo) {
+                        // Update Firestore student record
+                        const studentRef = window.doc(window.db, 'students', studentInfo.id);
+                        await window.updateDoc(studentRef, {
+                            emailVerified: true,
+                            emailVerifiedAt: new Date().toISOString(),
+                            uid: currentUser.uid // Link Firebase UID to student record
+                        });
+
+                        // Also update users collection
+                        const userRef = window.doc(window.db, 'users', currentUser.uid);
+                        await window.setDoc(userRef, {
+                            emailVerified: true,
+                            lastLogin: new Date().toISOString(),
+                            isActive: true
+                        }, { merge: true });
+                        
+                        console.log('✅ Student record updated:', studentInfo.id);
+                    } else {
+                        console.error('❌ Could not find student record for:', currentUser.email);
+                        // Still proceed, as the OTP verification was successful
+                    }
 
                     // Redirect to next step
                     setTimeout(() => {
@@ -670,18 +694,22 @@
             currentUser = user;
             document.getElementById('emailDisplay').textContent = user.email;
 
-            // Check if already verified
-            const studentRef = window.doc(window.db, 'students', user.uid);
-            const studentSnap = await window.getDoc(studentRef);
+            // Check if student exists in system
+            const studentInfo = await findStudentByEmail(user.email);
+            
+            if (!studentInfo) {
+                showError('Student account not found. Please contact your college secretary.');
+                document.getElementById('verifyBtn').disabled = true;
+                return;
+            }
+            
+            currentStudentId = studentInfo.id;
 
-            if (studentSnap.exists()) {
-                const studentData = studentSnap.data();
-                
-                if (studentData.emailVerified) {
-                    // Already verified, redirect to next step
-                    window.location.href = 'dataprivacy.html';
-                    return;
-                }
+            // Check if already verified
+            if (studentInfo.data.emailVerified) {
+                // Already verified, redirect to next step
+                window.location.href = 'dataprivacy.html';
+                return;
             }
 
             // Initialize OTP inputs

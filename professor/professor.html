@@ -412,116 +412,28 @@
             background: #3b82f6;
         }
         
-        .monitoring-table { 
-            width: 100%; 
-            border-collapse: collapse; 
-        }
-        .monitoring-table thead { 
-            background: #f8fafc; 
-        }
-        .monitoring-table th { 
-            font-family: "Inter", Helvetica; 
-            font-weight: 600; 
-            color: #64748b; 
-            font-size: 12px; 
-            text-transform: uppercase; 
-            padding: 14px 12px; 
-            text-align: left; 
-            border-bottom: 2px solid #e2e8f0; 
-            letter-spacing: 0.5px;
-        }
-        .monitoring-table td { 
-            font-family: "Inter", Helvetica; 
-            font-weight: 500; 
-            color: #475569; 
-            font-size: 14px; 
-            padding: 16px 12px; 
-            border-bottom: 1px solid #f1f5f9; 
-        }
-        .monitoring-table tr:hover {
-            background-color: #f8fafc;
-        }
-        .progress-bar-container { 
-            display: flex; 
-            align-items: center; 
-            gap: 10px; 
-        }
-        .progress-bar-custom { 
-            flex: 1; 
-            height: 8px; 
-            background: #e2e8f0; 
-            border-radius: 4px; 
-            overflow: hidden; 
-        }
-        .progress-fill { 
-            height: 100%; 
-            background: linear-gradient(90deg, #3b82f6 0%, #2563eb 100%); 
-            border-radius: 4px; 
-            transition: width 0.3s; 
-        }
-        .progress-text { 
-            font-family: "Inter", Helvetica; 
-            font-weight: 600; 
-            color: #64748b; 
-            font-size: 12px; 
-            min-width: 40px; 
-        }
-        .btn-monitor, .btn-interrupt { 
-            padding: 6px 12px; 
-            border: none; 
-            border-radius: 6px; 
-            font-family: "Inter", Helvetica; 
-            font-weight: 600; 
-            font-size: 12px; 
-            cursor: pointer; 
-            transition: all 0.3s; 
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-        }
-        .btn-monitor { 
-            background: #10b981; 
-            color: white; 
-        }
-        .btn-monitor:hover { 
-            background: #059669; 
-            transform: translateY(-1px);
-            box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
-        }
-        .btn-interrupt { 
-            background: #ef4444; 
-            color: white; 
-        }
-        .btn-interrupt:hover { 
-            background: #dc2626; 
-            transform: translateY(-1px);
-            box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
-        }
-        
         .empty-state { 
-            padding: 60px 40px; 
+            padding: 40px 20px; 
             text-align: center; 
         }
         .empty-icon { 
-            font-size: 64px; 
-            margin-bottom: 20px; 
+            font-size: 48px; 
+            margin-bottom: 15px; 
             opacity: 0.4; 
         }
         .empty-title { 
             font-family: "Inter", Helvetica; 
-            font-weight: 700; 
-            color: #1f2937; 
-            font-size: 20px; 
-            margin-bottom: 12px; 
+            font-weight: 600; 
+            color: #6b7280; 
+            font-size: 16px; 
+            margin-bottom: 8px; 
         }
         .empty-text { 
             font-family: "Inter", Helvetica; 
             font-weight: 400; 
-            color: #64748b; 
-            font-size: 14px; 
-            line-height: 1.6; 
-            max-width: 600px; 
-            margin: 0 auto; 
+            color: #9ca3af; 
+            font-size: 13px; 
+            line-height: 1.4; 
         }
         
         .footer { 
@@ -594,8 +506,6 @@
             .profile-content { flex-direction: column; align-items: flex-start; }
             .profile-info { gap: 20px; }
             .stat-value { font-size: 24px; }
-            .monitoring-table { font-size: 12px; }
-            .monitoring-table th, .monitoring-table td { padding: 10px 6px; }
             .monitoring-header {
                 flex-direction: column;
                 align-items: flex-start;
@@ -619,6 +529,99 @@
         .umak-logo {
             height: 40px;
             width: auto;
+        }
+        
+        /* Section Cards */
+        .sections-container {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 1px solid #e2e8f0;
+        }
+        .sections-title {
+            font-family: "Inter", Helvetica;
+            font-weight: 700;
+            color: #1f2937;
+            font-size: 22px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .sections-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .section-card {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s;
+        }
+        .section-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            border-color: #f59e0b;
+        }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .section-name {
+            font-family: "Inter", Helvetica;
+            font-weight: 700;
+            color: #1e3a8a;
+            font-size: 18px;
+        }
+        .section-student-count {
+            background: #3b82f6;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .section-details {
+            margin-bottom: 15px;
+        }
+        .section-detail {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            font-size: 13px;
+            color: #64748b;
+        }
+        .section-students {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e5e7eb;
+        }
+        .section-students-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #6b7280;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .student-badge {
+            display: inline-flex;
+            align-items: center;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 4px 8px;
+            margin: 4px;
+            font-size: 11px;
+            color: #4b5563;
         }
     </style>
 </head>
@@ -689,6 +692,7 @@
         
         <div class="main-content">
             <div class="container">
+                <!-- Profile Section -->
                 <div class="profile-section">
                     <div class="profile-header">
                         <div class="profile-title">Professor Profile</div>
@@ -717,6 +721,7 @@
                     </div>
                 </div>
                 
+                <!-- Stats Section -->
                 <div class="row stats-row g-3">
                     <div class="col-12 col-sm-6 col-lg-4 col-xl-2">
                         <div class="stat-card purple">
@@ -768,6 +773,17 @@
                     </div>
                 </div>
                 
+                <!-- My Sections Section -->
+                <div class="sections-container" id="sectionsContainer" style="display: none;">
+                    <div class="sections-title">
+                        <i class="fas fa-chalkboard"></i> My Assigned Sections
+                    </div>
+                    <div class="sections-grid" id="sectionsGrid">
+                        <!-- Sections will be dynamically added here -->
+                    </div>
+                </div>
+                
+                <!-- Real-time Monitoring -->
                 <div class="monitoring-container">
                     <div class="monitoring-header">
                         <div class="monitoring-title">
@@ -796,19 +812,6 @@
                         </div>
                         <div class="monitoring-card">
                             <div class="monitoring-card-title">
-                                <i class="fas fa-wifi" style="color: #3b82f6;"></i>
-                                Students Online Now
-                            </div>
-                            <div class="student-list" id="onlineStudentsList">
-                                <div class="empty-state">
-                                    <div class="empty-icon">📱</div>
-                                    <div class="empty-title">No Students Online</div>
-                                    <div class="empty-text">Students will appear here when they log in</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="monitoring-card">
-                            <div class="monitoring-card-title">
                                 <i class="fas fa-history" style="color: #f59e0b;"></i>
                                 Recent Activity Completions
                             </div>
@@ -821,7 +824,6 @@
                             </div>
                         </div>
                     </div>
-                
                 </div>
             </div>
         </div>
@@ -858,7 +860,7 @@
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
         import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-        import { getFirestore, doc, getDoc, collection, query, where, getDocs, onSnapshot, setDoc, updateDoc, orderBy } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        import { getFirestore, doc, getDoc, collection, query, where, getDocs, onSnapshot, orderBy } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
         const firebaseConfig = {
             apiKey: "AIzaSyAgaLunqEf2gs6dSpF_sz1hV5XQ5Wm52jo",
@@ -874,8 +876,8 @@
         const db = getFirestore(app);
 
         let currentProfessor = null;
-        let allStudents = [];
-        let assignedSections = [];
+        let professorSections = [];
+        let professorStudents = [];
 
         onAuthStateChanged(auth, async (user) => {
             const loadingScreen = document.getElementById('loadingScreen');
@@ -885,117 +887,47 @@
                 try {
                     console.log('=== PROFESSOR AUTHENTICATION ===');
                     console.log('User authenticated:', user.email);
-                    console.log('User UID:', user.uid);
                     
-                    // Normalize email
                     const userEmail = user.email.toLowerCase();
                     
-                    let professorData = null;
-                    let userRole = null;
+                    // First try to find professor by email in professors collection
+                    const professorsQuery = query(
+                        collection(db, 'professors'),
+                        where('email', '==', userEmail)
+                    );
+                    const professorsSnapshot = await getDocs(professorsQuery);
                     
-                    // Step 1: Check users collection by UID
-                    console.log('Step 1: Checking users collection...');
-                    const userRef = doc(db, 'users', user.uid);
-                    const userDoc = await getDoc(userRef);
-                    
-                    if (userDoc.exists()) {
-                        const userData = userDoc.data();
-                        userRole = userData.role;
-                        console.log('✓ User found, role:', userRole);
-                        
-                        // Verify this is a professor account
-                        if (userRole !== 'professor' && userRole !== 'professor') {
-                            console.error('❌ Not a professor account, role is:', userRole);
-                            alert('This account is not authorized to access the professor dashboard.');
-                            await signOut(auth);
-                            window.location.href = '/login/index.html';
-                            return;
-                        }
-                        
-                        professorData = userData;
-                        console.log('✓ Professor data loaded from users collection');
-                        
+                    if (!professorsSnapshot.empty) {
+                        const professorDoc = professorsSnapshot.docs[0];
+                        currentProfessor = { id: professorDoc.id, ...professorDoc.data() };
+                        console.log('✓ Professor found in professors collection:', currentProfessor);
                     } else {
-                        // Step 2: Try email lookup
-                        console.log('Step 2: User not found by UID, checking email lookup...');
-                        const emailKey = userEmail.replace(/\./g, '_');
-                        const emailLookupRef = doc(db, 'usersByEmail', emailKey);
-                        const emailLookupSnap = await getDoc(emailLookupRef);
+                        // Try users collection
+                        const usersQuery = query(
+                            collection(db, 'users'),
+                            where('email', '==', userEmail),
+                            where('role', '==', 'professor')
+                        );
+                        const usersSnapshot = await getDocs(usersQuery);
                         
-                        if (emailLookupSnap.exists()) {
-                            const emailData = emailLookupSnap.data();
-                            userRole = emailData.role;
-                            console.log('✓ Found via email lookup, role:', userRole);
-                            
-                            if (userRole !== 'professor' && userRole !== 'professor') {
-                                console.error('❌ Not a professor account');
-                                alert('This account is not authorized to access the professor dashboard.');
-                                await signOut(auth);
-                                window.location.href = '/login/index.html';
-                                return;
-                            }
-                            
-                            // Get actual user data
-                            if (emailData.uid) {
-                                const actualUserRef = doc(db, 'users', emailData.uid);
-                                const actualUserSnap = await getDoc(actualUserRef);
-                                if (actualUserSnap.exists()) {
-                                    professorData = actualUserSnap.data();
-                                }
-                            }
+                        if (!usersSnapshot.empty) {
+                            const userDoc = usersSnapshot.docs[0];
+                            currentProfessor = { id: userDoc.id, ...userDoc.data() };
+                            console.log('✓ Professor found in users collection:', currentProfessor);
                         } else {
-                            // Step 3: Check professorProfiles as fallback
-                            console.log('Step 3: Checking professorProfiles...');
-                            const profileRef = doc(db, 'professorProfiles', userEmail);
-                            const profileSnap = await getDoc(profileRef);
-                            
-                            if (profileSnap.exists()) {
-                                professorData = profileSnap.data();
-                                userRole = 'professor';
-                                console.log('✓ Found in professorProfiles, auto-setting role to professor');
-                                
-                                // Create user record with professor role
-                                await setDoc(doc(db, 'users', user.uid), {
-                                    ...professorData,
-                                    role: 'professor',
-                                    uid: user.uid,
-                                    updatedAt: new Date()
-                                }, { merge: true });
-                                
-                            } else {
-                                throw new Error('Professor profile not found. Please contact the administrator.');
-                            }
+                            throw new Error('Professor account not found. Please contact the secretary.');
                         }
                     }
-                    
-                    if (!professorData) {
-                        throw new Error('Unable to load professor data.');
-                    }
-                    
-                    // Set current professor
-                    currentProfessor = { id: user.uid, ...professorData };
-                    console.log('✓ Current professor set:', currentProfessor);
                     
                     // Update UI with professor information
-                    document.getElementById('userName').textContent = professorData.name || professorData.displayName || 'Professor';
+                    document.getElementById('userName').textContent = 
+                        currentProfessor.fullName || currentProfessor.name || user.displayName || 'Professor';
                     document.getElementById('userEmail').textContent = userEmail;
                     
-                    // Set College to "College of Human Kinetics" by default
-                    document.getElementById('userCollege').textContent = 'College of Human Kinetics';
-                    
-                    if (professorData.photoURL || user.photoURL) {
-                        document.getElementById('userPhoto').src = professorData.photoURL || user.photoURL;
-                    }
-                    
-                    // Load dashboard data
-                    console.log('Loading dashboard statistics...');
-                    await loadProfessorStatistics(user.uid, professorData);
-                    await loadAssignedSections(user.uid);
-                    await loadAllStudents();
-                    setupRealtimeMonitoring(user.uid);
-                    
-                    console.log('✓ Dashboard loaded successfully');
-                    console.log('=== AUTHENTICATION COMPLETE ===');
+                    // Load professor's sections and students
+                    await loadProfessorSections();
+                    await loadProfessorStatistics();
+                    setupRealtimeMonitoring();
                     
                     // Show dashboard
                     loadingScreen.style.display = 'none';
@@ -1004,7 +936,6 @@
                 } catch (error) {
                     console.error('=== ERROR IN AUTHENTICATION ===');
                     console.error('Error:', error);
-                    console.error('Error message:', error.message);
                     
                     loadingScreen.style.display = 'none';
                     alert(error.message || 'Error loading dashboard. Please try again.');
@@ -1017,125 +948,229 @@
             }
         });
 
-        async function loadProfessorStatistics(professorId, userData) {
+        async function loadProfessorSections() {
             try {
-                // Load from user data (updated by Head Admin)
-                document.getElementById('statCompleted').textContent = userData.activitiesCompleted || 0;
-                document.getElementById('statAverage').textContent = userData.averageScore || 0;
-                document.getElementById('statPending').textContent = userData.pendingActivities || 0;
-                document.getElementById('statRate').textContent = (userData.completionRate || 0) + '%';
+                console.log('Loading professor sections...');
                 
-                // Update total students from user data
-                document.getElementById('statStudents').textContent = userData.totalStudents || 0;
+                professorSections = [];
+                professorStudents = [];
+                
+                // Get professor's name for matching
+                const professorName = currentProfessor.fullName || currentProfessor.name || '';
+                const professorEmail = currentProfessor.email;
+                
+                console.log('Professor name for matching:', professorName);
+                console.log('Professor email:', professorEmail);
+                
+                // Query sections collection for this professor
+                // Try multiple matching strategies
+                const sectionsQuery = query(
+                    collection(db, 'sections')
+                );
+                const sectionsSnapshot = await getDocs(sectionsQuery);
+                
+                console.log('Total sections in database:', sectionsSnapshot.size);
+                
+                sectionsSnapshot.forEach((doc) => {
+                    const sectionData = doc.data();
+                    
+                    // Check if this professor teaches this section
+                    // Match by email or name
+                    const professorMatches = 
+                        sectionData.professor === professorName ||
+                        sectionData.professorEmail === professorEmail ||
+                        (sectionData.professor && professorName.includes(sectionData.professor)) ||
+                        (sectionData.professor && sectionData.professor.includes(professorName));
+                    
+                    if (professorMatches) {
+                        console.log(`✓ Section assigned: ${sectionData.name}`);
+                        
+                        professorSections.push({
+                            id: doc.id,
+                            ...sectionData
+                        });
+                        
+                        // Add students from this section
+                        if (sectionData.students && Array.isArray(sectionData.students)) {
+                            sectionData.students.forEach(student => {
+                                professorStudents.push({
+                                    ...student,
+                                    section: sectionData.name,
+                                    sectionId: doc.id
+                                });
+                            });
+                        }
+                    }
+                });
+                
+                console.log(`Found ${professorSections.length} sections with ${professorStudents.length} students`);
+                
+                // Update UI
+                document.getElementById('assignedSections').textContent = professorSections.length;
+                document.getElementById('statSections').textContent = professorSections.length;
+                document.getElementById('statStudents').textContent = professorStudents.length;
+                
+                // Display sections if any found
+                if (professorSections.length > 0) {
+                    document.getElementById('sectionsContainer').style.display = 'block';
+                    displaySections();
+                }
+                
+            } catch (error) {
+                console.error('Error loading sections:', error);
+            }
+        }
+
+        function displaySections() {
+            const sectionsGrid = document.getElementById('sectionsGrid');
+            
+            if (professorSections.length === 0) {
+                sectionsGrid.innerHTML = `
+                    <div class="col-12">
+                        <div class="empty-state">
+                            <div class="empty-icon">📚</div>
+                            <div class="empty-title">No Sections Assigned</div>
+                            <div class="empty-text">Sections assigned by the secretary will appear here</div>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '';
+            professorSections.forEach(section => {
+                const students = section.students || [];
+                const firstFewStudents = students.slice(0, 5);
+                const remainingCount = Math.max(0, students.length - 5);
+                
+                let studentsHtml = '';
+                firstFewStudents.forEach(student => {
+                    const displayName = student.name || student.email || 'Unknown Student';
+                    studentsHtml += `<span class="student-badge">${displayName}</span>`;
+                });
+                
+                if (remainingCount > 0) {
+                    studentsHtml += `<span class="student-badge">+${remainingCount} more</span>`;
+                }
+                
+                html += `
+                    <div class="section-card">
+                        <div class="section-header">
+                            <div class="section-name">${section.name || 'Unnamed Section'}</div>
+                            <div class="section-student-count">${students.length} students</div>
+                        </div>
+                        <div class="section-details">
+                            <div class="section-detail">
+                                <i class="fas fa-book" style="color: #6b7280;"></i>
+                                <span>${section.courseCode || 'PE 3'}</span>
+                            </div>
+                            <div class="section-detail">
+                                <i class="fas fa-user-tie" style="color: #6b7280;"></i>
+                                <span>${section.professor || 'Professor'}</span>
+                            </div>
+                            <div class="section-detail">
+                                <i class="fas fa-calendar-alt" style="color: #6b7280;"></i>
+                                <span>Updated: ${formatDate(section.lastUpdated || section.createdAt)}</span>
+                            </div>
+                        </div>
+                        ${students.length > 0 ? `
+                            <div class="section-students">
+                                <div class="section-students-title">
+                                    <i class="fas fa-users"></i>
+                                    Students in this section:
+                                </div>
+                                <div>${studentsHtml}</div>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            });
+            
+            sectionsGrid.innerHTML = html;
+        }
+
+        async function loadProfessorStatistics() {
+            try {
+                // Initialize stats
+                document.getElementById('statCompleted').textContent = '0';
+                document.getElementById('statAverage').textContent = '0';
+                document.getElementById('statPending').textContent = '0';
+                document.getElementById('statRate').textContent = '0%';
+                
+                // Get student IDs for querying activities
+                const studentIds = professorStudents.map(s => s.studentId || s.uid || s.email);
+                if (studentIds.length === 0) return;
+                
+                // Query activity results for these students
+                const activitiesQuery = query(
+                    collection(db, 'activityResults'),
+                    where('studentId', 'in', studentIds.slice(0, 10)) // Firestore limit of 10 for 'in' queries
+                );
+                const activitiesSnapshot = await getDocs(activitiesQuery);
+                
+                let completedCount = 0;
+                let totalScore = 0;
+                let pendingCount = 0;
+                
+                activitiesSnapshot.forEach(doc => {
+                    const activity = doc.data();
+                    if (activity.status === 'completed') {
+                        completedCount++;
+                        const score = parseFloat(activity.score) || 0;
+                        totalScore += score;
+                    } else if (activity.status === 'pending') {
+                        pendingCount++;
+                    }
+                });
+                
+                // Update stats
+                document.getElementById('statCompleted').textContent = completedCount;
+                document.getElementById('statPending').textContent = pendingCount;
+                
+                const averageScore = completedCount > 0 ? Math.round(totalScore / completedCount) : 0;
+                document.getElementById('statAverage').textContent = averageScore;
+                
+                const totalAssigned = completedCount + pendingCount;
+                const completionRate = totalAssigned > 0 ? Math.round((completedCount / totalAssigned) * 100) : 0;
+                document.getElementById('statRate').textContent = completionRate + '%';
                 
             } catch (error) {
                 console.error('Error loading statistics:', error);
             }
         }
 
-        async function loadAssignedSections(professorId) {
+        function setupRealtimeMonitoring() {
             try {
-                // Query sections where this professor is assigned
-                const sectionsQuery = query(
-                    collection(db, 'sections'), 
-                    where('professorId', '==', professorId)
-                );
-                const sectionsSnapshot = await getDocs(sectionsQuery);
+                // Get student IDs for monitoring
+                const studentIds = professorStudents.map(s => s.studentId || s.uid || s.email);
                 
-                let totalStudents = 0;
-                let sectionCount = 0;
-                
-                sectionsSnapshot.forEach((doc) => {
-                    const sectionData = doc.data();
-                    sectionCount++;
-                    totalStudents += sectionData.studentCount || 0;
-                    assignedSections.push({
-                        id: doc.id,
-                        ...sectionData
-                    });
-                });
-                
-                // Update UI with calculated data
-                if (sectionCount > 0) {
-                    document.getElementById('statSections').textContent = sectionCount;
-                    document.getElementById('assignedSections').textContent = sectionCount;
-                    document.getElementById('statStudents').textContent = totalStudents;
-                }
-                
-                console.log(`Loaded ${sectionCount} sections with ${totalStudents} total students`);
-                
-            } catch (error) {
-                console.error('Error loading assigned sections:', error);
-            }
-        }
-
-        async function loadAllStudents() {
-            try {
-                allStudents = [];
-                const studentIds = new Set();
-                
-                // Load students from all assigned sections
-                for (const section of assignedSections) {
-                    const studentsQuery = query(
-                        collection(db, 'students'),
-                        where('section', '==', section.name)
+                if (studentIds.length > 0) {
+                    // Set up real-time listener for active tests
+                    const activeTestsQuery = query(
+                        collection(db, 'activeTests'),
+                        where('studentId', 'in', studentIds.slice(0, 10)),
+                        where('status', '==', 'active')
                     );
-                    const studentsSnapshot = await getDocs(studentsQuery);
                     
-                    studentsSnapshot.forEach((doc) => {
-                        const studentData = doc.data();
-                        const uniqueId = studentData.email || studentData.umakId || doc.id;
-                        
-                        if (!studentIds.has(uniqueId)) {
-                            studentIds.add(uniqueId);
-                            allStudents.push({
-                                id: doc.id,
-                                ...studentData,
-                                section: section.name,
-                                uniqueId: uniqueId
-                            });
-                        }
+                    onSnapshot(activeTestsQuery, (snapshot) => {
+                        updateActiveTestsList(snapshot);
+                    });
+                    
+                    // Set up real-time listener for recent completions
+                    const recentCompletionsQuery = query(
+                        collection(db, 'activityResults'),
+                        where('studentId', 'in', studentIds.slice(0, 10)),
+                        where('status', '==', 'completed'),
+                        orderBy('submittedAt', 'desc')
+                    );
+                    
+                    onSnapshot(recentCompletionsQuery, (snapshot) => {
+                        updateRecentCompletions(snapshot);
                     });
                 }
                 
-                console.log('Loaded unique students:', allStudents.length);
-                
             } catch (error) {
-                console.error('Error loading students:', error);
-            }
-        }
-
-        function setupRealtimeMonitoring(professorId) {
-            try {
-                // Set up real-time listener for active tests
-                const activeTestsQuery = query(
-                    collection(db, 'activeTests'),
-                    where('professorId', '==', professorId),
-                    where('status', '==', 'active')
-                );
-                
-                onSnapshot(activeTestsQuery, (snapshot) => {
-                    updateActiveTestsList(snapshot);
-                }, (error) => {
-                    console.error('Error setting up real-time monitoring:', error);
-                });
-                
-                // Set up real-time listener for recent completions
-                const recentCompletionsQuery = query(
-                    collection(db, 'activityResults'),
-                    where('professorEmail', '==', currentProfessor.email),
-                    orderBy('submittedAt', 'desc')
-                );
-                
-                onSnapshot(recentCompletionsQuery, (snapshot) => {
-                    updateRecentCompletions(snapshot);
-                });
-                
-                // Set up real-time listener for online students
-                setupOnlineStudentsMonitoring();
-                
-            } catch (error) {
-                console.error('Error in setupRealtimeMonitoring:', error);
+                console.error('Error setting up real-time monitoring:', error);
             }
         }
 
@@ -1154,11 +1189,24 @@
             }
             
             let html = '';
+            let count = 0;
             snapshot.forEach((doc) => {
+                if (count >= 8) return; // Limit to 8
+                count++;
+                
                 const activity = doc.data();
                 const progress = activity.progress || 0;
                 const studentName = activity.studentName || 'Unknown Student';
                 const initials = getInitials(studentName);
+                
+                // Find student info
+                const studentInfo = professorStudents.find(s => 
+                    s.studentId === activity.studentId || 
+                    s.email === activity.studentEmail ||
+                    s.uid === activity.studentId
+                );
+                
+                const section = studentInfo?.section || 'N/A';
                 
                 html += `
                     <div class="student-item">
@@ -1166,7 +1214,7 @@
                         <div class="student-info">
                             <div class="student-name">${studentName}</div>
                             <div class="student-details">
-                                <span>${activity.section || 'N/A'}</span>
+                                <span>${section}</span>
                                 <span>${activity.activityName || 'Unnamed Activity'}</span>
                             </div>
                         </div>
@@ -1204,8 +1252,17 @@
                 const result = doc.data();
                 const studentName = result.studentName || 'Unknown Student';
                 const activityName = result.activityName || 'Unknown Activity';
-                const score = calculateActivityScore(result.activityName, result.result, result.activityTarget);
+                const score = result.score || 0;
                 const initials = getInitials(studentName);
+                
+                // Find student info
+                const studentInfo = professorStudents.find(s => 
+                    s.studentId === result.studentId || 
+                    s.email === result.studentEmail ||
+                    s.uid === result.studentId
+                );
+                
+                const section = studentInfo?.section || 'N/A';
                 
                 html += `
                     <div class="student-item">
@@ -1213,66 +1270,12 @@
                         <div class="student-info">
                             <div class="student-name">${studentName}</div>
                             <div class="student-details">
+                                <span>${section}</span>
                                 <span>${activityName}</span>
-                                <span>Score: ${score}</span>
                             </div>
                         </div>
                         <div class="student-status">
-                            <span>Completed</span>
-                        </div>
-                    </div>
-                `;
-            });
-            
-            container.innerHTML = html;
-        }
-
-        function setupOnlineStudentsMonitoring() {
-            // Update online students list
-            updateOnlineStudentsList();
-            
-            // Update online students list periodically
-            setInterval(() => {
-                updateOnlineStudentsList();
-            }, 30000); // Update every 30 seconds
-        }
-
-        function updateOnlineStudentsList() {
-            const container = document.getElementById('onlineStudentsList');
-            
-            // Show actual students from database
-            const onlineStudents = allStudents.slice(0, Math.min(8, allStudents.length));
-            
-            if (onlineStudents.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-icon">📱</div>
-                        <div class="empty-title">No Students Online</div>
-                        <div class="empty-text">Students will appear here when they log in</div>
-                    </div>
-                `;
-                return;
-            }
-            
-            let html = '';
-            onlineStudents.forEach(student => {
-                const firstName = student.firstName || 'Unknown';
-                const lastName = student.lastName || 'Student';
-                const initials = (firstName.charAt(0) + lastName.charAt(0)).toUpperCase();
-                
-                html += `
-                    <div class="student-item">
-                        <div class="student-avatar">${initials}</div>
-                        <div class="student-info">
-                            <div class="student-name">${firstName} ${lastName}</div>
-                            <div class="student-details">
-                                <span>${student.section || 'N/A'}</span>
-                                <span>ID: ${student.umakId || student.id.substring(0, 8)}</span>
-                            </div>
-                        </div>
-                        <div class="student-status">
-                            <div class="status-dot online"></div>
-                            <span class="status-online">Online</span>
+                            <span>Score: ${score}</span>
                         </div>
                     </div>
                 `;
@@ -1282,6 +1285,7 @@
         }
 
         function getInitials(name) {
+            if (!name) return '??';
             const nameParts = name.split(' ');
             if (nameParts.length >= 2) {
                 return (nameParts[0].charAt(0) + nameParts[nameParts.length - 1].charAt(0)).toUpperCase();
@@ -1289,101 +1293,20 @@
             return name.substring(0, 2).toUpperCase();
         }
 
-        function calculateActivityScore(activityName, result, activityTarget = null) {
-            if (!activityName || !result) return 0;
-            
-            const normalized = activityName.toLowerCase();
-            let numericValue = 0;
-
-            // Extract numeric value from result
-            if (typeof result === 'string') {
-                const match = result.match(/(\d+\.?\d*)/);
-                if (match) numericValue = parseFloat(match[1]);
-            } else {
-                numericValue = parseFloat(result) || 0;
-            }
-
-            // If professor set a target, use target-based scoring
-            if (activityTarget && activityTarget > 0) {
-                if (normalized.includes('push-up') || normalized.includes('pushup') || 
-                    normalized.includes('sit-up') || normalized.includes('situp')) {
-                    // For rep-based activities
-                    const reps = parseInt(result);
-                    if (reps >= activityTarget) return 100;
-                    if (reps >= activityTarget * 0.9) return 95;
-                    if (reps >= activityTarget * 0.8) return 90;
-                    if (reps >= activityTarget * 0.7) return 85;
-                    if (reps >= activityTarget * 0.6) return 80;
-                    if (reps >= activityTarget * 0.5) return 75;
-                    return Math.max(50, Math.round((reps / activityTarget) * 100));
-                } else if (normalized.includes('plank')) {
-                    // For plank (time-based in seconds)
-                    const seconds = parseInt(result.split(':')[1] || result);
-                    if (seconds >= activityTarget) return 100;
-                    if (seconds >= activityTarget * 0.9) return 95;
-                    if (seconds >= activityTarget * 0.8) return 90;
-                    if (seconds >= activityTarget * 0.7) return 85;
-                    if (seconds >= activityTarget * 0.6) return 80;
-                    if (seconds >= activityTarget * 0.5) return 75;
-                    return Math.max(50, Math.round((seconds / activityTarget) * 100));
-                }
-            }
-
-            // Fallback to default scoring
-            if (normalized.includes('push-up') || normalized.includes('pushup')) {
-                const reps = numericValue;
-                if (reps >= 40) return 100;
-                if (reps >= 30) return 90;
-                if (reps >= 20) return 80;
-                if (reps >= 15) return 70;
-                if (reps >= 10) return 60;
-                return 50;
-            } else if (normalized.includes('sit-up') || normalized.includes('situp')) {
-                const reps = numericValue;
-                if (reps >= 50) return 100;
-                if (reps >= 40) return 90;
-                if (reps >= 30) return 80;
-                if (reps >= 20) return 70;
-                if (reps >= 15) return 60;
-                return 50;
-            } else if (normalized.includes('plank')) {
-                const seconds = numericValue;
-                if (seconds >= 120) return 100;
-                if (seconds >= 90) return 90;
-                if (seconds >= 60) return 80;
-                if (seconds >= 45) return 70;
-                if (seconds >= 30) return 60;
-                return 50;
-            }
-
-            return numericValue > 0 ? 75 : 0; // Default score for unknown activities
-        }
-
-        window.monitorActivity = function(activityId) {
-            console.log('Monitoring activity:', activityId);
-            alert(`Opening detailed monitoring view for activity: ${activityId}\n\nThis will show:\n- Student video feed\n- Exercise form analysis\n- Rep counting\n- Real-time performance metrics`);
-        };
-
-        window.interruptActivity = async function(activityId) {
-            if (!confirm('Are you sure you want to interrupt this activity? The student will be notified.')) {
-                return;
-            }
+        function formatDate(timestamp) {
+            if (!timestamp) return 'Unknown';
             
             try {
-                const activityRef = doc(db, 'activeTests', activityId);
-                await updateDoc(activityRef, { 
-                    status: 'interrupted',
-                    interruptedBy: currentProfessor.id,
-                    interruptedAt: new Date()
+                const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+                return date.toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric'
                 });
-                
-                alert('Activity interrupted successfully. The student has been notified.');
-                
             } catch (error) {
-                console.error('Error interrupting activity:', error);
-                alert('Failed to interrupt activity. Please try again.');
+                return 'Invalid date';
             }
-        };
+        }
 
         async function handleLogout() {
             if (confirm('Are you sure you want to logout?')) {
@@ -1397,7 +1320,7 @@
             }
         }
 
-        // Make handleLogout globally available
+        // Export functions to global scope
         window.handleLogout = handleLogout;
 
     </script>

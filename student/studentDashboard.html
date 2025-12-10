@@ -256,7 +256,7 @@
                                     <p id="profileDropdownEmailMobile" class="text-xs sm:text-sm text-gray-500 mt-1 truncate px-2">Loading...</p>
                                 </div>
                                 <div class="p-2">
-                                    <a href="./studentProfile.html" class="flex items-center gap-3 px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg hover:bg-gray-100 transition-colors">
+                                    <a href="./studentprofile.html" class="flex items-center gap-3 px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg hover:bg-gray-100 transition-colors">
                                         <i class="bi bi-person-circle text-blue-500 text-lg sm:text-xl"></i>
                                         <span class="font-medium text-gray-700 text-sm sm:text-base">View Profile</span>
                                     </a>
@@ -576,7 +576,7 @@
         let showAllResults = false;
 
         const VISIBLE_RESULTS_COUNT = 2;
-            const testCategories = {
+        const testCategories = {
             'Cardiorespiratory Endurance': {
                 tests: ['3-Minute Step Test', '1-Mile Run', '1 Mile Run', 'BMI Assessment'],
                 icon: 'https://c.animaapp.com/HN7hFbsr/img/image-148@2x.png',
@@ -603,6 +603,7 @@
                 subtitle: 'Body fat and mass tests'
             }
         };
+        
         // DOM Elements
         const loadingScreen = document.getElementById('loadingScreen');
         const mainContent = document.getElementById('mainContent');
@@ -620,48 +621,46 @@
 
         // Event Listeners
         document.addEventListener('DOMContentLoaded', () => {
-    // Mobile menu toggle
-    if (mobileMenuButton) {
-        mobileMenuButton.addEventListener('click', toggleMobileMenu);
-    }
-    
-    // Notification dropdowns
-    if (notificationBellBtn) {
-        notificationBellBtn.addEventListener('click', toggleNotificationDropdown);
-    }
-    
-    if (notificationBellBtnMobile) {
-        notificationBellBtnMobile.addEventListener('click', toggleNotificationDropdown);
-    }
-    
-    // Profile dropdowns
-    if (profilePictureBtn) {
-        profilePictureBtn.addEventListener('click', toggleProfileDropdown);
-    }
-    
-    if (profilePictureBtnMobile) {
-        profilePictureBtnMobile.addEventListener('click', toggleProfileDropdown);
-    }
-    
-    // Export results
-    if (exportResultsBtn) {
-        exportResultsBtn.addEventListener('click', exportAllResults);
-    }
-    
-    // ADD THESE LOGOUT EVENT LISTENERS:
-    // Logout buttons - Desktop
-    document.querySelectorAll('#profileDropdown [class*="text-red-500"]').forEach(btn => {
-        btn.addEventListener('click', handleLogout);
-    });
-    
-    // Logout buttons - Mobile
-    document.querySelectorAll('#profileDropdownMobile [class*="text-red-500"]').forEach(btn => {
-        btn.addEventListener('click', handleLogout);
-    });
-    
-    // Close dropdowns when clicking outside
-    document.addEventListener('click', closeAllDropdowns);
-});
+            // Mobile menu toggle
+            if (mobileMenuButton) {
+                mobileMenuButton.addEventListener('click', toggleMobileMenu);
+            }
+            
+            // Notification dropdowns
+            if (notificationBellBtn) {
+                notificationBellBtn.addEventListener('click', toggleNotificationDropdown);
+            }
+            
+            if (notificationBellBtnMobile) {
+                notificationBellBtnMobile.addEventListener('click', toggleNotificationDropdown);
+            }
+            
+            // Profile dropdowns
+            if (profilePictureBtn) {
+                profilePictureBtn.addEventListener('click', toggleProfileDropdown);
+            }
+            
+            if (profilePictureBtnMobile) {
+                profilePictureBtnMobile.addEventListener('click', toggleProfileDropdown);
+            }
+            
+            // Export results
+            if (exportResultsBtn) {
+                exportResultsBtn.addEventListener('click', exportAllResults);
+            }
+            
+            // Logout buttons
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.logout-btn') || e.target.closest('[class*="text-red-500"]:not(.logout-btn)')) {
+                    if (e.target.closest('[class*="text-red-500"]').textContent.includes('Logout')) {
+                        handleLogout();
+                    }
+                }
+            });
+            
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', closeAllDropdowns);
+        });
 
         // Mobile menu toggle
         function toggleMobileMenu() {
@@ -670,53 +669,53 @@
 
         // Notification dropdown
         function toggleNotificationDropdown(event) {
-    event?.stopPropagation();
-    const isMobile = window.innerWidth < 1024;
-    const dropdown = isMobile ? notificationDropdownMobile : notificationDropdown;
-    
-    const isHidden = dropdown.classList.contains('hidden');
-    
-    if (isHidden) {
-        dropdown.classList.remove('hidden');
-        document.body.classList.add('dropdown-open');
-        loadNotificationDropdown();
-        updateNavNotificationCount(0);
-        closeProfileDropdown();
-    } else {
-        dropdown.classList.add('hidden');
-        document.body.classList.remove('dropdown-open');
-    }
-}
+            event?.stopPropagation();
+            const isMobile = window.innerWidth < 1024;
+            const dropdown = isMobile ? notificationDropdownMobile : notificationDropdown;
+            
+            const isHidden = dropdown.classList.contains('hidden');
+            
+            if (isHidden) {
+                dropdown.classList.remove('hidden');
+                document.body.classList.add('dropdown-open');
+                loadNotificationDropdown();
+                updateNavNotificationCount(0);
+                closeProfileDropdown();
+            } else {
+                dropdown.classList.add('hidden');
+                document.body.classList.remove('dropdown-open');
+            }
+        }
 
         function closeNotificationDropdown() {
-    notificationDropdown.classList.add('hidden');
-    notificationDropdownMobile.classList.add('hidden');
-    document.body.classList.remove('dropdown-open');
-}
+            notificationDropdown.classList.add('hidden');
+            notificationDropdownMobile.classList.add('hidden');
+            document.body.classList.remove('dropdown-open');
+        }
 
         // Profile dropdown
         function toggleProfileDropdown(event) {
-    event?.stopPropagation();
-    const isMobile = window.innerWidth < 1024;
-    const dropdown = isMobile ? profileDropdownMobile : profileDropdown;
-    
-    const isHidden = dropdown.classList.contains('hidden');
-    
-    if (isHidden) {
-        dropdown.classList.remove('hidden');
-        document.body.classList.add('dropdown-open');
-        closeNotificationDropdown();
-    } else {
-        dropdown.classList.add('hidden');
-        document.body.classList.remove('dropdown-open');
-    }
-}
+            event?.stopPropagation();
+            const isMobile = window.innerWidth < 1024;
+            const dropdown = isMobile ? profileDropdownMobile : profileDropdown;
+            
+            const isHidden = dropdown.classList.contains('hidden');
+            
+            if (isHidden) {
+                dropdown.classList.remove('hidden');
+                document.body.classList.add('dropdown-open');
+                closeNotificationDropdown();
+            } else {
+                dropdown.classList.add('hidden');
+                document.body.classList.remove('dropdown-open');
+            }
+        }
 
         function closeProfileDropdown() {
-    profileDropdown.classList.add('hidden');
-    profileDropdownMobile.classList.add('hidden');
-    document.body.classList.remove('dropdown-open');
-}
+            profileDropdown.classList.add('hidden');
+            profileDropdownMobile.classList.add('hidden');
+            document.body.classList.remove('dropdown-open');
+        }
 
         // Close all dropdowns when clicking outside
         function closeAllDropdowns(event) {
@@ -737,534 +736,530 @@
 
         // Logout function
         async function handleLogout() {
-    if (confirm('Are you sure you want to logout?')) {
-        try {
-            await signOut(auth);
-            window.location.href = '../login/index.html';
-        } catch (error) {
-            console.error('Error logging out:', error);
-            alert('Error logging out. Please try again.');
+            if (confirm('Are you sure you want to logout?')) {
+                try {
+                    await signOut(auth);
+                    window.location.href = '../login/index.html';
+                } catch (error) {
+                    console.error('Error logging out:', error);
+                    alert('Error logging out. Please try again.');
+                }
+            }
         }
-    }
-}
-            function initializeCharts() {
-    initializeFitnessOverviewChart();
-    initializePerformanceRadarChart();
-}
+
+        function initializeCharts() {
+            initializeFitnessOverviewChart();
+            initializePerformanceRadarChart();
+        }
+        
         // Initialize charts
         function initializeFitnessOverviewChart() {
-    const canvas = document.getElementById('fitnessOverviewChart');
-    if (!canvas) return;
+            const canvas = document.getElementById('fitnessOverviewChart');
+            if (!canvas) return;
 
-    const ctx = canvas.getContext('2d');
-    
-    window.fitnessOverviewChart = new Chart(ctx, {
-        type: 'line',  // Changed to line chart for better progress visualization
-        data: {
-            labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Current'],
-            datasets: [{
-                label: 'Cardiorespiratory',
-                data: [0, 0, 0, 0, 0],
-                borderColor: '#3b82f6',
-                backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                tension: 0.4,
-                fill: true
-            }, {
-                label: 'Muscular Strength',
-                data: [0, 0, 0, 0, 0],
-                borderColor: '#ef4444',
-                backgroundColor: 'rgba(239, 68, 68, 0.1)',
-                tension: 0.4,
-                fill: true
-            }, {
-                label: 'Muscular Endurance',
-                data: [0, 0, 0, 0, 0],
-                borderColor: '#10b981',
-                backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                tension: 0.4,
-                fill: true
-            }, {
-                label: 'Flexibility',
-                data: [0, 0, 0, 0, 0],
-                borderColor: '#f59e0b',
-                backgroundColor: 'rgba(245, 158, 11, 0.1)',
-                tension: 0.4,
-                fill: true
-            }, {
-                label: 'Body Composition',
-                data: [0, 0, 0, 0, 0],
-                borderColor: '#a855f7',
-                backgroundColor: 'rgba(168, 85, 247, 0.1)',
-                tension: 0.4,
-                fill: true
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: true,
-                    position: 'top',
-                    labels: {
-                        padding: 10,
-                        font: { size: 11, weight: '600' },
-                        usePointStyle: true
-                    }
+            const ctx = canvas.getContext('2d');
+            
+            window.fitnessOverviewChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Current'],
+                    datasets: [{
+                        label: 'Cardiorespiratory',
+                        data: [0, 0, 0, 0, 0],
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }, {
+                        label: 'Muscular Strength',
+                        data: [0, 0, 0, 0, 0],
+                        borderColor: '#ef4444',
+                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }, {
+                        label: 'Muscular Endurance',
+                        data: [0, 0, 0, 0, 0],
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }, {
+                        label: 'Flexibility',
+                        data: [0, 0, 0, 0, 0],
+                        borderColor: '#f59e0b',
+                        backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }, {
+                        label: 'Body Composition',
+                        data: [0, 0, 0, 0, 0],
+                        borderColor: '#a855f7',
+                        backgroundColor: 'rgba(168, 85, 247, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
                 },
-                tooltip: {
-                    backgroundColor: 'rgba(0, 0, 0, 0.9)',
-                    padding: 12,
-                    titleFont: { size: 13, weight: 'bold' },
-                    bodyFont: { size: 12 },
-                    callbacks: {
-                        label: function(context) {
-                            return `${context.dataset.label}: ${context.parsed.y}/100`;
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                padding: 10,
+                                font: { size: 11, weight: '600' },
+                                usePointStyle: true
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                            padding: 12,
+                            titleFont: { size: 13, weight: 'bold' },
+                            bodyFont: { size: 12 },
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.dataset.label}: ${context.parsed.y}/100`;
+                                }
+                            }
                         }
-                    }
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    max: 100,
-                    grid: { color: 'rgba(0, 0, 0, 0.05)' },
-                    ticks: {
-                        font: { size: 11, weight: '600' },
-                        stepSize: 20
                     },
-                    title: {
-                        display: true,
-                        text: 'Score (0-100)',
-                        font: { size: 12, weight: '700' }
-                    }
-                },
-                x: {
-                    grid: { display: false },
-                    ticks: {
-                        font: { size: 11, weight: '600' }
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            grid: { color: 'rgba(0, 0, 0, 0.05)' },
+                            ticks: {
+                                font: { size: 11, weight: '600' },
+                                stepSize: 20
+                            },
+                            title: {
+                                display: true,
+                                text: 'Score (0-100)',
+                                font: { size: 12, weight: '700' }
+                            }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: {
+                                font: { size: 11, weight: '600' }
+                            }
+                        }
+                    },
+                    animation: {
+                        duration: 1200,
+                        easing: 'easeOutQuart'
                     }
                 }
-            },
-            animation: {
-                duration: 1200,
-                easing: 'easeOutQuart'
-            }
+            });
         }
-    });
-}
 
         function initializePerformanceRadarChart() {
-    const canvas = document.getElementById('performanceRadarChart');
-    if (!canvas) return;
+            const canvas = document.getElementById('performanceRadarChart');
+            if (!canvas) return;
 
-    const ctx = canvas.getContext('2d');
-    
-    // Sample data matching 5 categories
-    const sampleData = {
-        labels: [
-            'Cardiorespiratory Endurance',
-            'Muscular Strength',
-            'Muscular Endurance',
-            'Flexibility',
-            'Body Composition'
-        ],
-        datasets: [{
-            label: 'Current Performance',
-            data: [0, 0, 0, 0, 0],
-            backgroundColor: 'rgba(59, 130, 246, 0.2)',
-            borderColor: '#3b82f6',
-            pointBackgroundColor: '#3b82f6',
-            pointBorderColor: '#fff',
-            pointHoverBackgroundColor: '#fff',
-            pointHoverBorderColor: '#3b82f6',
-            borderWidth: 2
-        }, {
-            label: 'Target Performance',
-            data: [85, 85, 85, 85, 85],
-            backgroundColor: 'rgba(16, 185, 129, 0.2)',
-            borderColor: '#10b981',
-            pointBackgroundColor: '#10b981',
-            pointBorderColor: '#fff',
-            pointHoverBackgroundColor: '#fff',
-            pointHoverBorderColor: '#10b981',
-            borderWidth: 2,
-            borderDash: [5, 5]
-        }]
-    };
-
-    window.performanceRadarChart = new Chart(ctx, {
-        type: 'radar',
-        data: sampleData,
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'top',
-                    labels: {
-                        padding: 15,
-                        font: {
-                            size: 11,
-                            weight: '600'
-                        }
-                    }
-                },
-                tooltip: {
-                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                    padding: 10,
-                    titleFont: {
-                        size: 11,
-                        weight: 'bold'
-                    },
-                    bodyFont: {
-                        size: 10
-                    }
-                }
-            },
-            scales: {
-                r: {
-                    beginAtZero: true,
-                    max: 100,
-                    ticks: {
-                        stepSize: 20,
-                        font: {
-                            size: 9
-                        }
-                    },
-                    pointLabels: {
-                        font: {
-                            size: 10,
-                            weight: '600'
-                        }
-                    },
-                    grid: {
-                        color: 'rgba(0, 0, 0, 0.1)'
-                    }
-                }
-            },
-            elements: {
-                line: {
+            const ctx = canvas.getContext('2d');
+            
+            const sampleData = {
+                labels: [
+                    'Cardiorespiratory Endurance',
+                    'Muscular Strength',
+                    'Muscular Endurance',
+                    'Flexibility',
+                    'Body Composition'
+                ],
+                datasets: [{
+                    label: 'Current Performance',
+                    data: [0, 0, 0, 0, 0],
+                    backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                    borderColor: '#3b82f6',
+                    pointBackgroundColor: '#3b82f6',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: '#3b82f6',
                     borderWidth: 2
+                }, {
+                    label: 'Target Performance',
+                    data: [85, 85, 85, 85, 85],
+                    backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                    borderColor: '#10b981',
+                    pointBackgroundColor: '#10b981',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: '#10b981',
+                    borderWidth: 2,
+                    borderDash: [5, 5]
+                }]
+            };
+
+            window.performanceRadarChart = new Chart(ctx, {
+                type: 'radar',
+                data: sampleData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                padding: 15,
+                                font: {
+                                    size: 11,
+                                    weight: '600'
+                                }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            padding: 10,
+                            titleFont: {
+                                size: 11,
+                                weight: 'bold'
+                            },
+                            bodyFont: {
+                                size: 10
+                            }
+                        }
+                    },
+                    scales: {
+                        r: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                stepSize: 20,
+                                font: {
+                                    size: 9
+                                }
+                            },
+                            pointLabels: {
+                                font: {
+                                    size: 10,
+                                    weight: '600'
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            }
+                        }
+                    },
+                    elements: {
+                        line: {
+                            borderWidth: 2
+                        }
+                    }
                 }
-            }
+            });
         }
-    });
-}
 
         // Update charts with real data
         async function updateChartsWithRealData() {
-    try {
-        if (!studentData || !studentData.email) return;
+            try {
+                if (!studentData || !studentData.email) return;
 
-        const resultsQuery = query(
-            collection(db, 'testResults'),
-            where('studentEmail', '==', studentData.email),
-            where('status', '==', 'completed'),
-            orderBy('submittedAt', 'asc')
-        );
-        
-        const resultsSnapshot = await getDocs(resultsQuery);
-        
-        const categoryData = {
-            'Cardiorespiratory Endurance': [],
-            'Muscular Strength': [],
-            'Muscular Endurance': [],
-            'Flexibility': [],
-            'Body Composition': []
-        };
-        
-        console.log('📊 Processing test results for charts...');
-        
-        // Group results by category with timestamps
-        resultsSnapshot.forEach((doc) => {
-            const result = doc.data();
-            const category = getCategoryForTest(result.testName);
-            
-            // Use stored score if available, otherwise calculate
-            const score = result.score || calculateTestScore(
-                result.testName, 
-                result.resultData || result.result, 
-                result.testTarget
-            );
-            
-            const timestamp = result.submittedAt?.toDate?.() || new Date(result.date);
-            
-            console.log(`📝 Test: ${result.testName} → Category: ${category} → Score: ${score}`);
-            
-            if (categoryData[category]) {
-                categoryData[category].push({
-                    score: score,
-                    timestamp: timestamp,
-                    testName: result.testName
-                });
-            }
-        });
-        
-        console.log('📊 Final category data:', categoryData);
-        
-        // Update Fitness Overview Chart (Line Chart showing progress over time)
-        if (window.fitnessOverviewChart) {
-            // Sort all tests by date to create timeline
-            const allTests = [];
-            Object.entries(categoryData).forEach(([category, tests]) => {
-                tests.forEach(test => {
-                    allTests.push({ ...test, category });
-                });
-            });
-            
-            allTests.sort((a, b) => a.timestamp - b.timestamp);
-            
-            // Group by time periods (last 5 data points)
-            const timePoints = Math.min(5, allTests.length || 1);
-            const labels = [];
-            const dataByCategory = {
-                'Cardiorespiratory Endurance': [],
-                'Muscular Strength': [],
-                'Muscular Endurance': [],
-                'Flexibility': [],
-                'Body Composition': []
-            };
-            
-            if (allTests.length > 0) {
-                // Create time-based labels
-                for (let i = 0; i < timePoints; i++) {
-                    const index = Math.floor((i / timePoints) * allTests.length);
-                    const test = allTests[Math.min(index, allTests.length - 1)];
-                    labels.push(test.timestamp.toLocaleDateString('en-US', { 
-                        month: 'short', 
-                        day: 'numeric' 
-                    }));
-                }
+                const resultsQuery = query(
+                    collection(db, 'testResults'),
+                    where('studentEmail', '==', studentData.email),
+                    where('status', '==', 'completed'),
+                    orderBy('submittedAt', 'asc')
+                );
                 
-                // Calculate progressive averages for each category
-                Object.keys(dataByCategory).forEach(category => {
-                    const categoryTests = categoryData[category];
+                const resultsSnapshot = await getDocs(resultsQuery);
+                
+                const categoryData = {
+                    'Cardiorespiratory Endurance': [],
+                    'Muscular Strength': [],
+                    'Muscular Endurance': [],
+                    'Flexibility': [],
+                    'Body Composition': []
+                };
+                
+                console.log('📊 Processing test results for charts...');
+                
+                // Group results by category with timestamps
+                resultsSnapshot.forEach((doc) => {
+                    const result = doc.data();
+                    const category = getCategoryForTest(result.testName);
                     
-                    for (let i = 0; i < timePoints; i++) {
-                        if (categoryTests.length > 0) {
-                            const upToIndex = Math.min(
-                                Math.floor((i + 1) / timePoints * categoryTests.length),
-                                categoryTests.length
-                            );
-                            const relevantTests = categoryTests.slice(0, upToIndex || 1);
-                            const avg = relevantTests.reduce((sum, t) => sum + t.score, 0) / relevantTests.length;
-                            dataByCategory[category].push(Math.round(avg));
-                        } else {
-                            dataByCategory[category].push(0);
-                        }
+                    const score = result.score || calculateTestScore(
+                        result.testName, 
+                        result.resultData || result.result, 
+                        result.testTarget
+                    );
+                    
+                    const timestamp = result.submittedAt?.toDate?.() || new Date(result.date);
+                    
+                    console.log(`📝 Test: ${result.testName} → Category: ${category} → Score: ${score}`);
+                    
+                    if (categoryData[category]) {
+                        categoryData[category].push({
+                            score: score,
+                            timestamp: timestamp,
+                            testName: result.testName
+                        });
                     }
                 });
-            } else {
-                // No data yet
-                labels.push('No Data');
-                Object.keys(dataByCategory).forEach(category => {
-                    dataByCategory[category].push(0);
-                });
+                
+                console.log('📊 Final category data:', categoryData);
+                
+                // Update Fitness Overview Chart
+                if (window.fitnessOverviewChart) {
+                    const allTests = [];
+                    Object.entries(categoryData).forEach(([category, tests]) => {
+                        tests.forEach(test => {
+                            allTests.push({ ...test, category });
+                        });
+                    });
+                    
+                    allTests.sort((a, b) => a.timestamp - b.timestamp);
+                    
+                    const timePoints = Math.min(5, allTests.length || 1);
+                    const labels = [];
+                    const dataByCategory = {
+                        'Cardiorespiratory Endurance': [],
+                        'Muscular Strength': [],
+                        'Muscular Endurance': [],
+                        'Flexibility': [],
+                        'Body Composition': []
+                    };
+                    
+                    if (allTests.length > 0) {
+                        for (let i = 0; i < timePoints; i++) {
+                            const index = Math.floor((i / timePoints) * allTests.length);
+                            const test = allTests[Math.min(index, allTests.length - 1)];
+                            labels.push(test.timestamp.toLocaleDateString('en-US', { 
+                                month: 'short', 
+                                day: 'numeric' 
+                            }));
+                        }
+                        
+                        Object.keys(dataByCategory).forEach(category => {
+                            const categoryTests = categoryData[category];
+                            
+                            for (let i = 0; i < timePoints; i++) {
+                                if (categoryTests.length > 0) {
+                                    const upToIndex = Math.min(
+                                        Math.floor((i + 1) / timePoints * categoryTests.length),
+                                        categoryTests.length
+                                    );
+                                    const relevantTests = categoryTests.slice(0, upToIndex || 1);
+                                    const avg = relevantTests.reduce((sum, t) => sum + t.score, 0) / relevantTests.length;
+                                    dataByCategory[category].push(Math.round(avg));
+                                } else {
+                                    dataByCategory[category].push(0);
+                                }
+                            }
+                        });
+                    } else {
+                        labels.push('No Data');
+                        Object.keys(dataByCategory).forEach(category => {
+                            dataByCategory[category].push(0);
+                        });
+                    }
+                    
+                    window.fitnessOverviewChart.data.labels = labels;
+                    window.fitnessOverviewChart.data.datasets[0].data = dataByCategory['Cardiorespiratory Endurance'];
+                    window.fitnessOverviewChart.data.datasets[1].data = dataByCategory['Muscular Strength'];
+                    window.fitnessOverviewChart.data.datasets[2].data = dataByCategory['Muscular Endurance'];
+                    window.fitnessOverviewChart.data.datasets[3].data = dataByCategory['Flexibility'];
+                    window.fitnessOverviewChart.data.datasets[4].data = dataByCategory['Body Composition'];
+                    
+                    window.fitnessOverviewChart.update('active');
+                    console.log('✅ Fitness Overview Chart updated');
+                }
+                
+                // Update Performance Radar Chart
+                if (window.performanceRadarChart) {
+                    const currentPerformance = [
+                        getLatestScore(categoryData['Cardiorespiratory Endurance']),
+                        getLatestScore(categoryData['Muscular Strength']),
+                        getLatestScore(categoryData['Muscular Endurance']),
+                        getLatestScore(categoryData['Flexibility']),
+                        getLatestScore(categoryData['Body Composition'])
+                    ];
+                    
+                    console.log('📊 Current Performance:', currentPerformance);
+                    
+                    window.performanceRadarChart.data.datasets[0].data = currentPerformance;
+                    window.performanceRadarChart.data.datasets[1].data = [85, 85, 85, 85, 85];
+                    
+                    window.performanceRadarChart.update();
+                    console.log('✅ Performance Radar Chart updated');
+                }
+                
+            } catch (error) {
+                console.error('❌ Error updating charts:', error);
             }
-            
-            window.fitnessOverviewChart.data.labels = labels;
-            window.fitnessOverviewChart.data.datasets[0].data = dataByCategory['Cardiorespiratory Endurance'];
-            window.fitnessOverviewChart.data.datasets[1].data = dataByCategory['Muscular Strength'];
-            window.fitnessOverviewChart.data.datasets[2].data = dataByCategory['Muscular Endurance'];
-            window.fitnessOverviewChart.data.datasets[3].data = dataByCategory['Flexibility'];
-            window.fitnessOverviewChart.data.datasets[4].data = dataByCategory['Body Composition'];
-            
-            window.fitnessOverviewChart.update('active');
-            console.log('✅ Fitness Overview Chart updated');
         }
-        
-        // Update Performance Radar Chart
-        if (window.performanceRadarChart) {
-            const currentPerformance = [
-                getLatestScore(categoryData['Cardiorespiratory Endurance']),
-                getLatestScore(categoryData['Muscular Strength']),
-                getLatestScore(categoryData['Muscular Endurance']),
-                getLatestScore(categoryData['Flexibility']),
-                getLatestScore(categoryData['Body Composition'])
-            ];
-            
-            console.log('📊 Current Performance:', currentPerformance);
-            
-            window.performanceRadarChart.data.datasets[0].data = currentPerformance;
-            window.performanceRadarChart.data.datasets[1].data = [85, 85, 85, 85, 85];
-            
-            window.performanceRadarChart.update();
-            console.log('✅ Performance Radar Chart updated');
-        }
-        
-    } catch (error) {
-        console.error('❌ Error updating charts:', error);
-    }
-}
 
         // Helper function to categorize tests
         function getCategoryForTest(testName) {
-    const normalized = testName.toLowerCase().trim();
-    
-    console.log('🔍 Categorizing test:', testName, '→', normalized);
-    
-    // Check each category's test list
-    for (const [category, data] of Object.entries(testCategories)) {
-        if (data.tests.some(t => 
-            normalized.includes(t.toLowerCase()) || 
-            t.toLowerCase().includes(normalized)
-        )) {
-            console.log('✅ Category:', category);
-            return category;
+            const normalized = testName.toLowerCase().trim();
+            
+            console.log('🔍 Categorizing test:', testName, '→', normalized);
+            
+            for (const [category, data] of Object.entries(testCategories)) {
+                if (data.tests.some(t => 
+                    normalized.includes(t.toLowerCase()) || 
+                    t.toLowerCase().includes(normalized)
+                )) {
+                    console.log('✅ Category:', category);
+                    return category;
+                }
+            }
+            
+            if (normalized.includes('sit-and-reach') || 
+                normalized.includes('sit and reach') ||
+                normalized.includes('flexibility') ||
+                normalized.includes('shoulder')) {
+                console.log('✅ Category: Flexibility (fallback)');
+                return 'Flexibility';
+            } else if (normalized.includes('push-up') || 
+                       normalized.includes('pushup') || 
+                       normalized.includes('push up') ||
+                       normalized.includes('grip')) {
+                console.log('✅ Category: Muscular Strength (fallback)');
+                return 'Muscular Strength';
+            } else if (normalized.includes('curl-up') ||
+                       normalized.includes('curl up') ||
+                       normalized.includes('plank')) {
+                console.log('✅ Category: Muscular Endurance (fallback)');
+                return 'Muscular Endurance';
+            } else if (normalized.includes('step') || 
+                       normalized.includes('run') || 
+                       normalized.includes('cardio') || 
+                       normalized.includes('mile') ||
+                       normalized.includes('bmi')) {
+                console.log('✅ Category: Cardiorespiratory Endurance (fallback)');
+                return 'Cardiorespiratory Endurance';
+            }
+            
+            console.log('❌ No category found, defaulting to Cardiorespiratory Endurance');
+            return 'Cardiorespiratory Endurance';
         }
-    }
-    
-    // Fallback categorization
-    if (normalized.includes('sit-and-reach') || 
-        normalized.includes('sit and reach') ||
-        normalized.includes('flexibility') ||
-        normalized.includes('shoulder')) {
-        console.log('✅ Category: Flexibility (fallback)');
-        return 'Flexibility';
-    } else if (normalized.includes('push-up') || 
-               normalized.includes('pushup') || 
-               normalized.includes('push up') ||
-               normalized.includes('grip')) {
-        console.log('✅ Category: Muscular Strength (fallback)');
-        return 'Muscular Strength';
-    } else if (normalized.includes('curl-up') ||
-               normalized.includes('curl up') ||
-               normalized.includes('plank')) {
-        console.log('✅ Category: Muscular Endurance (fallback)');
-        return 'Muscular Endurance';
-    } else if (normalized.includes('step') || 
-               normalized.includes('run') || 
-               normalized.includes('cardio') || 
-               normalized.includes('mile') ||
-               normalized.includes('bmi')) {
-        console.log('✅ Category: Cardiorespiratory Endurance (fallback)');
-        return 'Cardiorespiratory Endurance';
-    }
-    
-    console.log('❌ No category found, defaulting to Cardiorespiratory Endurance');
-    return 'Cardiorespiratory Endurance';
-}
         
-        function generateTimeLabels(categoryData) {
-            // Generate time labels based on available data
-            const allDates = [];
-            Object.values(categoryData).forEach(category => {
-                category.forEach(item => {
-                    if (!allDates.includes(item.date)) {
-                        allDates.push(item.date);
-                    }
-                });
-            });
-            
-            allDates.sort((a, b) => new Date(a) - new Date(b));
-            return allDates.slice(-5); // Last 5 data points
-        }
-
-        function getAveragedData(categoryData, length) {
-            if (categoryData.length === 0) return Array(length).fill(0);
-            
-            // Simple average for demo - in real app, you'd want more sophisticated aggregation
-            const avg = categoryData.reduce((sum, item) => sum + item.score, 0) / categoryData.length;
-            return Array(length).fill(Math.round(avg));
-        }
-
         function getLatestScore(categoryData) {
             if (categoryData.length === 0) return 0;
             return categoryData[categoryData.length - 1].score;
         }
-            function getAverageScore(categoryData) {
-    if (!categoryData || categoryData.length === 0) return 0;
-    const sum = categoryData.reduce((total, item) => total + item.score, 0);
-    const average = sum / categoryData.length;
-    console.log(`📊 Average for category: ${categoryData.length} tests, sum: ${sum}, avg: ${average}`);
-    return Math.round(average);
-}
-       
-        function calculateConsistencyScore(categoryData) {
-            const allScores = [];
-            Object.values(categoryData).forEach(category => {
-                category.forEach(item => allScores.push(item.score));
-            });
-            
-            if (allScores.length === 0) return 0;
-            
-            const avg = allScores.reduce((sum, score) => sum + score, 0) / allScores.length;
-            const variance = allScores.reduce((sum, score) => sum + Math.pow(score - avg, 2), 0) / allScores.length;
-            const consistency = Math.max(0, 100 - (variance * 2)); // Lower variance = higher consistency
-            
-            return Math.round(consistency);
+
+        function getAverageScore(categoryData) {
+            if (!categoryData || categoryData.length === 0) return 0;
+            const sum = categoryData.reduce((total, item) => total + item.score, 0);
+            const average = sum / categoryData.length;
+            console.log(`📊 Average for category: ${categoryData.length} tests, sum: ${sum}, avg: ${average}`);
+            return Math.round(average);
         }
 
-        // Load student data
+        // Load student data - UPDATED VERSION
         async function loadStudentData(user) {
             try {
                 console.log('Loading data for student:', user.email);
                 
-                const studentRef = doc(db, 'students', user.uid);
-                const studentDoc = await getDoc(studentRef);
+                // Try to get student data from students collection using email
+                const studentsQuery = query(
+                    collection(db, 'students'),
+                    where('email', '==', user.email)
+                );
                 
-                if (studentDoc.exists()) {
+                const studentsSnapshot = await getDocs(studentsQuery);
+                
+                if (!studentsSnapshot.empty) {
+                    // Get the first matching student document
+                    const studentDoc = studentsSnapshot.docs[0];
                     const data = studentDoc.data();
+                    
                     studentData = {
                         uid: user.uid,
                         displayName: `${data.firstName || ''} ${data.lastName || ''}`.trim() || user.email.split('@')[0],
                         email: data.email || user.email,
-                        studentId: data.umakId || '000000',
-                        course: data.department || 'Not Assigned',
+                        studentId: data.umakId || data.studentId || '000000',
+                        course: data.department || data.course || 'Not Assigned',
                         section: data.section || 'Not Assigned',
                         overallScore: data.overallScore || 0,
                         testsDone: data.testsDone || 0,
                         weekStreak: data.weekStreak || 0,
-                        profileComplete: data.profileComplete || false
+                        profileComplete: true // Assume profile is complete if found in students collection
                     };
-                    console.log('✓ Student data loaded by UID:', studentData);
-                } else {
-                    console.log('Student not found by UID, trying by email...');
-                    const studentsQuery = query(
-                        collection(db, 'students'),
-                        where('email', '==', user.email)
-                    );
-                    const studentsSnapshot = await getDocs(studentsQuery);
                     
-                    if (!studentsSnapshot.empty) {
-                        studentsSnapshot.forEach((doc) => {
-                            const data = doc.data();
-                            studentData = {
-                                uid: user.uid,
-                                displayName: `${data.firstName || ''} ${data.lastName || ''}`.trim() || user.email.split('@')[0],
-                                email: data.email || user.email,
-                                studentId: data.umakId || '000000',
-                                course: data.department || 'Not Assigned',
-                                section: data.section || 'Not Assigned',
-                                overallScore: data.overallScore || 0,
-                                testsDone: data.testsDone || 0,
-                                weekStreak: data.weekStreak || 0,
-                                profileComplete: data.profileComplete || false
-                            };
-                        });
-                        console.log('✓ Student data loaded by email:', studentData);
-                    } else {
-                        console.log('✗ No student profile found');
-                        window.location.href = './profilesetup.html';
-                        return null;
-                    }
+                    console.log('✓ Student data loaded:', studentData);
+                    
+                    // Update UI with student data
+                    document.getElementById('studentName').textContent = studentData.displayName;
+                    document.getElementById('studentCourse').textContent = studentData.course;
+                    document.getElementById('studentId').textContent = studentData.studentId;
+                    
+                    // Update profile UI
+                    updateProfileUI();
+                    
+                    // Load all other data
+                    await calculateAndUpdateStats();
+                    await loadTestHistory();
+                    await updatePerformanceSummary();
+                    await updateChartsWithRealData();
+                    await loadUpcomingTests();
+                    
+                    return studentData;
+                    
+                } else {
+                    console.log('✗ No student profile found in students collection');
+                    
+                    // Create a minimal student data object from Firebase auth
+                    studentData = {
+                        uid: user.uid,
+                        displayName: user.displayName || user.email.split('@')[0],
+                        email: user.email,
+                        studentId: 'Not Assigned',
+                        course: 'Not Assigned',
+                        section: 'Not Assigned',
+                        overallScore: 0,
+                        testsDone: 0,
+                        weekStreak: 0,
+                        profileComplete: false
+                    };
+                    
+                    console.log('⚠️ Using minimal student data from Firebase auth');
+                    
+                    // Update UI with minimal data
+                    document.getElementById('studentName').textContent = studentData.displayName;
+                    document.getElementById('studentCourse').textContent = studentData.course;
+                    document.getElementById('studentId').textContent = studentData.studentId;
+                    
+                    // Update profile UI
+                    updateProfileUI();
+                    
+                    // Load what data we can
+                    await calculateAndUpdateStats();
+                    await loadTestHistory();
+                    await updatePerformanceSummary();
+                    
+                    return studentData;
                 }
                 
-                document.getElementById('studentName').textContent = studentData.displayName;
-                document.getElementById('studentCourse').textContent = studentData.course;
-                document.getElementById('studentId').textContent = studentData.studentId;
-
-                await calculateAndUpdateStats();
-                await updateChartsWithRealData();
-                updateProfileUI();
-
-                console.log('Final student data for dashboard:', studentData);
-                return studentData;
             } catch (error) {
                 console.error('Error loading student data:', error);
-                alert('Error loading your profile. Please try again.');
-                return null;
+                
+                // Fallback to minimal data
+                studentData = {
+                    uid: user.uid,
+                    displayName: user.displayName || user.email.split('@')[0],
+                    email: user.email,
+                    studentId: 'Error Loading',
+                    course: 'Error Loading',
+                    section: 'Error Loading',
+                    overallScore: 0,
+                    testsDone: 0,
+                    weekStreak: 0,
+                    profileComplete: false
+                };
+                
+                document.getElementById('studentName').textContent = studentData.displayName;
+                document.getElementById('studentCourse').textContent = 'Error loading data';
+                document.getElementById('studentId').textContent = 'Error';
+                
+                updateProfileUI();
+                
+                return studentData;
             }
         }
 
@@ -1344,10 +1339,6 @@
                         if (deadlineDateTime >= now) {
                             const status = testStatus.get(test.id);
                             
-                            // Show test if:
-                            // 1. Never attempted yet, OR
-                            // 2. Has unlimited attempts and not perfect score, OR
-                            // 3. Has attempts remaining and not perfect score
                             if (!status) {
                                 upcomingTests.push(test);
                             } else {
@@ -1470,75 +1461,73 @@
 
         // Calculate and update stats
         async function calculateAndUpdateStats() {
-    try {
-        if (!studentData || !studentData.email) {
-            console.log('No student data available');
-            return;
-        }
+            try {
+                if (!studentData || !studentData.email) {
+                    console.log('No student data available');
+                    return;
+                }
 
-        const resultsQuery = query(
-            collection(db, 'testResults'),
-            where('studentEmail', '==', studentData.email),
-            where('status', '==', 'completed')
-        );
-        
-        const resultsSnapshot = await getDocs(resultsQuery);
-        
-        let totalTests = 0;
-        let totalScore = 0;
-        let bestScore = 0;
-        let bestTestName = '';
-        
-        resultsSnapshot.forEach((doc) => {
-            const result = doc.data();
-            // Use stored score or calculate from result data
-            const score = result.score || calculateTestScore(result.testName, result.resultData || result.result, result.testTarget);
-            
-            totalTests++;
-            totalScore += score;
-            
-            // Track best score and test name
-            if (score > bestScore) {
-                bestScore = score;
-                bestTestName = result.testName;
+                const resultsQuery = query(
+                    collection(db, 'testResults'),
+                    where('studentEmail', '==', studentData.email),
+                    where('status', '==', 'completed')
+                );
+                
+                const resultsSnapshot = await getDocs(resultsQuery);
+                
+                let totalTests = 0;
+                let totalScore = 0;
+                let bestScore = 0;
+                let bestTestName = '';
+                
+                resultsSnapshot.forEach((doc) => {
+                    const result = doc.data();
+                    const score = result.score || calculateTestScore(result.testName, result.resultData || result.result, result.testTarget);
+                    
+                    totalTests++;
+                    totalScore += score;
+                    
+                    if (score > bestScore) {
+                        bestScore = score;
+                        bestTestName = result.testName;
+                    }
+                });
+                
+                const avgScore = totalTests > 0 ? Math.round(totalScore / totalTests) : 0;
+                
+                // Update the DOM elements
+                document.getElementById('testsDone').textContent = totalTests;
+                document.getElementById('avgScore').textContent = avgScore;
+                
+                // Update best score with tooltip showing test name
+                const bestScoreElement = document.getElementById('bestScore');
+                bestScoreElement.textContent = bestScore;
+                const bestScoreTestElement = document.getElementById('bestScoreTest');
+                if (bestScoreTestElement && bestTestName) {
+                    bestScoreTestElement.textContent = bestTestName;
+                    bestScoreTestElement.classList.remove('hidden');
+                }
+                
+                // Add tooltip/title to show which test achieved the best score
+                if (bestTestName) {
+                    bestScoreElement.title = `Best score from: ${bestTestName}`;
+                    bestScoreElement.style.cursor = 'help';
+                }
+                
+                console.log('Stats updated:', { 
+                    totalTests, 
+                    avgScore, 
+                    bestScore,
+                    bestTestName 
+                });
+                
+            } catch (error) {
+                console.error('Error calculating stats:', error);
+                document.getElementById('testsDone').textContent = '0';
+                document.getElementById('avgScore').textContent = '0';
+                document.getElementById('bestScore').textContent = '0';
             }
-        });
-        
-        const avgScore = totalTests > 0 ? Math.round(totalScore / totalTests) : 0;
-        
-        // Update the DOM elements
-        document.getElementById('testsDone').textContent = totalTests;
-        document.getElementById('avgScore').textContent = avgScore;
-        
-        // Update best score with tooltip showing test name
-        const bestScoreElement = document.getElementById('bestScore');
-        bestScoreElement.textContent = bestScore;
-        const bestScoreTestElement = document.getElementById('bestScoreTest');
-        if (bestScoreTestElement && bestTestName) {
-    bestScoreTestElement.textContent = bestTestName;
-    bestScoreTestElement.classList.remove('hidden');
-}
-        
-        // Add tooltip/title to show which test achieved the best score
-        if (bestTestName) {
-            bestScoreElement.title = `Best score from: ${bestTestName}`;
-            bestScoreElement.style.cursor = 'help';
         }
-        
-        console.log('Stats updated:', { 
-            totalTests, 
-            avgScore, 
-            bestScore,
-            bestTestName 
-        });
-        
-    } catch (error) {
-        console.error('Error calculating stats:', error);
-        document.getElementById('testsDone').textContent = '0';
-        document.getElementById('avgScore').textContent = '0';
-        document.getElementById('bestScore').textContent = '0';
-    }
-}
 
         // Update performance summary
         async function updatePerformanceSummary() {
@@ -1617,7 +1606,11 @@
         // Calculate class ranking
         async function calculateClassRanking() {
             try {
-                if (!studentData || !studentData.section) return;
+                if (!studentData || !studentData.section || studentData.section === 'Not Assigned') {
+                    document.getElementById('classRanking').textContent = 'Not Ranked';
+                    document.getElementById('classRankingDetails').textContent = 'No section assigned';
+                    return;
+                }
                 
                 // Get all students in the same section
                 const studentsQuery = query(
@@ -1625,6 +1618,12 @@
                     where('section', '==', studentData.section)
                 );
                 const studentsSnapshot = await getDocs(studentsQuery);
+                
+                if (studentsSnapshot.empty) {
+                    document.getElementById('classRanking').textContent = 'No Data';
+                    document.getElementById('classRankingDetails').textContent = 'No students found in section';
+                    return;
+                }
                 
                 // Calculate each student's average score
                 const studentScores = [];
@@ -1683,81 +1682,81 @@
 
         // Calculate strongest category
         async function calculateStrongestCategory() {
-    try {
-        const resultsQuery = query(
-            collection(db, 'testResults'),
-            where('studentEmail', '==', studentData.email),
-            where('status', '==', 'completed')
-        );
+            try {
+                const resultsQuery = query(
+                    collection(db, 'testResults'),
+                    where('studentEmail', '==', studentData.email),
+                    where('status', '==', 'completed')
+                );
 
-        const resultsSnapshot = await getDocs(resultsQuery);
+                const resultsSnapshot = await getDocs(resultsQuery);
 
-        if (resultsSnapshot.empty) {
-            document.getElementById('strongestCategory').textContent = 'No Data Yet';
-            document.getElementById('strongestCategoryScore').textContent = 'Complete tests to see your strongest area';
-            return;
+                if (resultsSnapshot.empty) {
+                    document.getElementById('strongestCategory').textContent = 'No Data Yet';
+                    document.getElementById('strongestCategoryScore').textContent = 'Complete tests to see your strongest area';
+                    return;
+                }
+
+                // Initialize category scores using the same categories
+                const categoryScores = {};
+                Object.keys(testCategories).forEach(category => {
+                    categoryScores[category] = {
+                        totalScore: 0,
+                        testCount: 0,
+                        averageScore: 0
+                    };
+                });
+
+                // Calculate scores using getCategoryForTest function
+                resultsSnapshot.forEach((doc) => {
+                    const result = doc.data();
+                    const score = result.score || calculateTestScore(result.testName, result.resultData || result.result, result.testTarget);
+                    const category = getCategoryForTest(result.testName);
+                    
+                    if (categoryScores[category]) {
+                        categoryScores[category].totalScore += score;
+                        categoryScores[category].testCount++;
+                    }
+                });
+
+                // Calculate average scores
+                Object.keys(categoryScores).forEach(category => {
+                    if (categoryScores[category].testCount > 0) {
+                        categoryScores[category].averageScore = 
+                            categoryScores[category].totalScore / categoryScores[category].testCount;
+                    }
+                });
+
+                // Find strongest category
+                let strongestCategory = null;
+                let highestAverageScore = -1;
+
+                Object.entries(categoryScores).forEach(([category, data]) => {
+                    if (data.testCount > 0 && data.averageScore > highestAverageScore) {
+                        highestAverageScore = data.averageScore;
+                        strongestCategory = category;
+                    }
+                });
+
+                // Update UI
+                if (strongestCategory && highestAverageScore > 0) {
+                    document.getElementById('strongestCategory').textContent = strongestCategory;
+                    document.getElementById('strongestCategoryScore').textContent = 
+                        `Average Score: ${Math.round(highestAverageScore)}/100 (${categoryScores[strongestCategory].testCount} test${categoryScores[strongestCategory].testCount > 1 ? 's' : ''})`;
+                } else {
+                    document.getElementById('strongestCategory').textContent = 'No Data';
+                    document.getElementById('strongestCategoryScore').textContent = 'Complete tests to see your strongest area';
+                }
+
+                console.log('📊 Category Scores:', categoryScores);
+                console.log('🏆 Strongest Category:', strongestCategory, 'Score:', highestAverageScore);
+
+            } catch (error) {
+                console.error('Error calculating strongest category:', error);
+                document.getElementById('strongestCategory').textContent = 'Error';
+                document.getElementById('strongestCategoryScore').textContent = 'Unable to calculate';
+            }
         }
-
-        // Initialize category scores using the same categories
-        const categoryScores = {};
-        Object.keys(testCategories).forEach(category => {
-            categoryScores[category] = {
-                totalScore: 0,
-                testCount: 0,
-                averageScore: 0
-            };
-        });
-
-        // Calculate scores using getCategoryForTest function
-        resultsSnapshot.forEach((doc) => {
-            const result = doc.data();
-            const score = result.score || calculateTestScore(result.testName, result.resultData || result.result, result.testTarget);
-            const category = getCategoryForTest(result.testName);
-            
-            if (categoryScores[category]) {
-                categoryScores[category].totalScore += score;
-                categoryScores[category].testCount++;
-            }
-        });
-
-        // Calculate average scores
-        Object.keys(categoryScores).forEach(category => {
-            if (categoryScores[category].testCount > 0) {
-                categoryScores[category].averageScore = 
-                    categoryScores[category].totalScore / categoryScores[category].testCount;
-            }
-        });
-
-        // Find strongest category
-        let strongestCategory = null;
-        let highestAverageScore = -1;
-
-        Object.entries(categoryScores).forEach(([category, data]) => {
-            if (data.testCount > 0 && data.averageScore > highestAverageScore) {
-                highestAverageScore = data.averageScore;
-                strongestCategory = category;
-            }
-        });
-
-        // Update UI
-        if (strongestCategory && highestAverageScore > 0) {
-            document.getElementById('strongestCategory').textContent = strongestCategory;
-            document.getElementById('strongestCategoryScore').textContent = 
-                `Average Score: ${Math.round(highestAverageScore)}/100 (${categoryScores[strongestCategory].testCount} test${categoryScores[strongestCategory].testCount > 1 ? 's' : ''})`;
-        } else {
-            document.getElementById('strongestCategory').textContent = 'No Data';
-            document.getElementById('strongestCategoryScore').textContent = 'Complete tests to see your strongest area';
-        }
-
-        console.log('📊 Category Scores:', categoryScores);
-        console.log('🏆 Strongest Category:', strongestCategory, 'Score:', highestAverageScore);
-
-    } catch (error) {
-        console.error('Error calculating strongest category:', error);
-        document.getElementById('strongestCategory').textContent = 'Error';
-        document.getElementById('strongestCategoryScore').textContent = 'Unable to calculate';
-    }
-}
 
         // Calculate week streak
         function calculateWeekStreak(tests) {
@@ -1782,7 +1781,7 @@
             let checkYear = currentYear;
             let checkWeek = currentWeek;
             
-            for (let i = 0; i < 52; i++) { // Max 52 weeks
+            for (let i = 0; i < 52; i++) {
                 const key = `${checkYear}-W${checkWeek}`;
                 if (weekMap.has(key)) {
                     streak++;
@@ -1815,7 +1814,21 @@
         // Load notification dropdown
         async function loadNotificationDropdown() {
             try {
-                if (!studentData || !studentData.section) {
+                if (!studentData || !studentData.section || studentData.section === 'Not Assigned') {
+                    const dropdownBodies = [
+                        document.getElementById('notificationDropdownBody'),
+                        document.getElementById('notificationDropdownBodyMobile')
+                    ];
+                    
+                    const emptyHtml = `
+                        <div class="p-6 sm:p-8 text-center text-gray-400">
+                            <i class="bi bi-bell-slash text-4xl sm:text-5xl mb-3 block"></i>
+                            <p class="text-gray-600 text-sm">No section assigned</p>
+                        </div>
+                    `;
+                    dropdownBodies.forEach(body => {
+                        if (body) body.innerHTML = emptyHtml;
+                    });
                     return;
                 }
 
@@ -1826,7 +1839,6 @@
                 
                 const notificationsSnapshot = await getDocs(notificationsQuery);
                 
-                // Use custom body if provided, otherwise update both
                 const dropdownBodies = [
                     document.getElementById('notificationDropdownBody'),
                     document.getElementById('notificationDropdownBodyMobile')
@@ -1911,7 +1923,7 @@
 
         // Update profile UI
         function updateProfileUI() {
-            if (!currentUser || !studentData) return;
+            if (!currentUser) return;
             
             const photoURL = currentUser?.photoURL || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(studentData?.displayName || 'User') + '&background=3b82f6&color=fff&size=128';
             
@@ -1942,56 +1954,115 @@
 
         // Load test history
         async function loadTestHistory() {
-    try {
-        if (!currentUser || !studentData) {
-            console.log('No current user or student data');
-            return;
+            try {
+                if (!currentUser || !studentData) {
+                    console.log('No current user or student data');
+                    return;
+                }
+
+                console.log('=== LOADING MOST RECENT TEST RESULT ===');
+                console.log('Student Email:', studentData.email);
+
+                // Query by studentEmail
+                const historyQuery = query(
+                    collection(db, 'testResults'),
+                    where('studentEmail', '==', studentData.email),
+                    where('status', '==', 'completed'),
+                    orderBy('submittedAt', 'desc'),
+                    limit(1)
+                );
+                
+                let historySnapshot;
+                try {
+                    historySnapshot = await getDocs(historyQuery);
+                    console.log('Query with orderBy found:', historySnapshot.size, 'results');
+                } catch (indexError) {
+                    console.warn('Index not ready, trying without orderBy:', indexError);
+                    const simpleQuery = query(
+                        collection(db, 'testResults'),
+                        where('studentEmail', '==', studentData.email),
+                        where('status', '==', 'completed')
+                    );
+                    historySnapshot = await getDocs(simpleQuery);
+                    
+                    const results = [];
+                    historySnapshot.forEach(doc => {
+                        results.push({ id: doc.id, ...doc.data() });
+                    });
+                    
+                    results.sort((a, b) => {
+                        const dateA = a.submittedAt?.toDate?.() || new Date(a.date || 0);
+                        const dateB = b.submittedAt?.toDate?.() || new Date(b.date || 0);
+                        return dateB - dateA;
+                    });
+                    
+                    const container = document.getElementById('recentTestResultCard');
+                    if (results.length > 0) {
+                        allTestResults = [results[0]];
+                        renderSingleTestResult(results[0], container);
+                    } else {
+                        allTestResults = [];
+                        container.innerHTML = `
+                            <div class="text-center py-8 sm:py-12">
+                                <i class="bi bi-clipboard-data text-5xl sm:text-6xl text-gray-300 mb-2 sm:mb-3"></i>
+                                <p class="text-gray-600 font-semibold mb-1 text-sm sm:text-base">No test results yet</p>
+                                <small class="text-gray-400 text-xs sm:text-sm">Complete a test to see your results here</small>
+                            </div>
+                        `;
+                    }
+                    return;
+                }
+                
+                const container = document.getElementById('recentTestResultCard');
+                
+                if (!container) {
+                    console.error('Container "recentTestResultCard" not found!');
+                    return;
+                }
+                
+                if (!historySnapshot.empty) {
+                    const results = [];
+                    historySnapshot.forEach(doc => {
+                        const data = doc.data();
+                        console.log('Most recent test result:', data.testName, 'Score:', data.score, 'Date:', data.submittedAt?.toDate?.());
+                        results.push({ id: doc.id, ...data });
+                    });
+                    
+                    console.log('✓ Found most recent test result');
+                    
+                    allTestResults = results;
+                    renderSingleTestResult(results[0], container);
+                    
+                } else {
+                    console.log('✗ No completed tests found');
+                    allTestResults = [];
+                    container.innerHTML = `
+                        <div class="text-center py-8 sm:py-12">
+                            <i class="bi bi-clipboard-data text-5xl sm:text-6xl text-gray-300 mb-2 sm:mb-3"></i>
+                            <p class="text-gray-600 font-semibold mb-1 text-sm sm:text-base">No test results yet</p>
+                            <small class="text-gray-400 text-xs sm:text-sm">Complete a test to see your results here</small>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading test history:', error);
+                console.error('Error details:', error.message);
+                const container = document.getElementById('recentTestResultCard');
+                if (container) {
+                    container.innerHTML = `
+                        <div class="text-center py-8 sm:py-12">
+                            <i class="bi bi-exclamation-circle text-red-500 text-5xl sm:text-6xl mb-2 sm:mb-3"></i>
+                            <p class="text-red-500 font-semibold mb-1 text-sm sm:text-base">Error loading test results</p>
+                            <small class="text-gray-400 text-xs sm:text-sm">${error.message}</small>
+                        </div>
+                    `;
+                }
+            }
         }
 
-        console.log('=== LOADING MOST RECENT TEST RESULT ===');
-        console.log('Student Email:', studentData.email);
-
-        // Query by studentEmail with proper ordering
-        const historyQuery = query(
-            collection(db, 'testResults'),
-            where('studentEmail', '==', studentData.email),
-            where('status', '==', 'completed'),
-            orderBy('submittedAt', 'desc'),
-            limit(1)
-        );
-        
-        let historySnapshot;
-        try {
-            historySnapshot = await getDocs(historyQuery);
-            console.log('Query with orderBy found:', historySnapshot.size, 'results');
-        } catch (indexError) {
-            console.warn('Index not ready, trying without orderBy:', indexError);
-            // Fallback without orderBy if index isn't ready
-            const simpleQuery = query(
-                collection(db, 'testResults'),
-                where('studentEmail', '==', studentData.email),
-                where('status', '==', 'completed')
-            );
-            historySnapshot = await getDocs(simpleQuery);
-            
-            // Manually sort and get the most recent
-            const results = [];
-            historySnapshot.forEach(doc => {
-                results.push({ id: doc.id, ...doc.data() });
-            });
-            
-            results.sort((a, b) => {
-                const dateA = a.submittedAt?.toDate?.() || new Date(a.date || 0);
-                const dateB = b.submittedAt?.toDate?.() || new Date(b.date || 0);
-                return dateB - dateA;
-            });
-            
-            const container = document.getElementById('recentTestResultCard');
-            if (results.length > 0) {
-                allTestResults = [results[0]];
-                renderSingleTestResult(results[0], container);
-            } else {
-                allTestResults = [];
+        // Render single test result
+        function renderSingleTestResult(result, container) {
+            if (!result) {
                 container.innerHTML = `
                     <div class="text-center py-8 sm:py-12">
                         <i class="bi bi-clipboard-data text-5xl sm:text-6xl text-gray-300 mb-2 sm:mb-3"></i>
@@ -1999,292 +2070,225 @@
                         <small class="text-gray-400 text-xs sm:text-sm">Complete a test to see your results here</small>
                     </div>
                 `;
+                return;
             }
-            return;
-        }
-        
-        const container = document.getElementById('recentTestResultCard');
-        
-        if (!container) {
-            console.error('Container "recentTestResultCard" not found!');
-            return;
-        }
-        
-        if (!historySnapshot.empty) {
-            const results = [];
-            historySnapshot.forEach(doc => {
-                const data = doc.data();
-                console.log('Most recent test result:', data.testName, 'Score:', data.score, 'Date:', data.submittedAt?.toDate?.());
-                results.push({ id: doc.id, ...data });
+
+            const submittedDate = result.submittedAt?.toDate?.() || new Date(result.date);
+            const dateStr = submittedDate.toLocaleDateString('en-US', {
+                month: '2-digit',
+                day: '2-digit',
+                year: 'numeric'
             });
-            
-            console.log('✓ Found most recent test result');
-            
-            allTestResults = results;
-            renderSingleTestResult(results[0], container);
-            
-        } else {
-            console.log('✗ No completed tests found');
-            allTestResults = [];
-            container.innerHTML = `
-                <div class="text-center py-8 sm:py-12">
-                    <i class="bi bi-clipboard-data text-5xl sm:text-6xl text-gray-300 mb-2 sm:mb-3"></i>
-                    <p class="text-gray-600 font-semibold mb-1 text-sm sm:text-base">No test results yet</p>
-                    <small class="text-gray-400 text-xs sm:text-sm">Complete a test to see your results here</small>
+
+            const score = result.score || calculateTestScore(result.testName, result.result, result.testTarget);
+            const rating = getRating(score);
+
+            const html = `
+                <div class="bg-gray-50 rounded-xl p-3 sm:p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 hover:bg-gray-100 transition-colors">
+                    <div class="flex-1 w-full sm:w-auto">
+                        <h4 class="font-semibold text-gray-900 text-sm sm:text-base mb-1 sm:mb-2 break-words">${result.testName}</h4>
+                        <p class="${rating.class} text-xs sm:text-sm font-medium mb-1">Score: ${score}/100 • ${rating.text}</p>
+                        <small class="text-gray-500 text-[10px] sm:text-xs">Completed: ${dateStr}</small>
+                    </div>
+                    <button data-result-id="${result.id}" class="view-result-btn w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg font-semibold text-xs sm:text-sm hover:from-blue-600 hover:to-blue-700 hover:-translate-y-0.5 hover:shadow-lg transition-all whitespace-nowrap">
+                        View Result
+                    </button>
                 </div>
             `;
+
+            container.innerHTML = html;
+            
+            const viewResultBtn = container.querySelector('.view-result-btn');
+            if (viewResultBtn) {
+                viewResultBtn.addEventListener('click', function() {
+                    const resultId = this.getAttribute('data-result-id');
+                    window.location.href = `./studentresult.html?resultId=${resultId}`;
+                });
+            }
         }
-    } catch (error) {
-        console.error('Error loading test history:', error);
-        console.error('Error details:', error.message);
-        const container = document.getElementById('recentTestResultCard');
-        if (container) {
-            container.innerHTML = `
-                <div class="text-center py-8 sm:py-12">
-                    <i class="bi bi-exclamation-circle text-red-500 text-5xl sm:text-6xl mb-2 sm:mb-3"></i>
-                    <p class="text-red-500 font-semibold mb-1 text-sm sm:text-base">Error loading test results</p>
-                    <small class="text-gray-400 text-xs sm:text-sm">${error.message}</small>
-                </div>
-            `;
-        }
-    }
-}
-
-        // Render single test result
-        function renderSingleTestResult(result, container) {
-    if (!result) {
-        container.innerHTML = `
-            <div class="text-center py-8 sm:py-12">
-                <i class="bi bi-clipboard-data text-5xl sm:text-6xl text-gray-300 mb-2 sm:mb-3"></i>
-                <p class="text-gray-600 font-semibold mb-1 text-sm sm:text-base">No test results yet</p>
-                <small class="text-gray-400 text-xs sm:text-sm">Complete a test to see your results here</small>
-            </div>
-        `;
-        return;
-    }
-
-    const submittedDate = result.submittedAt?.toDate?.() || new Date(result.date);
-    const dateStr = submittedDate.toLocaleDateString('en-US', {
-        month: '2-digit',
-        day: '2-digit',
-        year: 'numeric'
-    });
-
-    // Use stored score or calculate from result
-    const score = result.score || calculateTestScore(result.testName, result.result, result.testTarget);
-    const rating = getRating(score);
-
-    const html = `
-        <div class="bg-gray-50 rounded-xl p-3 sm:p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 hover:bg-gray-100 transition-colors">
-            <div class="flex-1 w-full sm:w-auto">
-                <h4 class="font-semibold text-gray-900 text-sm sm:text-base mb-1 sm:mb-2 break-words">${result.testName}</h4>
-                <p class="${rating.class} text-xs sm:text-sm font-medium mb-1">Score: ${score}/100 • ${rating.text}</p>
-                <small class="text-gray-500 text-[10px] sm:text-xs">Completed: ${dateStr}</small>
-            </div>
-            <button data-result-id="${result.id}" class="view-result-btn w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg font-semibold text-xs sm:text-sm hover:from-blue-600 hover:to-blue-700 hover:-translate-y-0.5 hover:shadow-lg transition-all whitespace-nowrap">
-                View Result
-            </button>
-        </div>
-    `;
-
-    container.innerHTML = html;
-    
-    // Add event listener to view result button
-    const viewResultBtn = container.querySelector('.view-result-btn');
-    if (viewResultBtn) {
-        viewResultBtn.addEventListener('click', function() {
-            const resultId = this.getAttribute('data-result-id');
-            window.location.href = `./studentresult.html?resultId=${resultId}`;
-        });
-    }
-}
 
         // Calculate test score
-       function calculateTestScore(testName, result, testTarget = null) {
-    const normalized = testName.toLowerCase().trim();
-    
-    // Extract numeric value from result
-    let numericValue = 0;
-    
-    if (typeof result === 'object' && result !== null) {
-        numericValue = result.repetitions || result.time || result.distance || result.value || result.score || 0;
-    } else if (typeof result === 'string') {
-        const match = result.match(/(\d+\.?\d*)/);
-        if (match) {
-            numericValue = parseFloat(match[1]);
-        } else {
-            numericValue = parseFloat(result) || 0;
-        }
-    } else {
-        numericValue = parseFloat(result) || 0;
-    }
-    
-    console.log(`🔢 Score Calculation: ${testName} → Value: ${numericValue}, Target: ${testTarget}`);
-    
-    // Use test target if available for more accurate scoring
-    if (testTarget && testTarget > 0) {
-        if (normalized.includes('push-up') || normalized.includes('pushup') || 
-            normalized.includes('sit-up') || normalized.includes('situp') ||
-            normalized.includes('curl-up') || normalized.includes('curl up')) {
-            const percentage = (numericValue / testTarget) * 100;
-            let score = Math.min(100, Math.max(50, percentage));
+        function calculateTestScore(testName, result, testTarget = null) {
+            const normalized = testName.toLowerCase().trim();
             
-            if (percentage >= 100) score = 100;
-            else if (percentage >= 90) score = 95;
-            else if (percentage >= 80) score = 90;
-            else if (percentage >= 70) score = 85;
-            else if (percentage >= 60) score = 80;
-            else if (percentage >= 50) score = 75;
+            let numericValue = 0;
             
-            console.log(`💪 Strength Test: ${numericValue}/${testTarget} reps → ${score}%`);
-            return Math.round(score);
-        } else if (normalized.includes('bmi')) {
-            const bmi = numericValue;
-            if (bmi >= 18.5 && bmi <= 24.9) return 100;
-            if (bmi >= 17.0 && bmi < 18.5) return 85;
-            if (bmi >= 25.0 && bmi < 27.0) return 85;
-            if (bmi >= 16.0 && bmi < 17.0) return 70;
-            if (bmi >= 27.0 && bmi < 30.0) return 70;
-            if (bmi >= 15.0 && bmi < 16.0) return 60;
-            if (bmi >= 30.0 && bmi < 35.0) return 60;
-            return 50;
-        } else if (normalized.includes('plank')) {
-            let seconds = 0;
-            if (typeof result === 'string' && result.includes(':')) {
-                const [mins, secs] = result.split(':').map(Number);
-                seconds = (mins * 60) + (secs || 0);
+            if (typeof result === 'object' && result !== null) {
+                numericValue = result.repetitions || result.time || result.distance || result.value || result.score || 0;
+            } else if (typeof result === 'string') {
+                const match = result.match(/(\d+\.?\d*)/);
+                if (match) {
+                    numericValue = parseFloat(match[1]);
+                } else {
+                    numericValue = parseFloat(result) || 0;
+                }
             } else {
-                seconds = numericValue;
+                numericValue = parseFloat(result) || 0;
             }
             
-            const percentage = (seconds / testTarget) * 100;
-            let score = Math.min(100, Math.max(50, percentage));
+            console.log(`🔢 Score Calculation: ${testName} → Value: ${numericValue}, Target: ${testTarget}`);
             
-            if (percentage >= 100) score = 100;
-            else if (percentage >= 90) score = 95;
-            else if (percentage >= 80) score = 90;
-            else if (percentage >= 70) score = 85;
-            else if (percentage >= 60) score = 80;
-            else if (percentage >= 50) score = 75;
-            
-            console.log(`⏱️ Plank Test: ${seconds}s/${testTarget}s → ${score}%`);
-            return Math.round(score);
-        } else if (normalized.includes('sit-and-reach')) {
-            const distance = numericValue;
-            const percentage = (distance / testTarget) * 100;
-            let score = Math.min(100, Math.max(50, percentage));
-            
-            if (percentage >= 100) score = 100;
-            else if (percentage >= 90) score = 95;
-            else if (percentage >= 80) score = 90;
-            else if (percentage >= 70) score = 85;
-            else if (percentage >= 60) score = 80;
-            else if (percentage >= 50) score = 75;
-            
-            console.log(`📏 Flexibility Test: ${distance}cm/${testTarget}cm → ${score}%`);
-            return Math.round(score);
-        } else if (normalized.includes('grip')) {
-            const strength = numericValue;
-            const percentage = (strength / testTarget) * 100;
-            let score = Math.min(100, Math.max(50, percentage));
-            
-            if (percentage >= 100) score = 100;
-            else if (percentage >= 90) score = 95;
-            else if (percentage >= 80) score = 90;
-            else if (percentage >= 70) score = 85;
-            else if (percentage >= 60) score = 80;
-            else if (percentage >= 50) score = 75;
-            
-            console.log(`💪 Grip Test: ${strength}kg/${testTarget}kg → ${score}%`);
-            return Math.round(score);
-        } else if (normalized.includes('mile') || normalized.includes('run')) {
-            let totalSeconds = 0;
-            if (typeof result === 'string' && result.includes(':')) {
-                const [minutes, seconds] = result.split(':').map(Number);
-                totalSeconds = (minutes * 60) + (seconds || 0);
-            } else {
-                totalSeconds = numericValue;
+            if (testTarget && testTarget > 0) {
+                if (normalized.includes('push-up') || normalized.includes('pushup') || 
+                    normalized.includes('sit-up') || normalized.includes('situp') ||
+                    normalized.includes('curl-up') || normalized.includes('curl up')) {
+                    const percentage = (numericValue / testTarget) * 100;
+                    let score = Math.min(100, Math.max(50, percentage));
+                    
+                    if (percentage >= 100) score = 100;
+                    else if (percentage >= 90) score = 95;
+                    else if (percentage >= 80) score = 90;
+                    else if (percentage >= 70) score = 85;
+                    else if (percentage >= 60) score = 80;
+                    else if (percentage >= 50) score = 75;
+                    
+                    console.log(`💪 Strength Test: ${numericValue}/${testTarget} reps → ${score}%`);
+                    return Math.round(score);
+                } else if (normalized.includes('bmi')) {
+                    const bmi = numericValue;
+                    if (bmi >= 18.5 && bmi <= 24.9) return 100;
+                    if (bmi >= 17.0 && bmi < 18.5) return 85;
+                    if (bmi >= 25.0 && bmi < 27.0) return 85;
+                    if (bmi >= 16.0 && bmi < 17.0) return 70;
+                    if (bmi >= 27.0 && bmi < 30.0) return 70;
+                    if (bmi >= 15.0 && bmi < 16.0) return 60;
+                    if (bmi >= 30.0 && bmi < 35.0) return 60;
+                    return 50;
+                } else if (normalized.includes('plank')) {
+                    let seconds = 0;
+                    if (typeof result === 'string' && result.includes(':')) {
+                        const [mins, secs] = result.split(':').map(Number);
+                        seconds = (mins * 60) + (secs || 0);
+                    } else {
+                        seconds = numericValue;
+                    }
+                    
+                    const percentage = (seconds / testTarget) * 100;
+                    let score = Math.min(100, Math.max(50, percentage));
+                    
+                    if (percentage >= 100) score = 100;
+                    else if (percentage >= 90) score = 95;
+                    else if (percentage >= 80) score = 90;
+                    else if (percentage >= 70) score = 85;
+                    else if (percentage >= 60) score = 80;
+                    else if (percentage >= 50) score = 75;
+                    
+                    console.log(`⏱️ Plank Test: ${seconds}s/${testTarget}s → ${score}%`);
+                    return Math.round(score);
+                } else if (normalized.includes('sit-and-reach')) {
+                    const distance = numericValue;
+                    const percentage = (distance / testTarget) * 100;
+                    let score = Math.min(100, Math.max(50, percentage));
+                    
+                    if (percentage >= 100) score = 100;
+                    else if (percentage >= 90) score = 95;
+                    else if (percentage >= 80) score = 90;
+                    else if (percentage >= 70) score = 85;
+                    else if (percentage >= 60) score = 80;
+                    else if (percentage >= 50) score = 75;
+                    
+                    console.log(`📏 Flexibility Test: ${distance}cm/${testTarget}cm → ${score}%`);
+                    return Math.round(score);
+                } else if (normalized.includes('grip')) {
+                    const strength = numericValue;
+                    const percentage = (strength / testTarget) * 100;
+                    let score = Math.min(100, Math.max(50, percentage));
+                    
+                    if (percentage >= 100) score = 100;
+                    else if (percentage >= 90) score = 95;
+                    else if (percentage >= 80) score = 90;
+                    else if (percentage >= 70) score = 85;
+                    else if (percentage >= 60) score = 80;
+                    else if (percentage >= 50) score = 75;
+                    
+                    console.log(`💪 Grip Test: ${strength}kg/${testTarget}kg → ${score}%`);
+                    return Math.round(score);
+                } else if (normalized.includes('mile') || normalized.includes('run')) {
+                    let totalSeconds = 0;
+                    if (typeof result === 'string' && result.includes(':')) {
+                        const [minutes, seconds] = result.split(':').map(Number);
+                        totalSeconds = (minutes * 60) + (seconds || 0);
+                    } else {
+                        totalSeconds = numericValue;
+                    }
+                    
+                    const percentage = (testTarget / totalSeconds) * 100;
+                    let score = Math.min(100, Math.max(50, percentage));
+                    
+                    if (percentage >= 100) score = 100;
+                    else if (percentage >= 90) score = 95;
+                    else if (percentage >= 80) score = 90;
+                    else if (percentage >= 70) score = 85;
+                    else if (percentage >= 60) score = 80;
+                    else if (percentage >= 50) score = 75;
+                    
+                    return Math.round(score);
+                } else if (normalized.includes('step test') || normalized.includes('3-minute')) {
+                    const percentage = (testTarget / numericValue) * 100;
+                    let score = Math.min(100, Math.max(50, percentage));
+                    
+                    if (percentage >= 100) score = 100;
+                    else if (percentage >= 90) score = 95;
+                    else if (percentage >= 80) score = 90;
+                    else if (percentage >= 70) score = 85;
+                    else if (percentage >= 60) score = 80;
+                    else if (percentage >= 50) score = 75;
+                    
+                    return Math.round(score);
+                }
             }
             
-            // Lower time is better
-            const percentage = (testTarget / totalSeconds) * 100;
-            let score = Math.min(100, Math.max(50, percentage));
+            // Fallback scoring without target
+            if (normalized.includes('push-up') || normalized.includes('pushup')) {
+                if (numericValue >= 40) return 100;
+                if (numericValue >= 35) return 95;
+                if (numericValue >= 30) return 90;
+                if (numericValue >= 25) return 85;
+                if (numericValue >= 20) return 80;
+                if (numericValue >= 15) return 75;
+                return 70;
+            } else if (normalized.includes('curl-up') || normalized.includes('curl up')) {
+                if (numericValue >= 75) return 100;
+                if (numericValue >= 60) return 95;
+                if (numericValue >= 50) return 90;
+                if (numericValue >= 40) return 85;
+                if (numericValue >= 30) return 80;
+                return 75;
+            } else if (normalized.includes('plank')) {
+                let seconds = 0;
+                if (typeof result === 'string' && result.includes(':')) {
+                    const [mins, secs] = result.split(':').map(Number);
+                    seconds = (mins * 60) + (secs || 0);
+                } else {
+                    seconds = numericValue;
+                }
+                
+                if (seconds >= 180) return 100;
+                if (seconds >= 150) return 95;
+                if (seconds >= 120) return 90;
+                if (seconds >= 100) return 85;
+                if (seconds >= 80) return 80;
+                if (seconds >= 60) return 75;
+                return 70;
+            } else if (normalized.includes('sit-and-reach')) {
+                if (numericValue >= 25) return 100;
+                if (numericValue >= 20) return 95;
+                if (numericValue >= 15) return 90;
+                if (numericValue >= 10) return 85;
+                if (numericValue >= 5) return 80;
+                return 75;
+            } else if (normalized.includes('grip')) {
+                if (numericValue >= 60) return 100;
+                if (numericValue >= 55) return 95;
+                if (numericValue >= 50) return 90;
+                if (numericValue >= 45) return 85;
+                if (numericValue >= 40) return 80;
+                return 75;
+            }
             
-            if (percentage >= 100) score = 100;
-            else if (percentage >= 90) score = 95;
-            else if (percentage >= 80) score = 90;
-            else if (percentage >= 70) score = 85;
-            else if (percentage >= 60) score = 80;
-            else if (percentage >= 50) score = 75;
-            
-            return Math.round(score);
-        } else if (normalized.includes('step test') || normalized.includes('3-minute')) {
-            // Lower heart rate is better
-            const percentage = (testTarget / numericValue) * 100;
-            let score = Math.min(100, Math.max(50, percentage));
-            
-            if (percentage >= 100) score = 100;
-            else if (percentage >= 90) score = 95;
-            else if (percentage >= 80) score = 90;
-            else if (percentage >= 70) score = 85;
-            else if (percentage >= 60) score = 80;
-            else if (percentage >= 50) score = 75;
-            
-            return Math.round(score);
+            console.log(`❓ Unknown test type: ${testName}, using default score of 75`);
+            return 75;
         }
-    }
-    
-    // Fallback scoring without target
-    if (normalized.includes('push-up') || normalized.includes('pushup')) {
-        if (numericValue >= 40) return 100;
-        if (numericValue >= 35) return 95;
-        if (numericValue >= 30) return 90;
-        if (numericValue >= 25) return 85;
-        if (numericValue >= 20) return 80;
-        if (numericValue >= 15) return 75;
-        return 70;
-    } else if (normalized.includes('curl-up') || normalized.includes('curl up')) {
-        if (numericValue >= 75) return 100;
-        if (numericValue >= 60) return 95;
-        if (numericValue >= 50) return 90;
-        if (numericValue >= 40) return 85;
-        if (numericValue >= 30) return 80;
-        return 75;
-    } else if (normalized.includes('plank')) {
-        let seconds = 0;
-        if (typeof result === 'string' && result.includes(':')) {
-            const [mins, secs] = result.split(':').map(Number);
-            seconds = (mins * 60) + (secs || 0);
-        } else {
-            seconds = numericValue;
-        }
-        
-        if (seconds >= 180) return 100;
-        if (seconds >= 150) return 95;
-        if (seconds >= 120) return 90;
-        if (seconds >= 100) return 85;
-        if (seconds >= 80) return 80;
-        if (seconds >= 60) return 75;
-        return 70;
-    } else if (normalized.includes('sit-and-reach')) {
-        if (numericValue >= 25) return 100;
-        if (numericValue >= 20) return 95;
-        if (numericValue >= 15) return 90;
-        if (numericValue >= 10) return 85;
-        if (numericValue >= 5) return 80;
-        return 75;
-    } else if (normalized.includes('grip')) {
-        if (numericValue >= 60) return 100;
-        if (numericValue >= 55) return 95;
-        if (numericValue >= 50) return 90;
-        if (numericValue >= 45) return 85;
-        if (numericValue >= 40) return 80;
-        return 75;
-    }
-    
-    console.log(`❓ Unknown test type: ${testName}, using default score of 75`);
-    return 75;
-}
 
         // Get rating
         function getRating(score) {
@@ -2294,82 +2298,6 @@
             return { text: 'Needs Improvement', class: 'text-red-600' };
         }
 
-        // View detailed result
-        async function viewDetailedResult(resultId) {
-            try {
-                const resultRef = doc(db, 'testResults', resultId);
-                const resultSnap = await getDoc(resultRef);
-                
-                if (resultSnap.exists()) {
-                    const result = resultSnap.data();
-                    const submittedDate = result.submittedAt?.toDate?.() || new Date(result.date);
-                    const dateStr = submittedDate.toLocaleDateString('en-US', {
-                        month: 'long',
-                        day: 'numeric',
-                        year: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    });
-                    
-                    let detailsHtml = `
-                        <div style="padding: 1rem;">
-                            <h5 style="color: #111827; margin-bottom: 1rem; font-size: 1.125rem;">${result.testName}</h5>
-                            
-                            <div style="background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; padding: 1.5rem; border-radius: 12px; text-align: center; margin-bottom: 1.5rem;">
-                                <div style="font-size: 3rem; font-weight: 700; margin-bottom: 0.5rem;">${result.score}</div>
-                                <div style="font-size: 0.875rem; opacity: 0.9;">Your Score</div>
-                            </div>
-                            
-                            <div style="display: grid; gap: 1rem; margin-bottom: 1.5rem;">
-                                <div style="padding: 1rem; background: #f9fafb; border-radius: 8px; border-left: 3px solid #3b82f6;">
-                                    <div style="font-size: 0.75rem; color: #6b7280; margin-bottom: 0.25rem;">DATE SUBMITTED</div>
-                                    <div style="font-size: 1rem; color: #111827; font-weight: 600;">${dateStr}</div>
-                                </div>
-                                
-                                <div style="padding: 1rem; background: #f9fafb; border-radius: 8px; border-left: 3px solid #3b82f6;">
-                                    <div style="font-size: 0.75rem; color: #6b7280; margin-bottom: 0.25rem;">SECTION</div>
-                                    <div style="font-size: 1rem; color: #111827; font-weight: 600;">${result.section || 'N/A'}</div>
-                                </div>
-                                
-                                ${result.resultData?.repetitions ? `
-                                    <div style="padding: 1rem; background: #f9fafb; border-radius: 8px; border-left: 3px solid #3b82f6;">
-                                        <div style="font-size: 0.75rem; color: #6b7280; margin-bottom: 0.25rem;">REPETITIONS</div>
-                                        <div style="font-size: 1rem; color: #111827; font-weight: 600;">${result.resultData.repetitions}</div>
-                                    </div>
-                                ` : ''}
-                                
-                                ${result.resultData?.time ? `
-                                    <div style="padding: 1rem; background: #f9fafb; border-radius: 8px; border-left: 3px solid #3b82f6;">
-                                        <div style="font-size: 0.75rem; color: #6b7280; margin-bottom: 0.25rem;">TIME HELD</div>
-                                        <div style="font-size: 1rem; color: #111827; font-weight: 600;">${result.resultData.time} seconds</div>
-                                    </div>
-                                ` : ''}
-                                
-                                ${result.resultData?.distance ? `
-                                    <div style="padding: 1rem; background: #f9fafb; border-radius: 8px; border-left: 3px solid #3b82f6;">
-                                        <div style="font-size: 0.75rem; color: #6b7280; margin-bottom: 0.25rem;">DISTANCE REACHED</div>
-                                        <div style="font-size: 1rem; color: #111827; font-weight: 600;">${result.resultData.distance} cm</div>
-                                    </div>
-                                ` : ''}
-                            </div>
-                            
-                            ${result.resultData?.notes ? `
-                                <div style="padding: 1rem; background: #fef3c7; border-radius: 8px; border-left: 3px solid #f59e0b;">
-                                    <div style="font-size: 0.75rem; color: #78350f; margin-bottom: 0.5rem; font-weight: 600;">YOUR NOTES</div>
-                                    <div style="font-size: 0.875rem; color: #111827; line-height: 1.6;">${result.resultData.notes}</div>
-                                </div>
-                            ` : ''}
-                        </div>
-                    `;
-                    
-                    alert(detailsHtml.replace(/<[^>]*>/g, '\n'));
-                }
-            } catch (error) {
-                console.error('Error viewing detailed result:', error);
-                alert('Error loading result details. Please try again.');
-            }
-        }
-
         // Export all results
         async function exportAllResults() {
             try {
@@ -2377,7 +2305,7 @@
                 
                 const historyQuery = query(
                     collection(db, 'testResults'),
-                    where('studentId', '==', currentUser.uid),
+                    where('studentEmail', '==', studentData.email),
                     where('status', '==', 'completed')
                 );
                 
@@ -2422,16 +2350,10 @@
 
         // Start test
         function startTest(testId) {
-    // Redirect to test details page
-    window.location.href = `./testdetails.html?testId=${testId}`;
-}
-
-        // View test details
-        function viewTestDetails(testId) {
-            alert('Viewing test details: ' + testId);
+            window.location.href = `./testdetails.html?testId=${testId}`;
         }
 
-        // Auth state change listener
+        // Auth state change listener - UPDATED VERSION
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 try {
@@ -2439,25 +2361,7 @@
                     console.log('User:', user.email);
                     currentUser = user;
                     
-                    const studentRef = doc(db, 'students', user.uid);
-                    const studentSnap = await getDoc(studentRef);
-                    
-                    if (!studentSnap.exists()) {
-                        console.log('❌ No student profile, redirect to setup');
-                        window.location.href = './profilesetup.html';  
-                        return;
-                    }
-                    
-                    const studentDataTemp = studentSnap.data();
-                    
-                    if (!studentDataTemp.profileComplete) {
-                        console.log('❌ Profile incomplete, redirect to setup');
-                        window.location.href = './profilesetup.html';  
-                        return;
-                    }
-                    
-                    console.log('✓ Profile complete, loading dashboard...');
-                    
+                    // Check user role
                     const userRef = doc(db, 'users', user.uid);
                     const userDoc = await getDoc(userRef);
                     
@@ -2472,17 +2376,18 @@
                         }
                     }
                     
-                    await loadStudentData(user);
-                    initializeCharts(); // Initialize charts first
-                    await loadTestHistory();
-                    await updatePerformanceSummary();
-                    await updateChartsWithRealData(); // Then populate with real data
-                    await loadUpcomingTests();
+                    // Initialize charts first
+                    initializeCharts();
                     
+                    // Load student data from students collection
+                    await loadStudentData(user);
+                    
+                    // Show the main content
                     loadingScreen.classList.add('hidden');
                     mainContent.classList.remove('hidden');
                     
                     console.log('✓ Dashboard loaded successfully');
+                    
                 } catch (error) {
                     console.error('Error loading dashboard:', error);
                     alert('Error loading dashboard. Please try again.');
