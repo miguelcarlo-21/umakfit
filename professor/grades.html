@@ -1403,43 +1403,51 @@
                 const gradesSnapshot = await getDocs(gradesQuery);
                 
                 gradesSnapshot.forEach(docSnap => {
-                    const data = docSnap.data();
-                    
-                    // Skip if not completed
-                    if (data.status !== 'completed') return;
-                    
-                    // Calculate score
-                    let score = 0;
-                    
-                    // Method 1: Check if score already exists
-                    if (data.score && data.score > 0) {
-                        score = data.score;
+                const data = docSnap.data();
+                
+                // Skip if not completed
+                if (data.status !== 'completed') return;
+                
+                // ⭐ ADD THIS: Check for professor override
+                const isProfessorOverride = data.isProfessorOverride === true;
+                
+                // Calculate score
+                let score = 0;
+                
+                // ⭐ UPDATED: Check professor override first
+                if (isProfessorOverride && data.score && data.score > 0) {
+                    score = data.score;
+                    console.log(`✅ Using professor override score: ${score} for ${data.testName}`);
+                }
+                // Method 1: Check if score already exists
+                else if (data.score && data.score > 0) {
+                    score = data.score;
+                }
+                // Method 2: Calculate from result/resultData
+                else if (data.result || data.resultData) {
+                    score = calculateActivityScore(
+                        data.testName || 'Unknown Activity',
+                        data.result || data.resultData,
+                        data.testTarget || null
+                    );
+                }
+                // Method 3: Try to extract from any numeric fields
+                else if (data.repetitions) {
+                    score = calculateActivityScore(
+                        data.testName || 'Unknown Activity',
+                        data.repetitions,
+                        data.testTarget || null
+                    );
+                }
+                
+                // If score is 0, try to get it from other fields
+                if (score === 0 && data.result) {
+                    // Try to parse result as number
+                    const numResult = parseFloat(data.result);
+                    if (!isNaN(numResult)) {
+                        score = numResult;
                     }
-                    // Method 2: Calculate from result/resultData
-                    else if (data.result || data.resultData) {
-                        score = calculateActivityScore(
-                            data.testName || 'Unknown Activity',
-                            data.result || data.resultData,
-                            data.testTarget || null
-                        );
-                    }
-                    // Method 3: Try to extract from any numeric fields
-                    else if (data.repetitions) {
-                        score = calculateActivityScore(
-                            data.testName || 'Unknown Activity',
-                            data.repetitions,
-                            data.testTarget || null
-                        );
-                    }
-                    
-                    // If score is 0, try to get it from other fields
-                    if (score === 0 && data.result) {
-                        // Try to parse result as number
-                        const numResult = parseFloat(data.result);
-                        if (!isNaN(numResult)) {
-                            score = numResult;
-                        }
-                    }
+                }
 
                     // Handle date
                     let submittedDate = new Date();
@@ -1485,26 +1493,27 @@
 
                         // Store the highest score for this activity on this date
                         activityInstances[uniqueKey] = {
-                            id: docSnap.id,
-                            studentName: data.studentName || 'Unknown Student',
-                            section: data.section || section.section,
-                            testName: data.testName || 'Unknown Activity',
-                            result: displayResult,
-                            score: score,
-                            gradeStatus: gradeStatus,
-                            date: submittedDate.toLocaleDateString('en-US', { 
-                                year: 'numeric', 
-                                month: 'long', 
-                                day: 'numeric' 
-                            }),
-                            dateObject: submittedDate, // Store date object for sorting
-                            formattedDate: dateKey, // Store formatted date
-                            remarks: data.remarks || '',
-                            studentEmail: data.studentEmail || '',
-                            studentId: data.studentId || '',
-                            professorEmail: data.professorEmail || '',
-                            submittedAt: data.submittedAt || ''
-                        };
+                        id: docSnap.id,
+                        studentName: data.studentName || 'Unknown Student',
+                        section: data.section || section.section,
+                        testName: data.testName || 'Unknown Activity',
+                        result: displayResult,
+                        score: score,
+                        gradeStatus: gradeStatus,
+                        date: submittedDate.toLocaleDateString('en-US', { 
+                            year: 'numeric', 
+                            month: 'long', 
+                            day: 'numeric' 
+                        }),
+                        dateObject: submittedDate,
+                        formattedDate: dateKey,
+                        remarks: data.remarks || '',
+                        studentEmail: data.studentEmail || '',
+                        studentId: data.studentId || '',
+                        professorEmail: data.professorEmail || '',
+                        submittedAt: data.submittedAt || '',
+                        isProfessorOverride: isProfessorOverride || false  // ⭐ ADD THIS
+                    };
                     }
                 });
                 
@@ -1566,11 +1575,25 @@
         function calculateActivityScore(testName, result, testTarget = null) {
     const normalized = testName.toLowerCase().trim();
     
+    // ⭐ CRITICAL: Check if this is a professor override with pre-calculated score
+    if (result && typeof result === 'object' && result !== null) {
+        // If professor already set a final score, use it directly
+        if (result.score !== undefined && result.score !== null) {
+            const score = parseFloat(result.score);
+            if (!isNaN(score) && score >= 0 && score <= 100) {
+                console.log(`✅ Using stored professor score: ${score} for ${testName}`);
+                return score;
+            }
+        }
+    }
+    
     // Extract numeric value from result
     let numericValue = 0;
     
     if (typeof result === 'object' && result !== null) {
-        numericValue = result.repetitions || result.time || result.distance || result.value || result.score || 0;
+        numericValue = result.repetitions || result.time || result.distance || 
+                      result.value || result.result || result.count || 
+                      result.score || 0;
     } else if (typeof result === 'string') {
         const match = result.match(/(\d+\.?\d*)/);
         if (match) {
@@ -1582,16 +1605,22 @@
         numericValue = parseFloat(result) || 0;
     }
     
-    // Use test target if available for more accurate scoring
+    console.log(`🎯 Calculating: ${testName} | Value: ${numericValue} | Target: ${testTarget}`);
+    
+    // Use test target if available - THIS IS THE KEY SECTION
     if (testTarget && testTarget > 0) {
+        // REPETITION TESTS (push-ups, sit-ups, curl-ups)
         if (normalized.includes('push-up') || normalized.includes('pushup') || 
             normalized.includes('sit-up') || normalized.includes('situp') ||
             normalized.includes('curl-up')) {
+            
             const reps = numericValue;
+            if (reps >= testTarget) return 100;
+            
             const percentage = (reps / testTarget) * 100;
             let score = Math.min(100, Math.max(50, percentage));
             
-            // Apply grading curve for better distribution
+            // Apply grading scale
             if (percentage >= 100) score = 100;
             else if (percentage >= 90) score = 95;
             else if (percentage >= 80) score = 90;
@@ -1600,15 +1629,12 @@
             else if (percentage >= 50) score = 75;
             
             return Math.round(score);
-            
-        } else if (normalized.includes('plank')) {
-            let seconds = 0;
-            if (typeof result === 'string' && result.includes(':')) {
-                const [mins, secs] = result.split(':').map(Number);
-                seconds = (mins * 60) + (secs || 0);
-            } else {
-                seconds = numericValue;
-            }
+        }
+        
+        // PLANK (time-based in seconds)
+        if (normalized.includes('plank')) {
+            let seconds = numericValue;
+            if (seconds >= testTarget) return 100;
             
             const percentage = (seconds / testTarget) * 100;
             let score = Math.min(100, Math.max(50, percentage));
@@ -1621,9 +1647,13 @@
             else if (percentage >= 50) score = 75;
             
             return Math.round(score);
-            
-        } else if (normalized.includes('sit-and-reach')) {
+        }
+        
+        // SIT-AND-REACH (flexibility in cm)
+        if (normalized.includes('sit-and-reach')) {
             const distance = numericValue;
+            if (distance >= testTarget) return 100;
+            
             const percentage = (distance / testTarget) * 100;
             let score = Math.min(100, Math.max(50, percentage));
             
@@ -1636,9 +1666,61 @@
             
             return Math.round(score);
         }
+        
+        // GRIP STRENGTH (kg)
+        if (normalized.includes('grip')) {
+            if (numericValue >= testTarget) return 100;
+            
+            const percentage = (numericValue / testTarget) * 100;
+            let score = Math.min(100, Math.max(50, percentage));
+            
+            if (percentage >= 90) score = 95;
+            else if (percentage >= 80) score = 90;
+            else if (percentage >= 70) score = 85;
+            else if (percentage >= 60) score = 80;
+            else if (percentage >= 50) score = 75;
+            
+            return Math.round(score);
+        }
+        
+        // 1-MILE RUN (seconds - LOWER IS BETTER)
+        if (normalized.includes('mile') || normalized.includes('run')) {
+            if (numericValue <= testTarget) return 100;
+            
+            const percentage = (testTarget / numericValue) * 100;
+            let score = Math.min(100, Math.max(50, percentage));
+            
+            if (percentage >= 90) score = 95;
+            else if (percentage >= 80) score = 90;
+            else if (percentage >= 70) score = 85;
+            else if (percentage >= 60) score = 80;
+            else if (percentage >= 50) score = 75;
+            
+            return Math.round(score);
+        }
+        
+        // STEP TEST (heart rate - LOWER IS BETTER)
+        if (normalized.includes('step test') || normalized.includes('3-minute')) {
+            if (numericValue <= testTarget) return 100;
+            
+            const percentage = (testTarget / numericValue) * 100;
+            let score = Math.min(100, Math.max(50, percentage));
+            
+            if (percentage >= 90) score = 95;
+            else if (percentage >= 80) score = 90;
+            else if (percentage >= 70) score = 85;
+            else if (percentage >= 60) score = 80;
+            else if (percentage >= 50) score = 75;
+            
+            return Math.round(score);
+        }
     }
     
-    // Fallback to standard scoring if no target available
+    // Fallback to default scoring if no target set
+    return calculateDefaultScore(normalized, numericValue);
+}
+    function calculateDefaultScore(normalized, numericValue) {
+    // Fallback scoring when no test target is available
     if (normalized.includes('push-up') || normalized.includes('pushup')) {
         const reps = numericValue;
         if (reps >= 40) return 100;
@@ -1650,7 +1732,6 @@
         if (reps >= 10) return 70;
         if (reps >= 5) return 65;
         return 60;
-        
     } else if (normalized.includes('sit-up') || normalized.includes('situp')) {
         const reps = numericValue;
         if (reps >= 50) return 100;
@@ -1662,7 +1743,6 @@
         if (reps >= 20) return 70;
         if (reps >= 15) return 65;
         return 60;
-        
     } else if (normalized.includes('curl-up')) {
         const reps = numericValue;
         if (reps >= 75) return 100;
@@ -1673,11 +1753,10 @@
         if (reps >= 25) return 75;
         if (reps >= 20) return 70;
         return 65;
-        
     } else if (normalized.includes('plank')) {
         let seconds = 0;
-        if (typeof result === 'string' && result.includes(':')) {
-            const [mins, secs] = result.split(':').map(Number);
+        if (typeof numericValue === 'string' && numericValue.includes(':')) {
+            const [mins, secs] = numericValue.split(':').map(Number);
             seconds = (mins * 60) + (secs || 0);
         } else {
             seconds = numericValue;
@@ -1692,7 +1771,6 @@
         if (seconds >= 45) return 70;
         if (seconds >= 30) return 65;
         return 60;
-        
     } else if (normalized.includes('step test') || normalized.includes('3-minute')) {
         const heartRate = numericValue;
         if (heartRate <= 70) return 100;
@@ -1703,11 +1781,10 @@
         if (heartRate <= 120) return 75;
         if (heartRate <= 130) return 70;
         return 65;
-        
     } else if (normalized.includes('mile') || normalized.includes('run')) {
         let totalSeconds = 0;
-        if (typeof result === 'string' && result.includes(':')) {
-            const [minutes, seconds] = result.split(':').map(Number);
+        if (typeof numericValue === 'string' && numericValue.includes(':')) {
+            const [minutes, seconds] = numericValue.split(':').map(Number);
             totalSeconds = (minutes * 60) + (seconds || 0);
         } else {
             totalSeconds = numericValue;
@@ -1722,7 +1799,6 @@
         if (totalSeconds <= 720) return 70;
         if (totalSeconds <= 780) return 65;
         return 60;
-        
     } else if (normalized.includes('sit-and-reach')) {
         const distance = numericValue;
         if (distance >= 25) return 100;
@@ -1733,7 +1809,6 @@
         if (distance >= 0) return 75;
         if (distance >= -5) return 70;
         return 65;
-        
     } else if (normalized.includes('grip')) {
         const strength = numericValue;
         if (strength >= 60) return 100;
@@ -1746,7 +1821,6 @@
         return 65;
     } else if (normalized.includes('bmi')) {
         const bmi = numericValue;
-        // Healthy BMI range is 18.5-24.9
         if (bmi >= 18.5 && bmi <= 24.9) return 100;
         if (bmi >= 17.5 && bmi < 18.5) return 85;
         if (bmi >= 25 && bmi <= 27) return 85;
@@ -1755,7 +1829,7 @@
         return 60;
     }
     
-    return 75;
+    return 75; // Default fallback
 }
         function calculateGradeLetter(score) {
         return score.toFixed(1); // Returns score with 1 decimal place

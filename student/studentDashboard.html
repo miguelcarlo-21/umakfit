@@ -101,14 +101,37 @@
                 background-position: -200% 0;
             }
         }
+        /* Custom scrollbar for the scrollable containers */
+        #upcomingTestsCard::-webkit-scrollbar,
+        .overflow-y-auto::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        #upcomingTestsCard::-webkit-scrollbar-track,
+        .overflow-y-auto::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 10px;
+        }
+
+        #upcomingTestsCard::-webkit-scrollbar-thumb,
+        .overflow-y-auto::-webkit-scrollbar-thumb {
+            background: #3b82f6;
+            border-radius: 10px;
+        }
+
+        #upcomingTestsCard::-webkit-scrollbar-thumb:hover,
+        .overflow-y-auto::-webkit-scrollbar-thumb:hover {
+            background: #2563eb;
+        }
     </style>
 </head>
 <body class="bg-gray-50">
-    <!-- Loading Screen -->
-    <div id="loadingScreen" class="fixed inset-0 bg-white/98 flex flex-col items-center justify-center z-50">
-        <div class="spinner"></div>
-        <div class="mt-5 text-gray-600 font-medium text-sm md:text-base">Loading Dashboard...</div>
-    </div>
+   <!-- Loading Screen -->
+<div id="loadingScreen" class="fixed inset-0 bg-white/98 flex flex-col items-center justify-center z-50">
+    <img src="logo.png" alt="UMakFit Logo" class="h-40 sm:h-48 w-auto object-contain mb-4 animate-pulse">
+    <div class="spinner"></div>
+    <div class="mt-5 text-gray-600 font-medium text-sm md:text-base">Loading Dashboard...</div>
+</div>
     
     <div id="mainContent" class="hidden">
         <!-- Navigation -->
@@ -134,17 +157,17 @@
                             <i class="bi bi-clipboard-check"></i> 
                             <span class="hidden xl:inline">Tests</span>
                         </a>
-                        <a href="./progress.html" class="px-3 xl:px-4 py-2.5 xl:py-3 bg-white/20 text-white rounded-lg font-semibold text-sm flex items-center gap-2 hover:bg-white/30 transition-all">
-                            <i class="bi bi-graph-up"></i> 
-                            <span class="hidden xl:inline">Progress</span>
-                        </a>
                         <a href="./studentlesson.html" class="px-3 xl:px-4 py-2.5 xl:py-3 bg-white/20 text-white rounded-lg font-semibold text-sm flex items-center gap-2 hover:bg-white/30 transition-all">
                             <i class="bi bi-book"></i> 
                             <span class="hidden xl:inline">Lessons</span>
                         </a>
-                        <a href="./studentgrades.html" class="px-3 xl:px-4 py-2.5 xl:py-3 bg-white/20 text-white rounded-lg font-semibold text-sm flex items-center gap-2 hover:bg-white/30 transition-all">
+                          <a href="./studentgrades.html" class="px-3 xl:px-4 py-2.5 xl:py-3 bg-white/20 text-white rounded-lg font-semibold text-sm flex items-center gap-2 hover:bg-white/30 transition-all">
                             <i class="bi bi-award"></i> 
                             <span class="hidden xl:inline">Grades</span>
+                        </a>
+                        <a href="./progress.html" class="px-3 xl:px-4 py-2.5 xl:py-3 bg-white/20 text-white rounded-lg font-semibold text-sm flex items-center gap-2 hover:bg-white/30 transition-all">
+                            <i class="bi bi-graph-up"></i> 
+                            <span class="hidden xl:inline">Progress</span>
                         </a>
                         <a href="#" class="px-3 xl:px-4 py-2.5 xl:py-3 bg-white/20 text-white rounded-lg font-semibold text-sm flex items-center gap-2 hover:bg-white/30 transition-all">
                             <i class="bi bi-book"></i> 
@@ -301,240 +324,375 @@
         </nav>
 
         <!-- Main Content -->
-        <div class="container mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-6 max-w-7xl">
-            <!-- UMak Logo -->
-            <div class="mb-4 sm:mb-6 text-center">
-                <img src="https://c.animaapp.com/OLLvAv1E/img/screenshot-2025-10-18-110909-1@2x.png" 
-                     alt="UMak Banner" class="h-12 sm:h-14 md:h-16 mx-auto object-contain">
+        <div class="container mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-6 lg:py-8 max-w-7xl">
+        <!-- Hero Section -->
+<div class="mb-12">
+    <!-- Logo and College Info -->
+    <div class="flex items-center gap-4 mb-8">
+        <img src="https://c.animaapp.com/OLLvAv1E/img/screenshot-2025-10-18-110909-1@2x.png" 
+             alt="CHK Logo" class="h-16 sm:h-20 w-auto object-contain">
+        <div>
+            <h3 class="text-base sm:text-lg font-bold text-gray-900 uppercase tracking-wide">College of Human Kinetics</h3>
+            <p class="text-xs sm:text-sm text-gray-600 font-medium">University of Makati</p>
+        </div>
+    </div>
+    
+    <!-- Welcome Section -->
+    <div class="mb-8">
+        <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 mb-2">
+            Welcome Back, 
+            <span id="studentName" class="block sm:inline bg-gradient-to-r from-blue-600 to-yellow-500 bg-clip-text text-transparent">
+                Student
+            </span>
+        </h1>
+        <p class="text-base sm:text-lg md:text-xl text-gray-600 font-medium">
+            <span id="studentCourse" class="text-gray-900">Subject</span> 
+            <span class="mx-2 text-gray-400">•</span> 
+            <span class="text-gray-500">ID:</span> <span id="studentId" class="text-gray-900 font-semibold">000000</span>
+        </p>
+    </div>
+    
+    <!-- Stats - Clean No Boxes -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-12">
+        <!-- Tests Completed -->
+        <div class="text-center sm:text-left">
+            <div class="flex items-center justify-center sm:justify-start gap-4 mb-2">
+                <div class="w-12 h-12 sm:w-14 sm:h-14 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <i class="bi bi-clipboard-check-fill text-blue-600 text-xl sm:text-2xl"></i>
+                </div>
+                <div id="testsDone" class="text-5xl sm:text-6xl font-black text-gray-900">0</div>
             </div>
-
-            <!-- Hero Welcome Card -->
-            <div class="bg-gradient-to-br from-blue-900 to-blue-500 rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 lg:p-10 text-white shadow-xl mb-4 sm:mb-6 relative overflow-hidden">
-                <div class="absolute top-0 right-0 w-32 h-32 sm:w-48 sm:h-48 bg-white/10 rounded-full transform translate-x-1/3 -translate-y-1/3"></div>
-                
-                <div class="relative z-10">
-                    <h1 class="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-1 sm:mb-2 leading-tight">
-                        Welcome Back<br><span id="studentName" class="break-words">Student Name</span>!
-                    </h1>
-                    <p class="text-xs sm:text-sm md:text-base opacity-90 mb-4 sm:mb-6 md:mb-8">
-                        <span id="studentCourse" class="break-words">Subject</span> | ID: <span id="studentId">A12345678</span>
-                    </p>
-                    
-                    <!-- Stats Grid -->
-                    <div class="grid grid-cols-3 gap-2 sm:gap-3 md:gap-4">
-                        <div class="bg-white/20 backdrop-blur-lg rounded-lg sm:rounded-xl p-2.5 sm:p-4 md:p-5 text-center border border-white/20 hover:bg-white/25 transition-all hover:-translate-y-1">
-                            <div id="testsDone" class="text-2xl sm:text-3xl md:text-4xl font-bold mb-0.5 sm:mb-1">0</div>
-                            <div class="text-[10px] sm:text-xs md:text-sm font-semibold opacity-90 leading-tight">Tests<br class="sm:hidden"> Completed</div>
-                        </div>
-                        <div class="bg-white/20 backdrop-blur-lg rounded-lg sm:rounded-xl p-2.5 sm:p-4 md:p-5 text-center border border-white/20 hover:bg-white/25 transition-all hover:-translate-y-1">
-                            <div id="avgScore" class="text-2xl sm:text-3xl md:text-4xl font-bold mb-0.5 sm:mb-1">0</div>
-                            <div class="text-[10px] sm:text-xs md:text-sm font-semibold opacity-90 leading-tight">Average<br class="sm:hidden"> Score</div>
-                        </div>
-                       <div class="bg-white/20 backdrop-blur-lg rounded-lg sm:rounded-xl p-2.5 sm:p-4 md:p-5 text-center border border-white/20 hover:bg-white/25 transition-all hover:-translate-y-1">
-                        <div id="bestScore" class="text-2xl sm:text-3xl md:text-4xl font-bold mb-0.5 sm:mb-1">0</div>
-                        <div class="text-[10px] sm:text-xs md:text-sm font-semibold opacity-90 leading-tight">Best<br class="sm:hidden"> Score</div>
-                        <div id="bestScoreTest" class="text-[9px] sm:text-[10px] opacity-75 mt-1 truncate hidden"></div>
-                        </div>
-                    </div>
+            <p class="text-xs sm:text-sm font-bold text-gray-500 uppercase tracking-wider">Tests Completed</p>
+        </div>
+        
+        <!-- Average Score -->
+        <div class="text-center sm:text-left">
+            <div class="flex items-center justify-center sm:justify-start gap-4 mb-2">
+                <div class="w-12 h-12 sm:w-14 sm:h-14 bg-green-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <i class="bi bi-graph-up-arrow text-green-600 text-xl sm:text-2xl"></i>
                 </div>
+                <div id="avgScore" class="text-5xl sm:text-6xl font-black text-gray-900">0</div>
             </div>
-
-           <!-- Content Grid -->
-           <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 mb-4 sm:mb-6">
-                <!-- Left Column - Performance Summary -->
-                <div class="lg:col-span-4 xl:col-span-4">
-                    <div class="bg-white rounded-xl shadow-md border border-gray-200 p-4 sm:p-5 md:p-6 hover:shadow-lg transition-shadow h-full card-hover">
-                        <h5 class="text-base sm:text-lg font-bold text-gray-900 mb-3 sm:mb-4 flex items-center">
-                            <i class="bi bi-trophy text-blue-600 mr-2 text-lg sm:text-xl"></i>
-                            <span class="text-sm sm:text-base md:text-lg">Performance Summary</span>
-                        </h5>
-                        
-                        <div class="space-y-3 sm:space-y-4">
-                            <div class="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl border-l-4 border-blue-500 hover:translate-x-1 transition-transform">
-                                <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center flex-shrink-0">
-                                    <i class="bi bi-clipboard-check-fill text-white text-lg sm:text-2xl"></i>
-                                </div>
-                                <div class="flex-1 min-w-0">
-                                    <div class="text-[10px] sm:text-xs text-gray-600 font-semibold uppercase tracking-wider mb-0.5 sm:mb-1">Completion Rate</div>
-                                    <div id="completionRate" class="text-base sm:text-lg font-bold text-gray-900">0%</div>
-                                </div>
-                            </div>
-
-                            <div class="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl border-l-4 border-blue-500 hover:translate-x-1 transition-transform">
-                                <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center flex-shrink-0">
-                                    <i class="bi bi-graph-up-arrow text-white text-lg sm:text-2xl"></i>
-                                </div>
-                                <div class="flex-1 min-w-0">
-                                    <div class="text-[10px] sm:text-xs text-gray-600 font-semibold uppercase tracking-wider mb-0.5 sm:mb-1">Overall Progress</div>
-                                    <div id="overallProgress" class="text-base sm:text-lg font-bold text-gray-900">Beginner</div>
-                                </div>
-                            </div>
-
-                            <!-- New Elements Added Here -->
-                            <div class="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl border-l-4 border-blue-500 hover:translate-x-1 transition-transform">
-                                <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center flex-shrink-0">
-                                    <i class="bi bi-fire text-white text-lg sm:text-2xl"></i>
-                                </div>
-                                <div class="flex-1 min-w-0">
-                                    <div class="text-[10px] sm:text-xs text-gray-600 font-semibold uppercase tracking-wider mb-0.5 sm:mb-1">Week Streak</div>
-                                    <div id="currentStreak" class="text-base sm:text-lg font-bold text-gray-900">0 days</div>
-                                </div>
-                            </div>
-
-                            <div class="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl border-l-4 border-blue-500 hover:translate-x-1 transition-transform">
-                                <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center flex-shrink-0">
-                                    <i class="bi bi-award text-white text-lg sm:text-2xl"></i>
-                                </div>
-                                <div class="flex-1 min-w-0">
-                                    <div class="text-[10px] sm:text-xs text-gray-600 font-semibold uppercase tracking-wider mb-0.5 sm:mb-1">Rank / Level</div>
-                                    <div id="rankLevel" class="text-base sm:text-lg font-bold text-gray-900">Novice</div>
-                                </div>
-                            </div>
-                            <div class="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl border-l-4 border-blue-500 hover:translate-x-1 transition-transform">
-                                <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center flex-shrink-0">
-                                    <i class="bi bi-trophy text-white text-lg sm:text-2xl"></i>
-                                </div>
-                                <div class="flex-1 min-w-0">
-                                    <div class="text-[10px] sm:text-xs text-gray-600 font-semibold uppercase tracking-wider mb-0.5 sm:mb-1">Class Ranking</div>
-                                    <div id="classRanking" class="text-base sm:text-lg font-bold text-gray-900">Loading...</div>
-                                    <div id="classRankingDetails" class="text-xs text-gray-500 mt-1">Calculating your position</div>
-                                </div>
-                            </div>
-
-                            <!-- Strongest Category (Blue Version) -->
-                            <div class="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl border-l-4 border-blue-500 hover:translate-x-1 transition-transform">
-                                <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center flex-shrink-0">
-                                    <i class="bi bi-star-fill text-white text-lg sm:text-2xl"></i>
-                                </div>
-                                <div class="flex-1 min-w-0">
-                                    <div class="text-[10px] sm:text-xs text-gray-600 font-semibold uppercase tracking-wider mb-0.5 sm:mb-1">Strongest Category</div>
-                                    <div id="strongestCategory" class="text-base sm:text-lg font-bold text-gray-900">Loading...</div>
-                                    <div id="strongestCategoryScore" class="text-xs text-gray-500 mt-1">Calculating your best performance</div>
-                                </div>
-                            </div>
-                            
-                            <div class="bg-gradient-to-r from-yellow-100 to-yellow-200 p-3 sm:p-4 md:p-5 rounded-xl border-l-4 border-yellow-500 mt-3 sm:mt-4">
-                                <h6 class="font-bold text-yellow-900 text-xs sm:text-sm mb-1 sm:mb-2">💡 Personalized Quick Tip</h6>
-                                <p id="dailyTip" class="text-xs sm:text-sm text-gray-900 leading-relaxed">Complete your pending tests to track your fitness progress!</p>
-                            </div>
-                        </div>
-                    </div>
+            <p class="text-xs sm:text-sm font-bold text-gray-500 uppercase tracking-wider">Average Score</p>
+        </div>
+        
+        <!-- Best Score -->
+        <div class="text-center sm:text-left">
+            <div class="flex items-center justify-center sm:justify-start gap-4 mb-2">
+                <div class="w-12 h-12 sm:w-14 sm:h-14 bg-yellow-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <i class="bi bi-trophy-fill text-yellow-600 text-xl sm:text-2xl"></i>
                 </div>
+                <div id="bestScore" class="text-5xl sm:text-6xl font-black text-gray-900">0</div>
+            </div>
+            <p class="text-xs sm:text-sm font-bold text-gray-500 uppercase tracking-wider">Best Score</p>
+            <div id="bestScoreTest" class="text-xs text-gray-400 mt-1 truncate hidden"></div>
+        </div>
+    </div>
+    
+    <!-- Divider -->
+    <div class="mt-10 border-t-2 border-gray-200"></div>
+</div>
 
-                <!-- Middle Column - Comprehensive Fitness Overview -->
-                <div class="lg:col-span-5 xl:col-span-5 space-y-4 sm:space-y-6">
-                    <!-- Overall Fitness Progress -->
-                    <div class="bg-white rounded-xl shadow-md border border-gray-200 p-4 sm:p-5 md:p-6 hover:shadow-lg transition-shadow card-hover">
-                        <h5 class="text-base sm:text-lg font-bold text-gray-900 mb-3 sm:mb-4 flex items-center">
-                            <i class="bi bi-graph-up-arrow text-blue-600 mr-2 text-lg sm:text-xl"></i>
-                            <span class="text-sm sm:text-base md:text-lg">Fitness Progress Overview</span>
-                        </h5>
-                        <div class="h-48 sm:h-56 md:h-64 lg:h-72 bg-gray-50 rounded-xl p-2 chart-container">
-                            <canvas id="fitnessOverviewChart"></canvas>
-                        </div>
+<!-- Main Content Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+    <!-- Left Column (2/3 width on desktop) -->
+    <div class="lg:col-span-2 space-y-8">
+        
+        <!-- Upcoming Tests -->
+        <div>
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-gray-900 flex items-center gap-3">
+                    <div class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
+                        <i class="bi bi-calendar-check text-white text-lg"></i>
                     </div>
-
-                    <!-- Category Performance Radar -->
-                    <div class="bg-white rounded-xl shadow-md border border-gray-200 p-4 sm:p-5 md:p-6 hover:shadow-lg transition-shadow card-hover">
-                        <h5 class="text-base sm:text-lg font-bold text-gray-900 mb-3 sm:mb-4 flex items-center">
-                            <i class="bi bi-radar text-blue-600 mr-2 text-lg sm:text-xl"></i>
-                            <span class="text-sm sm:text-base md:text-lg">Category Performance</span>
-                        </h5>
-                        <div class="h-48 sm:h-56 md:h-64 lg:h-72 bg-gray-50 rounded-xl p-2 chart-container">
-                            <canvas id="performanceRadarChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Right Column - Upcoming Tests -->
-                <div class="lg:col-span-3 xl:col-span-3">
-                    <div class="bg-white rounded-xl shadow-md border border-gray-200 p-4 sm:p-5 md:p-6 hover:shadow-lg transition-shadow h-full card-hover">
-                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
-                            <h5 class="text-base sm:text-lg font-bold text-gray-900 flex items-center">
-                                <i class="bi bi-calendar-check text-blue-600 mr-2 text-lg sm:text-xl"></i>
-                                <span class="text-sm sm:text-base md:text-lg">Upcoming Tests</span>
-                            </h5>
-                            <a href="./test.html" class="w-full sm:w-auto px-3 sm:px-4 py-2 border-2 border-blue-500 text-blue-500 rounded-lg font-semibold text-xs sm:text-sm hover:bg-blue-500 hover:text-white transition-all text-center">
-                                <i class="bi bi-eye mr-1"></i>View All
-                            </a>
-                        </div>
-                        
-                        <div id="upcomingTestsCard">
-                            <div class="text-center py-8 sm:py-12">
-                                <i class="bi bi-calendar-x text-5xl sm:text-6xl text-gray-300 mb-2 sm:mb-3"></i>
-                                <p class="text-gray-600 font-semibold mb-1 text-sm sm:text-base">No upcoming tests</p>
-                                <small class="text-gray-400 text-xs sm:text-sm">Check back later for scheduled tests</small>
-                            </div>
-                        </div>
-                    </div>
+                    Upcoming Tests
+                </h2>
+                <a href="./test.html" class="px-4 py-2 bg-blue-500 text-white rounded-lg font-semibold text-sm hover:bg-blue-600 transition-all">
+                    View All
+                </a>
+            </div>
+            
+            <div id="upcomingTestsCard" class="space-y-4 max-h-96 overflow-y-auto pr-2" style="scrollbar-width: thin; scrollbar-color: #3b82f6 #f1f5f9;">
+                <div class="text-center py-16 bg-gray-50 rounded-xl">
+                    <i class="bi bi-calendar-x text-6xl text-gray-300 mb-3"></i>
+                    <p class="text-gray-600 font-semibold">No upcoming tests</p>
+                    <small class="text-gray-400">Check back later</small>
                 </div>
             </div>
-
-            <!-- Recent Test Results Card - Full Width at Bottom -->
-            <div class="bg-white rounded-xl shadow-md border border-gray-200 p-4 sm:p-5 md:p-6 hover:shadow-lg transition-shadow mb-4 sm:mb-6 card-hover">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
-                    <h5 class="text-base sm:text-lg font-bold text-gray-900 flex items-center">
-                        <i class="bi bi-clipboard-data text-blue-600 mr-2 text-lg sm:text-xl"></i>
-                        <span class="text-sm sm:text-base md:text-lg">Recent Test Results</span>
-                    </h5>
-                    <button id="exportResultsBtn" class="w-full sm:w-auto px-3 sm:px-4 py-2 border-2 border-blue-500 text-blue-500 rounded-lg font-semibold text-xs sm:text-sm hover:bg-blue-500 hover:text-white transition-all">
-                        <i class="bi bi-download mr-1"></i>Export All
-                    </button>
-                </div>
-                
-                <div id="recentTestResultCard">
-                    <div class="text-center py-8 sm:py-12">
-                        <i class="bi bi-clipboard-data text-5xl sm:text-6xl text-gray-300 mb-2 sm:mb-3"></i>
-                        <p class="text-gray-600 font-semibold mb-1 text-sm sm:text-base">No test results yet</p>
-                        <small class="text-gray-400 text-xs sm:text-sm">Complete a test to see your results here</small>
+        </div>
+        
+        <!-- Overall Progress Chart -->
+        <div>
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-gray-900 flex items-center gap-3">
+                    <div class="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
+                        <i class="bi bi-graph-up-arrow text-white text-lg"></i>
+                    </div>
+                    Overall Progress
+                </h2>
+                <span class="text-sm text-gray-500 font-medium">Weekly Performance</span>
+            </div>
+            
+            <div class="bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
+                <div id="overallProgressChart" style="height: 350px; position: relative;">
+                    <div class="text-center py-12">
+                        <i class="bi bi-graph-up text-6xl text-gray-300 mb-3"></i>
+                        <p class="text-gray-600 font-semibold">Loading progress data...</p>
                     </div>
                 </div>
             </div>
         </div>
-            <!-- Footer -->
-            <footer class="bg-gray-800 text-white mt-12 sm:mt-16 py-8 sm:py-12 -mx-3 sm:-mx-4 lg:-mx-6">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8 text-center md:text-left">
-                        <div>
-                            <h6 class="text-orange-500 font-bold text-base sm:text-lg mb-3 sm:mb-4">About CTBL</h6>
-                            <p class="text-xs leading-relaxed text-gray-300">
-                                The Center for Technology Based Learning serves as the learning management system operating hub, reporting to the university MANCOM officials.
-                            </p>
-                        </div>
-
-                        <div>
-                            <h6 class="text-orange-500 font-bold text-base sm:text-lg mb-3 sm:mb-4">Contact Us</h6>
-                            <p class="text-xs leading-relaxed text-gray-300 mb-2 sm:mb-3">
-                                J.P. Rizal Extension, West Rembo, 1644 City of Taguig, Metro Manila, Philippines<br>
-                                Email: <a href="mailto:tblhub@umak.edu.ph" class="underline hover:text-orange-400">tblhub@umak.edu.ph</a>
-                            </p>
-                            <a href="https://www.facebook.com/CHKstudentcouncilofficial" target="_blank" 
-                               class="inline-flex items-center gap-2 hover:text-orange-400 transition-colors text-xs sm:text-sm">
-                                <i class="bi bi-facebook text-lg sm:text-xl text-blue-600"></i>
-                                <span>Follow us on Facebook</span>
-                            </a>
-                        </div>
-
-                        <div>
-                            <h6 class="text-orange-500 font-bold text-base sm:text-lg mb-3 sm:mb-4">Links</h6>
-                            <p class="text-xs leading-relaxed text-gray-300">
-                                University of Makati<br>
-                                Legacy TBL Hub<br>
-                                UMak Online Library<br>
-                                Contact TBL Hub Support
-                            </p>
-                        </div>
+        
+        <!-- Calendar -->
+        <div>
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-gray-900 flex items-center gap-3">
+                    <div class="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center">
+                        <i class="bi bi-calendar3 text-white text-lg"></i>
                     </div>
+                    Calendar
+                </h2>
+            </div>
+            
+            <div class="bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
+                <div id="miniCalendar">
+                    <!-- Calendar will be generated here -->
                 </div>
-            </footer>
-
-            <div class="bg-black text-gray-400 py-4 sm:py-6 text-center text-[10px] sm:text-xs px-4 -mx-3 sm:-mx-4 lg:-mx-6">
-                Copyright © 2025 - University of Makati - Technology Based Learning Hub.
-                Powered by <a href="https://moodle.org/" class="underline hover:text-white">Moodle</a>
+            </div>
+        </div>
+        
+        <!-- Recent Test Results -->
+        <div>
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-gray-900 flex items-center gap-3">
+                    <div class="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center">
+                        <i class="bi bi-clipboard-data text-white text-lg"></i>
+                    </div>
+                    Recent Results
+                </h2>
+                <button id="exportResultsBtn" class="px-4 py-2 border-2 border-orange-500 text-orange-500 rounded-lg font-semibold text-sm hover:bg-orange-500 hover:text-white transition-all">
+                    <i class="bi bi-download mr-1"></i>Export
+                </button>
+            </div>
+            
+            <div id="recentTestResultCard">
+                <div class="text-center py-16 bg-gray-50 rounded-xl">
+                    <i class="bi bi-clipboard-data text-6xl text-gray-300 mb-3"></i>
+                    <p class="text-gray-600 font-semibold">No test results yet</p>
+                    <small class="text-gray-400">Complete a test to see results</small>
+                </div>
             </div>
         </div>
     </div>
+    
+    <!-- Right Sidebar (1/3 width on desktop) -->
+    <div class="space-y-6">
+        <!-- Performance Summary -->
+        <div class="bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
+            <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                <i class="bi bi-trophy text-yellow-500 text-2xl"></i>
+                Performance
+            </h3>
+            
+            <div class="space-y-4">
+                <!-- Completion Rate -->
+                <div class="p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-sm font-semibold text-gray-700">Completion</span>
+                        <i class="bi bi-clipboard-check text-blue-600 text-xl"></i>
+                    </div>
+                    <div id="completionRate" class="text-3xl font-bold text-gray-900">0%</div>
+                </div>
 
+                <!-- Progress Level -->
+                <div class="p-4 bg-gradient-to-r from-green-50 to-green-100 rounded-xl">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-sm font-semibold text-gray-700">Level</span>
+                        <i class="bi bi-graph-up text-green-600 text-xl"></i>
+                    </div>
+                    <div id="overallProgress" class="text-3xl font-bold text-gray-900">Beginner</div>
+                </div>
+
+                <!-- Streak -->
+                <div class="p-4 bg-gradient-to-r from-orange-50 to-orange-100 rounded-xl">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-sm font-semibold text-gray-700">Streak</span>
+                        <i class="bi bi-fire text-orange-600 text-xl"></i>
+                    </div>
+                    <div id="currentStreak" class="text-3xl font-bold text-gray-900">0 weeks</div>
+                </div>
+
+                <!-- Rank -->
+                <div class="p-4 bg-gradient-to-r from-purple-50 to-purple-100 rounded-xl">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-sm font-semibold text-gray-700">Rank</span>
+                        <i class="bi bi-award text-purple-600 text-xl"></i>
+                    </div>
+                    <div id="rankLevel" class="text-3xl font-bold text-gray-900">Novice</div>
+                </div>
+                
+                <!-- Class Ranking -->
+                <div class="p-4 bg-gradient-to-r from-yellow-50 to-yellow-100 rounded-xl">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-sm font-semibold text-gray-700">Class Rank</span>
+                        <i class="bi bi-trophy text-yellow-600 text-xl"></i>
+                    </div>
+                    <div id="classRanking" class="text-3xl font-bold text-gray-900">--</div>
+                    <div id="classRankingDetails" class="text-xs text-gray-600 mt-1">Calculating...</div>
+                </div>
+
+                <!-- Strongest Category -->
+                <div class="p-4 bg-gradient-to-r from-pink-50 to-pink-100 rounded-xl">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-sm font-semibold text-gray-700">Best At</span>
+                        <i class="bi bi-star text-pink-600 text-xl"></i>
+                    </div>
+                    <div id="strongestCategory" class="text-lg font-bold text-gray-900">Loading...</div>
+                    <div id="strongestCategoryScore" class="text-xs text-gray-600 mt-1">Calculating...</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Quick Tip -->
+        <div class="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl p-6 text-white shadow-lg">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
+                    <i class="bi bi-lightbulb-fill text-yellow-300 text-2xl"></i>
+                </div>
+                <h3 class="text-lg font-bold">Daily Tip</h3>
+            </div>
+            <p id="dailyTip" class="text-sm leading-relaxed text-blue-50">
+                Complete your pending tests to track your fitness progress!
+            </p>
+        </div>
+    </div>
+</div>
+    
+           <!-- Footer -->
+<footer class="bg-gradient-to-r from-blue-900 to-blue-800 text-white mt-12 sm:mt-16 py-8 sm:py-12">
+    <div class="w-full px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto"> <!-- Changed back to max-w-7xl to match your main content -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 text-center lg:text-left">
+                <!-- About UmakFit & College of Human Kinetics -->
+                <div>
+                    <div class="flex items-center justify-center lg:justify-start gap-3 mb-4">
+                        <img src="https://c.animaapp.com/vkhEa8zW/img/screenshot-2025-09-19-2-53-51-pm-removebg-preview-3@2x.png" 
+                             alt="UMak Logo" class="h-12 w-auto object-contain"> <!-- Increased logo size -->
+                        <div>
+                            <h6 class="text-yellow-400 font-bold text-lg lg:text-xl mb-1">UMakFit</h6>
+                            <p class="text-xs lg:text-sm text-blue-200 font-medium">College of Human Kinetics</p>
+                        </div>
+                    </div>
+                    <p class="text-sm lg:text-base leading-relaxed text-blue-100">
+                        UMakFit is the official fitness assessment and tracking platform of the College of Human Kinetics at University of Makati. 
+                        Our mission is to promote health, wellness, and physical fitness through comprehensive assessment and personalized tracking.
+                    </p>
+                    <div class="mt-4 flex flex-wrap gap-2 justify-center lg:justify-start">
+                        <span class="bg-blue-700/50 px-3 py-1 rounded-full text-xs font-semibold">Fitness Tracking</span>
+                        <span class="bg-blue-700/50 px-3 py-1 rounded-full text-xs font-semibold">Performance Assessment</span>
+                        <span class="bg-blue-700/50 px-3 py-1 rounded-full text-xs font-semibold">Health & Wellness</span>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h6 class="text-yellow-400 font-bold text-lg lg:text-xl mb-4 lg:mb-6">Quick Links</h6>
+                    <div class="grid grid-cols-2 gap-4 lg:gap-6">
+                        <div class="space-y-3">
+                            <a href="./studentlesson.html" class="block text-blue-100 hover:text-yellow-300 hover:translate-x-1 transition-all duration-200 text-sm lg:text-base">
+                                <i class="bi bi-book mr-2"></i>Lessons
+                            </a>
+                            <a href="./test.html" class="block text-blue-100 hover:text-yellow-300 hover:translate-x-1 transition-all duration-200 text-sm lg:text-base">
+                                <i class="bi bi-clipboard-check mr-2"></i>Tests
+                            </a>
+                            <a href="./progress.html" class="block text-blue-100 hover:text-yellow-300 hover:translate-x-1 transition-all duration-200 text-sm lg:text-base">
+                                <i class="bi bi-graph-up mr-2"></i>Progress
+                            </a>
+                        </div>
+                        <div class="space-y-3">
+                            <a href="./studentgrades.html" class="block text-blue-100 hover:text-yellow-300 hover:translate-x-1 transition-all duration-200 text-sm lg:text-base">
+                                <i class="bi bi-award mr-2"></i>Grades
+                            </a>
+                            <a href="./studentprofile.html" class="block text-blue-100 hover:text-yellow-300 hover:translate-x-1 transition-all duration-200 text-sm lg:text-base">
+                                <i class="bi bi-person-circle mr-2"></i>Profile
+                            </a>
+                            <a href="#" class="block text-blue-100 hover:text-yellow-300 hover:translate-x-1 transition-all duration-200 text-sm lg:text-base">
+                                <i class="bi bi-trophy mr-2"></i>Achievements
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact & Social -->
+                <div>
+                    <h6 class="text-yellow-400 font-bold text-lg lg:text-xl mb-4 lg:mb-6">Get In Touch</h6>
+                    <div class="space-y-4 lg:space-y-5">
+                        <div class="flex items-start gap-3">
+                            <i class="bi bi-geo-alt-fill text-yellow-400 text-lg lg:text-xl mt-1"></i>
+                            <p class="text-sm lg:text-base text-blue-100">
+                                College of Human Kinetics<br>
+                                University of Makati<br>
+                                J.P. Rizal Extension, West Rembo<br>
+                                Taguig City, Metro Manila
+                            </p>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <i class="bi bi-envelope-fill text-yellow-400 text-lg lg:text-xl"></i>
+                            <a href="mailto:chk@umak.edu.ph" class="text-blue-100 hover:text-yellow-300 transition-colors text-sm lg:text-base">
+                                chk@umak.edu.ph
+                            </a>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <i class="bi bi-telephone-fill text-yellow-400 text-lg lg:text-xl"></i>
+                            <span class="text-blue-100 text-sm lg:text-base">(02) 8882-0801 loc. 3001</span>
+                        </div>
+                        <div class="flex items-center gap-4 pt-3">
+                            <a href="https://www.facebook.com/profile.php?id=61577064971920" target="_blank" class="bg-blue-700 hover:bg-blue-600 p-2.5 rounded-lg transition-all duration-200 hover:scale-110">
+                                <i class="bi bi-facebook text-white text-lg lg:text-xl"></i>
+                            </a>
+                            <a href="#" class="bg-blue-700 hover:bg-blue-600 p-2.5 rounded-lg transition-all duration-200 hover:scale-110">
+                                <i class="bi bi-twitter text-white text-lg lg:text-xl"></i>
+                            </a>
+                            <a href="#" class="bg-blue-700 hover:bg-blue-600 p-2.5 rounded-lg transition-all duration-200 hover:scale-110">
+                                <i class="bi bi-instagram text-white text-lg lg:text-xl"></i>
+                            </a>
+                            <a href="#" class="bg-blue-700 hover:bg-blue-600 p-2.5 rounded-lg transition-all duration-200 hover:scale-110">
+                                <i class="bi bi-youtube text-white text-lg lg:text-xl"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Divider -->
+            <div class="border-t border-blue-600/50 mt-8 lg:mt-12 pt-6 lg:pt-8">
+                <div class="flex flex-col lg:flex-row justify-between items-center gap-4">
+                    <!-- Copyright -->
+                    <div class="text-center lg:text-left">
+                        <p class="text-xs lg:text-sm text-blue-200">
+                            © 2025 University of Makati - College of Human Kinetics. All Rights Reserved.
+                        </p>
+                    </div>
+                    
+                    <!-- University Links -->
+                    <div class="flex flex-wrap justify-center gap-3 lg:gap-4">
+                        <a href="https://umak.edu.ph" target="_blank" class="text-xs lg:text-sm text-blue-200 hover:text-yellow-300 transition-colors">
+                            University of Makati
+                        </a>
+                        <span class="text-blue-400">•</span>
+                        <a href="https://library.umak.edu.ph" target="_blank" class="text-xs lg:text-sm text-blue-200 hover:text-yellow-300 transition-colors">
+                            UMak Online Library
+                        </a>
+                        <span class="text-blue-400">•</span>
+                        <a href="https://tbl.umak.edu.ph" target="_blank" class="text-xs lg:text-sm text-blue-200 hover:text-yellow-300 transition-colors">
+                            TBL Hub
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script type="module">
         // Import Firebase modules
@@ -1091,7 +1249,274 @@
                 console.error('❌ Error updating charts:', error);
             }
         }
+                async function createOverallProgressChart() {
+    try {
+        const container = document.getElementById('overallProgressChart');
+        if (!container) {
+            console.error('Overall progress chart container not found');
+            return;
+        }
 
+        if (!studentData || !studentData.email) {
+            container.innerHTML = `
+                <div class="text-center py-12">
+                    <i class="bi bi-graph-up text-6xl text-gray-300 mb-3"></i>
+                    <p class="text-gray-600 font-semibold mb-1">No student data</p>
+                    <small class="text-gray-400">Please log in</small>
+                </div>
+            `;
+            return;
+        }
+
+        const resultsQuery = query(
+    collection(db, 'testResults'),
+    where('studentEmail', '==', studentData.email),
+    where('status', '==', 'completed')
+    
+        );
+
+        const resultsSnapshot = await getDocs(resultsQuery);
+
+        // Sort in JavaScript instead
+        const allResults = [];
+        resultsSnapshot.forEach((doc) => {
+            allResults.push(doc.data());
+        });
+
+        // Sort by date in JavaScript
+        allResults.sort((a, b) => {
+            const dateA = a.submittedAt?.toDate?.() || new Date(a.date);
+            const dateB = b.submittedAt?.toDate?.() || new Date(b.date);
+            return dateA - dateB;
+        });
+        
+        allResults.forEach((result) => {
+            container.innerHTML = `
+                <div class="text-center py-12">
+                    <i class="bi bi-graph-up text-6xl text-gray-300 mb-3"></i>
+                    <p class="text-gray-600 font-semibold mb-1">No test results yet</p>
+                    <small class="text-gray-400">Complete tests to see your progress</small>
+                    <div class="mt-4">
+                        <a href="./test.html" class="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg font-semibold text-sm hover:from-blue-600 hover:to-blue-700 transition-all inline-block">
+                            Take Your First Test
+                        </a>
+                    </div>
+                </div>
+            `;
+            return;
+        });
+
+        // Process results by week
+        const weeklyData = new Map();
+        
+        resultsSnapshot.forEach((doc) => {
+            const result = doc.data();
+            const testDate = result.submittedAt?.toDate?.() || new Date(result.date);
+            
+            // Get week number and year
+            const weekNum = getWeekNumber(testDate);
+            const year = testDate.getFullYear();
+            const weekKey = `${year}-W${weekNum}`;
+            
+            // Calculate score
+            const score = result.score || calculateTestScore(
+                result.testName, 
+                result.resultData || result.result, 
+                result.testTarget
+            );
+            
+            if (!weeklyData.has(weekKey)) {
+                weeklyData.set(weekKey, {
+                    scores: [],
+                    tests: [],
+                    date: testDate,
+                    weekLabel: testDate.toLocaleDateString('en-US', { 
+                        month: 'short', 
+                        day: 'numeric',
+                        year: 'numeric'
+                    })
+                });
+            }
+            
+            const weekData = weeklyData.get(weekKey);
+            weekData.scores.push(score);
+            weekData.tests.push(result.testName);
+        });
+        
+        // Convert to array and sort by date
+        const sortedWeeks = Array.from(weeklyData.entries())
+            .sort((a, b) => a[1].date - b[1].date);
+        
+        if (sortedWeeks.length === 0) {
+            container.innerHTML = `
+                <div class="text-center py-12">
+                    <i class="bi bi-graph-up text-6xl text-gray-300 mb-3"></i>
+                    <p class="text-gray-600 font-semibold mb-1">No weekly data</p>
+                    <small class="text-gray-400">Complete tests to track progress</small>
+                </div>
+            `;
+            return;
+        }
+        
+        // Prepare chart data
+        const labels = sortedWeeks.map(([_, data]) => data.weekLabel);
+        const averageScores = sortedWeeks.map(([_, data]) => {
+            const avg = data.scores.reduce((a, b) => a + b, 0) / data.scores.length;
+            return Math.round(avg);
+        });
+        const testCounts = sortedWeeks.map(([_, data]) => data.tests.length);
+        
+        // Clear container and create canvas
+        container.innerHTML = '<canvas id="overallProgressCanvas"></canvas>';
+        const canvas = document.getElementById('overallProgressCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Create gradient
+        const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+        gradient.addColorStop(0, 'rgba(59, 130, 246, 0.3)');
+        gradient.addColorStop(1, 'rgba(59, 130, 246, 0.05)');
+        
+        // Create chart
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Average Score',
+                    data: averageScores,
+                    backgroundColor: gradient,
+                    borderColor: 'rgb(59, 130, 246)',
+                    borderWidth: 4,
+                    pointBackgroundColor: 'rgb(37, 99, 235)',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 4,
+                    pointRadius: 8,
+                    pointHoverRadius: 12,
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                        titleColor: '#1f2937',
+                        bodyColor: '#6b7280',
+                        borderColor: 'rgb(59, 130, 246)',
+                        borderWidth: 2,
+                        padding: 16,
+                        displayColors: false,
+                        titleFont: {
+                            size: 15,
+                            weight: 'bold'
+                        },
+                        bodyFont: {
+                            size: 14
+                        },
+                        callbacks: {
+                            title: function(context) {
+                                const index = context[0].dataIndex;
+                                return `Week of ${labels[index]}`;
+                            },
+                            label: function(context) {
+                                return `Average Score: ${context.parsed.y}/100`;
+                            },
+                            afterLabel: function(context) {
+                                const index = context.dataIndex;
+                                const count = testCounts[index];
+                                const tests = sortedWeeks[index][1].tests;
+                                return [
+                                    `Tests Taken: ${count}`,
+                                    '',
+                                    'Tests:',
+                                    ...tests.map(t => `• ${t}`)
+                                ];
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: {
+                            stepSize: 20,
+                            callback: function(value) {
+                                return value;
+                            },
+                            font: {
+                                size: 12,
+                                weight: '600'
+                            },
+                            color: '#64748b'
+                        },
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)',
+                            drawBorder: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'Average Score',
+                            font: {
+                                size: 13,
+                                weight: '700'
+                            },
+                            color: '#1e293b'
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: {
+                                size: 11,
+                                weight: '600'
+                            },
+                            color: '#64748b',
+                            maxRotation: 45,
+                            minRotation: 45
+                        },
+                        grid: {
+                            display: false,
+                            drawBorder: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'Week',
+                            font: {
+                                size: 13,
+                                weight: '700'
+                            },
+                            color: '#1e293b'
+                        }
+                    }
+                },
+                interaction: {
+                    intersect: false,
+                    mode: 'index'
+                }
+            }
+        });
+        
+        console.log('✅ Overall progress chart created successfully');
+        
+    } catch (error) {
+        console.error('❌ Error creating overall progress chart:', error);
+        const container = document.getElementById('overallProgressChart');
+        if (container) {
+            container.innerHTML = `
+                <div class="text-center py-12">
+                    <i class="bi bi-exclamation-circle text-red-500 text-6xl mb-3"></i>
+                    <p class="text-red-500 font-semibold mb-1">Error loading chart</p>
+                    <small class="text-gray-400">${error.message}</small>
+                </div>
+            `;
+        }
+    }
+}
         // Helper function to categorize tests
         function getCategoryForTest(testName) {
             const normalized = testName.toLowerCase().trim();
@@ -1197,6 +1622,7 @@
                     await loadTestHistory();
                     await updatePerformanceSummary();
                     await updateChartsWithRealData();
+                    await createOverallProgressChart(); 
                     await loadUpcomingTests();
                     
                     return studentData;
@@ -2385,7 +2811,7 @@
                     // Show the main content
                     loadingScreen.classList.add('hidden');
                     mainContent.classList.remove('hidden');
-                    
+                    generateMiniCalendar();
                     console.log('✓ Dashboard loaded successfully');
                     
                 } catch (error) {
@@ -2399,6 +2825,51 @@
                 window.location.href = '../login/index.html';
             }
         });
+           // Generate Calendar
+        function generateMiniCalendar() {
+            const calendar = document.getElementById('miniCalendar');
+            if (!calendar) return;
+            
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth();
+            const today = now.getDate();
+            
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                            'July', 'August', 'September', 'October', 'November', 'December'];
+            
+            let html = `
+                <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-6 border border-blue-100">
+                    <div class="grid grid-cols-7 gap-3 text-center">
+                        <div class="font-bold text-blue-700 py-3 text-xs sm:text-sm uppercase tracking-wide">Sun</div>
+                        <div class="font-bold text-blue-700 py-3 text-xs sm:text-sm uppercase tracking-wide">Mon</div>
+                        <div class="font-bold text-blue-700 py-3 text-xs sm:text-sm uppercase tracking-wide">Tue</div>
+                        <div class="font-bold text-blue-700 py-3 text-xs sm:text-sm uppercase tracking-wide">Wed</div>
+                        <div class="font-bold text-blue-700 py-3 text-xs sm:text-sm uppercase tracking-wide">Thu</div>
+                        <div class="font-bold text-blue-700 py-3 text-xs sm:text-sm uppercase tracking-wide">Fri</div>
+                        <div class="font-bold text-blue-700 py-3 text-xs sm:text-sm uppercase tracking-wide">Sat</div>
+            `;
+            
+            // Empty cells before first day
+            for (let i = 0; i < firstDay; i++) {
+                html += '<div class="py-3"></div>';
+            }
+            
+            // Days of month
+            for (let day = 1; day <= daysInMonth; day++) {
+                const isToday = day === today;
+                const classes = isToday 
+                    ? 'bg-gradient-to-br from-blue-600 to-blue-700 text-white font-bold rounded-xl py-3 sm:py-4 text-sm sm:text-base shadow-lg transform scale-110 hover:scale-115 transition-transform' 
+                    : 'text-gray-700 hover:bg-blue-100 rounded-xl py-3 sm:py-4 cursor-pointer transition-all text-sm sm:text-base hover:shadow-md';
+                html += `<div class="${classes}">${day}</div>`;
+            }
+            
+            html += '</div></div>';
+            calendar.innerHTML = html;
+        }
     </script>
 </body>
 </html>

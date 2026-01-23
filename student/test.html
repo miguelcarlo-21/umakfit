@@ -70,10 +70,11 @@
 </head>
 <body class="bg-gray-50">
     <!-- Loading Screen -->
-    <div id="loadingScreen" class="fixed inset-0 bg-white/98 flex flex-col items-center justify-center z-50">
-        <div class="spinner"></div>
-        <div class="mt-5 text-gray-600 font-medium text-sm md:text-base">Loading Tests...</div>
-    </div>
+<div id="loadingScreen" class="fixed inset-0 bg-white/98 flex flex-col items-center justify-center z-50">
+    <img src="logo.png" alt="UMakFit Logo" class="h-40 sm:h-48 w-auto object-contain mb-4 animate-pulse">
+    <div class="spinner"></div>
+    <div class="mt-5 text-gray-600 font-medium text-sm md:text-base">Loading Test...</div>
+</div>
 
     <div id="mainContent" class="hidden">
         <!-- Navigation -->
@@ -228,57 +229,108 @@
 
         <!-- Main Content -->
         <div class="container mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-6 lg:py-8 max-w-7xl">
-            <!-- Page Title -->
-            <div class="relative mb-6 sm:mb-8">
-                <div class="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-blue-900 to-blue-500 rounded-r"></div>
-                <h1 class="pl-4 sm:pl-6 text-2xl sm:text-3xl lg:text-4xl font-bold text-blue-900">Fitness Assessment Test</h1>
-            </div>
+<!-- Hero Section - Clean Title Only -->
+<div class="relative mb-8 sm:mb-10">
+    <div class="flex items-center gap-3 mb-3">
+        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-md flex-shrink-0">
+            <i class="bi bi-clipboard-check text-xl sm:text-2xl text-white"></i>
+        </div>
+        <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent leading-tight">
+            Fitness Assessment
+        </h1>
+    </div>
+    <p class="text-sm sm:text-base text-gray-600 max-w-2xl pl-0 sm:pl-14">
+        Track your progress, challenge yourself, and achieve your fitness goals.
+    </p>
+</div>
 
-            <!-- Stats Banner -->
-            <div class="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 mb-6 sm:mb-8 shadow-md border border-gray-200">
-                <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
-                    <div class="relative bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-4 sm:p-6 text-center border-2 border-blue-200 hover:-translate-y-1 transition-transform overflow-hidden">
-                        <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-blue-600"></div>
-                        <div id="testsDone" class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-blue-900 mb-1 sm:mb-2">0</div>
-                        <div class="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-gray-600">Tests Completed</div>
-                    </div>
-                    <div class="relative bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-4 sm:p-6 text-center border-2 border-blue-200 hover:-translate-y-1 transition-transform overflow-hidden">
-                        <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-blue-600"></div>
-                        <div id="avgScore" class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-blue-900 mb-1 sm:mb-2">0</div>
-                        <div class="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-gray-600">Average Score</div>
-                    </div>
-                    <div class="relative bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-4 sm:p-6 text-center border-2 border-blue-200 hover:-translate-y-1 transition-transform overflow-hidden">
-                        <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-blue-600"></div>
-                        <div id="bestScore" class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-blue-900 mb-1 sm:mb-2">0</div>
-                        <div class="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-gray-600">Best Score</div>
-                    </div>
-                    <div class="relative bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-4 sm:p-6 text-center border-2 border-blue-200 hover:-translate-y-1 transition-transform overflow-hidden">
-                        <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-blue-600"></div>
-                        <div id="dayStreak" class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-blue-900 mb-1 sm:mb-2">0</div>
-                        <div class="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-gray-600">Day Streak</div>
-                    </div>
-                </div>
+            <!-- Performance Dashboard -->
+<div class="bg-white rounded-2xl p-6 lg:p-8 mb-8 shadow-lg border border-gray-100">
+    <div class="flex items-center gap-3 mb-6">
+        <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
+            <i class="bi bi-bar-chart-fill text-white text-xl"></i>
+        </div>
+        <h2 class="text-2xl font-bold text-gray-900">Your Performance</h2>
+    </div>
+    
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+        <div class="group relative bg-gradient-to-br from-blue-50 to-white rounded-2xl p-6 text-center border border-blue-100 hover:border-blue-300 hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+            <div class="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-blue-500 to-blue-600 rounded-t-2xl"></div>
+            <div class="w-14 h-14 mx-auto mb-3 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                <i class="bi bi-check-circle-fill text-white text-2xl"></i>
             </div>
+            <div id="testsDone" class="text-4xl lg:text-5xl font-extrabold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent mb-2">0</div>
+            <div class="text-xs font-bold uppercase tracking-wider text-gray-600">Tests Completed</div>
+        </div>
+
+        <div class="group relative bg-gradient-to-br from-purple-50 to-white rounded-2xl p-6 text-center border border-purple-100 hover:border-purple-300 hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+            <div class="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-purple-500 to-purple-600 rounded-t-2xl"></div>
+            <div class="w-14 h-14 mx-auto mb-3 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                <i class="bi bi-graph-up text-white text-2xl"></i>
+            </div>
+            <div id="avgScore" class="text-4xl lg:text-5xl font-extrabold bg-gradient-to-r from-purple-600 to-purple-800 bg-clip-text text-transparent mb-2">0</div>
+            <div class="text-xs font-bold uppercase tracking-wider text-gray-600">Average Score</div>
+        </div>
+
+        <div class="group relative bg-gradient-to-br from-green-50 to-white rounded-2xl p-6 text-center border border-green-100 hover:border-green-300 hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+            <div class="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-green-500 to-green-600 rounded-t-2xl"></div>
+            <div class="w-14 h-14 mx-auto mb-3 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                <i class="bi bi-trophy-fill text-white text-2xl"></i>
+            </div>
+            <div id="bestScore" class="text-4xl lg:text-5xl font-extrabold bg-gradient-to-r from-green-600 to-green-800 bg-clip-text text-transparent mb-2">0</div>
+            <div class="text-xs font-bold uppercase tracking-wider text-gray-600">Best Score</div>
+        </div>
+
+        <div class="group relative bg-gradient-to-br from-orange-50 to-white rounded-2xl p-6 text-center border border-orange-100 hover:border-orange-300 hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+            <div class="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-orange-500 to-orange-600 rounded-t-2xl"></div>
+            <div class="w-14 h-14 mx-auto mb-3 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                <i class="bi bi-fire text-white text-2xl"></i>
+            </div>
+            <div id="dayStreak" class="text-4xl lg:text-5xl font-extrabold bg-gradient-to-r from-orange-600 to-orange-800 bg-clip-text text-transparent mb-2">0</div>
+            <div class="text-xs font-bold uppercase tracking-wider text-gray-600">Day Streak</div>
+        </div>
+    </div>
+</div>
 
             <!-- Category Cards Container -->
             <div id="categoryCardsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8"></div>
 
-            <!-- Recent Test History -->
-            <div class="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 shadow-md border border-gray-200">
-                <div class="flex items-center gap-3 mb-4 sm:mb-6">
-                    <img src="https://c.animaapp.com/HN7hFbsr/img/image-151@2x.png" alt="History Icon" class="w-6 h-6 sm:w-8 sm:h-8" />
-                    <h2 class="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">Recent Test History</h2>
-                </div>
-                <div id="testHistoryContainer">
-                    <div class="text-center py-8 sm:py-12">
-                        <div class="text-5xl sm:text-6xl mb-3 sm:mb-4">📋</div>
-                        <p class="text-base sm:text-lg font-semibold text-gray-600 mb-1 sm:mb-2">No Test History Yet</p>
-                        <small class="text-sm text-gray-400">Your completed tests will appear here</small>
-                    </div>
-                </div>
+            <!-- Overdue Tests Section -->
+<div class="bg-white rounded-2xl p-6 lg:p-8 mb-8 shadow-lg border border-red-200">
+    <div class="flex items-center gap-3 mb-6">
+        <div class="w-10 h-10 bg-gradient-to-br from-red-500 to-red-600 rounded-xl flex items-center justify-center">
+            <i class="bi bi-exclamation-triangle-fill text-white text-xl"></i>
+        </div>
+        <h2 class="text-2xl font-bold text-gray-900">Overdue Test</h2>
+    </div>
+    <div id="overdueTestsContainer">
+        <div class="text-center py-12">
+            <div class="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl flex items-center justify-center">
+                <i class="bi bi-check-circle text-4xl text-gray-400"></i>
             </div>
+            <p class="text-lg font-semibold text-gray-600 mb-2">No Overdue Test</p>
+            <small class="text-sm text-gray-400">All test are up to date</small>
         </div>
     </div>
+</div>
+           <!-- Test History Section -->
+<div class="bg-white rounded-2xl p-6 lg:p-8 shadow-lg border border-gray-100">
+    <div class="flex items-center gap-3 mb-6">
+        <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
+            <i class="bi bi-clock-history text-white text-xl"></i>
+        </div>
+        <h2 class="text-2xl font-bold text-gray-900">Recent Test History</h2>
+    </div>
+    <div id="testHistoryContainer">
+        <div class="text-center py-12">
+            <div class="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl flex items-center justify-center">
+                <i class="bi bi-clipboard-data text-4xl text-gray-400"></i>
+            </div>
+            <p class="text-lg font-semibold text-gray-600 mb-2">No Test History Yet</p>
+            <small class="text-sm text-gray-400">Your completed tests will appear here</small>
+        </div>
+    </div>
+</div>
 
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
@@ -301,6 +353,7 @@
         let currentUser = null;
         let studentData = null;
         let availableTests = [];
+        let overdueTests = [];
         let allTestHistory = [];
         let showAllHistory = false;
         const VISIBLE_HISTORY_COUNT = 2;
@@ -646,7 +699,6 @@ async function loadNotificationDropdown() {
 
         console.log('📋 Loading tests for section:', studentData.section);
         
-        // Simplified query - only filter by section, then filter visibility in memory
         const testsQuery = query(
             collection(db, 'scheduledTests'),
             where('section', '==', studentData.section)
@@ -654,7 +706,9 @@ async function loadNotificationDropdown() {
         
         const testsSnapshot = await getDocs(testsQuery);
         availableTests = [];
+        overdueTests = [];
         const now = new Date();
+        const seenTestIds = new Set(); // NEW: Track seen test IDs to prevent duplicates
         
         console.log(`📊 Found ${testsSnapshot.size} total tests for section ${studentData.section}`);
         
@@ -689,14 +743,34 @@ async function loadNotificationDropdown() {
             }
         });
         
+        // Check for professor permissions
+        const permissionsQuery = query(
+            collection(db, 'testPermissions'),
+            where('studentEmail', '==', studentData.email)
+        );
+        const permissionsSnapshot = await getDocs(permissionsQuery);
+        const enabledTests = new Set();
+        
+        permissionsSnapshot.forEach(doc => {
+            const permission = doc.data();
+            enabledTests.add(permission.testId);
+            console.log(`🔓 Professor enabled test: ${permission.testName} for ${studentData.email}`);
+        });
+        
         if (!testsSnapshot.empty) {
-            testsSnapshot.forEach((doc) => {
+            for (const doc of testsSnapshot.docs) {
                 const test = { id: doc.id, ...doc.data() };
                 
-                // Filter visibility in code instead of query
+                // Skip if we've already processed this test ID (prevent duplicates)
+                if (seenTestIds.has(test.id)) {
+                    console.log(`🔄 Skipping duplicate test: ${test.testName} (ID: ${test.id})`);
+                    continue;
+                }
+                seenTestIds.add(test.id);
+                
                 if (test.isVisible !== true || test.isActive !== true) {
                     console.log(`❌ Skipping test ${test.testName}: Not visible or not active`);
-                    return;
+                    continue;
                 }
                 
                 console.log(`🔍 Processing test: ${test.testName}`, {
@@ -720,21 +794,34 @@ async function loadNotificationDropdown() {
                 }
                 
                 console.log(`⏰ Test deadline: ${deadlineDateTime}, Now: ${now}`);
-            
-                // Check if deadline hasn't passed
-                if (deadlineDateTime >= now) {
-                    const status = testStatus.get(test.id);
+                
+                const status = testStatus.get(test.id);
+                const isUnlimited = test.attemptsAllowed === 0;
+                const isPerfect = status ? status.bestScore === 100 : false;
+                const hasAttemptsLeft = status ? status.attempts < test.attemptsAllowed : true;
+                
+                // Check if deadline has passed
+                if (deadlineDateTime < now) {
+                    // Test is overdue
+                    if (enabledTests.has(test.id)) {
+                        // Professor has enabled this test
+                        console.log(`⚠️✅ Test ${test.testName}: Overdue but ENABLED by professor`);
+                        test.professorEnabled = true;
+                        overdueTests.push(test);
+                    } else if (!status || status.attempts === 0) {
+                        // Not enabled and not attempted
+                        console.log(`⚠️ Test ${test.testName}: Overdue and not attempted`);
+                        overdueTests.push(test);
+                    } else {
+                        console.log(`✅ Test ${test.testName}: Overdue but already completed`);
+                    }
                     
+                } else {
+                    // Not overdue - normal logic
                     if (!status) {
-                        // Never attempted - always show
                         console.log(`✅ Adding test ${test.testName}: Never attempted`);
                         availableTests.push(test);
                     } else {
-                        const isUnlimited = test.attemptsAllowed === 0;
-                        const isPerfect = status.bestScore === 100;
-                        const hasAttemptsLeft = status.attempts < test.attemptsAllowed;
-                        
-                        // Show if not perfect AND (unlimited OR has attempts left)
                         if (!isPerfect && (isUnlimited || hasAttemptsLeft)) {
                             console.log(`✅ Adding test ${test.testName}: Can retry (Best: ${status.bestScore}, Attempts: ${status.attempts}/${test.attemptsAllowed})`);
                             availableTests.push(test);
@@ -742,16 +829,15 @@ async function loadNotificationDropdown() {
                             console.log(`❌ Skipping test ${test.testName}: ${isPerfect ? 'Perfect score achieved' : 'No attempts left'}`);
                         }
                     }
-                } else {
-                    console.log(`❌ Skipping test ${test.testName}: Deadline passed`);
                 }
-            });
+            }
         } else {
             console.log('⚠️ No tests found for section:', studentData.section);
         }
         
-        console.log(`🎯 Total available tests for student: ${availableTests.length}`);
+        console.log(`🎯 Total available tests: ${availableTests.length}, Overdue: ${overdueTests.length}`);
         await renderCategoryCards();
+        renderOverdueTests(overdueTests);
         
     } catch (error) {
         console.error('❌ Error loading tests:', error);
@@ -811,6 +897,29 @@ async function loadNotificationDropdown() {
     } catch (error) {
         console.error('Error setting up test updates for student:', error);
     }
+}
+        function formatDeadline(deadline, deadlineTime) {
+    if (!deadline) return 'No deadline';
+    
+    const date = new Date(deadline);
+    
+    // Format date as "Month Day, Year" (e.g., "January 28, 2026")
+    const dateText = date.toLocaleDateString('en-US', { 
+        month: 'long', 
+        day: 'numeric', 
+        year: 'numeric' 
+    });
+    
+    // Convert 24-hour time to 12-hour format
+    let timeText = '';
+    if (deadlineTime) {
+        const [hours, minutes] = deadlineTime.split(':').map(Number);
+        const period = hours >= 12 ? 'PM' : 'AM';
+        const hour12 = hours % 12 || 12;
+        timeText = ` at ${hour12}:${minutes.toString().padStart(2, '0')} ${period}`;
+    }
+    
+    return dateText + timeText;
 }
     async function renderCategoryCards() {
     const container = document.getElementById('categoryCardsContainer');
@@ -944,12 +1053,12 @@ async function loadNotificationDropdown() {
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                             <div class="flex-1 min-w-0 w-full sm:w-auto">
                                 <h4 class="font-semibold text-gray-900 text-sm sm:text-base mb-1">${test.testName}</h4>
-                                <div class="flex flex-wrap gap-2 text-xs sm:text-sm">
+                               <div class="flex flex-wrap gap-2 text-xs sm:text-sm">
                                     <p class="${isUnlimited ? 'text-green-600' : 'text-gray-600'}">
                                         📅 ${test.date || 'No date'}
                                     </p>
                                     <p class="text-gray-600">
-                                        ⏰ Due: ${test.deadline} ${test.deadlineTime || ''}
+                                        ⏰ Due: ${formatDeadline(test.deadline, test.deadlineTime)}
                                     </p>
                                     ${hasAttempts ? `
                                     <p class="${isPerfect ? 'text-green-600 font-bold' : canRetry ? 'text-orange-600 font-semibold' : 'text-gray-600'}">
@@ -993,7 +1102,135 @@ async function loadNotificationDropdown() {
     
     container.innerHTML = html;
 }
-
+        async function renderOverdueTests(overdueTestsArray) {
+    const container = document.getElementById('overdueTestsContainer');
+    
+    // Remove duplicates before rendering
+    const uniqueOverdueTests = [];
+    const seenIds = new Set();
+    
+    overdueTestsArray.forEach(test => {
+        if (!seenIds.has(test.id)) {
+            seenIds.add(test.id);
+            uniqueOverdueTests.push(test);
+        } else {
+            console.log(`⚠️ Removing duplicate overdue test: ${test.testName} (ID: ${test.id})`);
+        }
+    });
+    
+    console.log(`🔍 Rendering ${uniqueOverdueTests.length} unique overdue tests (removed ${overdueTestsArray.length - uniqueOverdueTests.length} duplicates)`);
+    
+    if (uniqueOverdueTests.length === 0) {
+        container.innerHTML = `
+            <div class="text-center py-12">
+                <div class="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-green-100 to-green-200 rounded-2xl flex items-center justify-center">
+                    <i class="bi bi-check-circle text-4xl text-green-600"></i>
+                </div>
+                <p class="text-lg font-semibold text-gray-600 mb-2">No Overdue Tests</p>
+                <small class="text-sm text-gray-400">All tests are up to date!</small>
+            </div>
+        `;
+        return;
+    }
+    
+    // Check completion status for each test
+    const completionPromises = uniqueOverdueTests.map(async (test) => {
+        try {
+            const resultsQuery = query(
+                collection(db, 'testResults'),
+                where('testId', '==', test.id),
+                where('studentEmail', '==', studentData.email)
+            );
+            const resultsSnapshot = await getDocs(resultsQuery);
+            
+            let bestScore = 0;
+            let attempts = 0;
+            
+            resultsSnapshot.forEach(doc => {
+                const result = doc.data();
+                const score = calculateTestScore(result.testName, result.result, result.testTarget);
+                attempts++;
+                if (score > bestScore) bestScore = score;
+            });
+            
+            return {
+                testId: test.id,
+                completed: attempts > 0,
+                bestScore: bestScore,
+                attempts: attempts
+            };
+        } catch (error) {
+            console.error(`Error checking completion for test ${test.id}:`, error);
+            return {
+                testId: test.id,
+                completed: false,
+                bestScore: 0,
+                attempts: 0
+            };
+        }
+    });
+    
+    const completionData = await Promise.all(completionPromises);
+    const completionMap = new Map();
+    completionData.forEach(data => {
+        completionMap.set(data.testId, data);
+    });
+    
+    let html = '<div class="space-y-3">';
+    
+    uniqueOverdueTests.forEach(test => {
+        const isProfessorEnabled = test.professorEnabled === true;
+        const completion = completionMap.get(test.id) || { completed: false, bestScore: 0, attempts: 0 };
+        const isCompleted = completion.completed;
+        
+        html += `
+            <div class="bg-${isCompleted ? 'green' : isProfessorEnabled ? 'blue' : 'red'}-50 border-2 border-${isCompleted ? 'green' : isProfessorEnabled ? 'blue' : 'red'}-200 rounded-xl p-4 hover:bg-${isCompleted ? 'green' : isProfessorEnabled ? 'blue' : 'red'}-100 transition-colors">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                    <div class="flex-1">
+                        <h4 class="font-semibold text-gray-900 text-base mb-1">
+                            ${test.testName}
+                            ${isProfessorEnabled && !isCompleted ? '<span class="ml-2 text-xs bg-blue-500 text-white px-2 py-1 rounded-full">✓ Enabled by Professor</span>' : ''}
+                            ${isCompleted ? '<span class="ml-2 text-xs bg-green-500 text-white px-2 py-1 rounded-full">Completed</span>' : ''}
+                        </h4>
+                        <div class="flex flex-wrap gap-2 text-sm">
+                            <p class="${isCompleted ? 'text-green-600' : isProfessorEnabled ? 'text-blue-600' : 'text-red-600'} font-semibold">
+                                ${isCompleted ? `Score: ${completion.bestScore}/100 • ${completion.attempts} Attempt${completion.attempts > 1 ? 's' : ''}` : `⚠️ Overdue: ${formatDeadline(test.deadline, test.deadlineTime)}`}
+                            </p>
+                        </div>
+                    </div>
+                    ${isCompleted ? `
+                        <div class="w-full sm:w-auto px-5 py-2.5 bg-green-100 text-green-700 rounded-lg font-semibold text-sm text-center border-2 border-green-300">
+                            Done
+                        </div>
+                    ` : isProfessorEnabled ? `
+                        <button onclick="startOverdueTest('${test.id}', '${encodeURIComponent(test.testName)}')" class="w-full sm:w-auto px-4 sm:px-5 py-2 sm:py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg font-semibold text-sm hover:from-blue-600 hover:to-blue-700 hover:-translate-y-0.5 hover:shadow-lg transition-all whitespace-nowrap">
+                            Take Test Now
+                        </button>
+                    ` : `
+                        <div class="w-full sm:w-auto px-5 py-2.5 bg-red-200 text-red-800 rounded-lg font-semibold text-sm text-center border-2 border-red-300">
+                            🔒 Test Locked
+                        </div>
+                    `}
+                </div>
+            </div>
+        `;
+    });
+    
+    html += '</div>';
+    html += `
+        <div class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <div class="flex items-start gap-3">
+                <i class="bi bi-info-circle text-blue-600 text-xl flex-shrink-0 mt-0.5"></i>
+                <div class="text-sm text-blue-800">
+                    <p class="font-semibold mb-1">Need Help?</p>
+                    <p>Contact your professor to request access to overdue tests.</p>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    container.innerHTML = html;
+}
         function renderEmptyState() {
             const container = document.getElementById('categoryCardsContainer');
             
@@ -1165,14 +1402,52 @@ async function loadNotificationDropdown() {
                 }, 100);
             }
         };
+            window.startOverdueTest = function(testId, encodedTestName) {
+        const testName = decodeURIComponent(encodedTestName);
+        console.log(`Starting overdue test: ${testName} (ID: ${testId})`);
+        window.location.href = `./testdetails.html?testId=${testId}&testName=${encodedTestName}&isOverdue=true`;
+    };
+
+    window.startTest = function(testId) {
+        // Check available tests first
+        const test = availableTests.find(t => t.id === testId);
+        if (test) {
+            window.location.href = `./testdetails.html?testId=${testId}&testName=${encodeURIComponent(test.testName)}`;
+            return;
+        }
+        
+        // If not found, check overdue tests
+        const overdueTest = overdueTests.find(t => t.id === testId);
+        if (overdueTest) {
+            window.location.href = `./testdetails.html?testId=${testId}&testName=${encodeURIComponent(overdueTest.testName)}&isOverdue=true`;
+            return;
+        }
+        
+        console.error(`Test not found: ${testId}`);
+        alert('Test not found. Please refresh the page and try again.');
+    };
 function calculateTestScore(testName, result, testTarget = null) {
     const normalized = testName.toLowerCase().trim();
+    
+    // ⭐ CRITICAL: Check if this is a professor override with pre-calculated score
+    if (result && typeof result === 'object' && result !== null) {
+        // If professor already set a final score, use it directly
+        if (result.score !== undefined && result.score !== null) {
+            const score = parseFloat(result.score);
+            if (!isNaN(score) && score >= 0 && score <= 100) {
+                console.log(`✅ Using stored professor score: ${score} for ${testName}`);
+                return score;
+            }
+        }
+    }
     
     // Extract numeric value from result
     let numericValue = 0;
     
     if (typeof result === 'object' && result !== null) {
-        numericValue = result.repetitions || result.time || result.distance || result.value || result.score || 0;
+        numericValue = result.repetitions || result.time || result.distance || 
+                      result.value || result.result || result.count || 
+                      result.score || 0;
     } else if (typeof result === 'string') {
         const match = result.match(/(\d+\.?\d*)/);
         if (match) {
@@ -1184,17 +1459,22 @@ function calculateTestScore(testName, result, testTarget = null) {
         numericValue = parseFloat(result) || 0;
     }
     
-    console.log(`🔢 Score Calculation: ${testName} → Value: ${numericValue}, Target: ${testTarget}`);
+    console.log(`🎯 Calculating: ${testName} | Value: ${numericValue} | Target: ${testTarget}`);
     
-    // Use test target if available for more accurate scoring
+    // Use test target if available
     if (testTarget && testTarget > 0) {
+        // REPETITION TESTS (push-ups, sit-ups, curl-ups)
         if (normalized.includes('push-up') || normalized.includes('pushup') || 
-            normalized.includes('sit-up') || normalized.includes('situp')) {
+            normalized.includes('sit-up') || normalized.includes('situp') ||
+            normalized.includes('curl-up')) {
+            
             const reps = numericValue;
+            if (reps >= testTarget) return 100;
+            
             const percentage = (reps / testTarget) * 100;
             let score = Math.min(100, Math.max(50, percentage));
             
-            // Apply grading curve for better distribution
+            // Apply grading scale
             if (percentage >= 100) score = 100;
             else if (percentage >= 90) score = 95;
             else if (percentage >= 80) score = 90;
@@ -1204,15 +1484,12 @@ function calculateTestScore(testName, result, testTarget = null) {
             
             console.log(`💪 Strength Test: ${reps}/${testTarget} reps → ${score}%`);
             return Math.round(score);
-            
-        } else if (normalized.includes('plank')) {
-            let seconds = 0;
-            if (typeof result === 'string' && result.includes(':')) {
-                const [mins, secs] = result.split(':').map(Number);
-                seconds = (mins * 60) + (secs || 0);
-            } else {
-                seconds = numericValue;
-            }
+        }
+        
+        // PLANK (time-based in seconds)
+        if (normalized.includes('plank')) {
+            let seconds = numericValue;
+            if (seconds >= testTarget) return 100;
             
             const percentage = (seconds / testTarget) * 100;
             let score = Math.min(100, Math.max(50, percentage));
@@ -1226,9 +1503,13 @@ function calculateTestScore(testName, result, testTarget = null) {
             
             console.log(`⏱️ Plank Test: ${seconds}s/${testTarget}s → ${score}%`);
             return Math.round(score);
-            
-        } else if (normalized.includes('sit-and-reach')) {
+        }
+        
+        // SIT-AND-REACH (flexibility in cm)
+        if (normalized.includes('sit-and-reach')) {
             const distance = numericValue;
+            if (distance >= testTarget) return 100;
+            
             const percentage = (distance / testTarget) * 100;
             let score = Math.min(100, Math.max(50, percentage));
             
@@ -1242,9 +1523,57 @@ function calculateTestScore(testName, result, testTarget = null) {
             console.log(`📏 Flexibility Test: ${distance}cm/${testTarget}cm → ${score}%`);
             return Math.round(score);
         }
+        
+        // GRIP STRENGTH (kg)
+        if (normalized.includes('grip')) {
+            if (numericValue >= testTarget) return 100;
+            
+            const percentage = (numericValue / testTarget) * 100;
+            let score = Math.min(100, Math.max(50, percentage));
+            
+            if (percentage >= 90) score = 95;
+            else if (percentage >= 80) score = 90;
+            else if (percentage >= 70) score = 85;
+            else if (percentage >= 60) score = 80;
+            else if (percentage >= 50) score = 75;
+            
+            return Math.round(score);
+        }
+        
+        // 1-MILE RUN (seconds - LOWER IS BETTER)
+        if (normalized.includes('mile') || normalized.includes('run')) {
+            if (numericValue <= testTarget) return 100;
+            
+            const percentage = (testTarget / numericValue) * 100;
+            let score = Math.min(100, Math.max(50, percentage));
+            
+            if (percentage >= 90) score = 95;
+            else if (percentage >= 80) score = 90;
+            else if (percentage >= 70) score = 85;
+            else if (percentage >= 60) score = 80;
+            else if (percentage >= 50) score = 75;
+            
+            return Math.round(score);
+        }
+        
+        // STEP TEST (heart rate - LOWER IS BETTER)
+        if (normalized.includes('step test') || normalized.includes('3-minute')) {
+            if (numericValue <= testTarget) return 100;
+            
+            const percentage = (testTarget / numericValue) * 100;
+            let score = Math.min(100, Math.max(50, percentage));
+            
+            if (percentage >= 90) score = 95;
+            else if (percentage >= 80) score = 90;
+            else if (percentage >= 70) score = 85;
+            else if (percentage >= 60) score = 80;
+            else if (percentage >= 50) score = 75;
+            
+            return Math.round(score);
+        }
     }
     
-    // Fallback to standard scoring if no target available
+    // Fallback to default scoring if no target set
     if (normalized.includes('push-up') || normalized.includes('pushup')) {
         const reps = numericValue;
         if (reps >= 40) return 100;
@@ -1256,8 +1585,7 @@ function calculateTestScore(testName, result, testTarget = null) {
         if (reps >= 10) return 70;
         if (reps >= 5) return 65;
         return 60;
-        
-    } else if (normalized.includes('sit-up') || normalized.includes('situp')) {
+    } else if (normalized.includes('sit-up') || normalized.includes('situp') || normalized.includes('curl-up')) {
         const reps = numericValue;
         if (reps >= 50) return 100;
         if (reps >= 45) return 95;
@@ -1268,16 +1596,8 @@ function calculateTestScore(testName, result, testTarget = null) {
         if (reps >= 20) return 70;
         if (reps >= 15) return 65;
         return 60;
-        
     } else if (normalized.includes('plank')) {
-        let seconds = 0;
-        if (typeof result === 'string' && result.includes(':')) {
-            const [mins, secs] = result.split(':').map(Number);
-            seconds = (mins * 60) + (secs || 0);
-        } else {
-            seconds = numericValue;
-        }
-        
+        let seconds = numericValue;
         if (seconds >= 180) return 100;
         if (seconds >= 150) return 95;
         if (seconds >= 120) return 90;
@@ -1287,7 +1607,6 @@ function calculateTestScore(testName, result, testTarget = null) {
         if (seconds >= 45) return 70;
         if (seconds >= 30) return 65;
         return 60;
-        
     } else if (normalized.includes('step test') || normalized.includes('3-minute')) {
         const heartRate = numericValue;
         if (heartRate <= 70) return 100;
@@ -1298,16 +1617,8 @@ function calculateTestScore(testName, result, testTarget = null) {
         if (heartRate <= 120) return 75;
         if (heartRate <= 130) return 70;
         return 65;
-        
     } else if (normalized.includes('mile') || normalized.includes('run')) {
-        let totalSeconds = 0;
-        if (typeof result === 'string' && result.includes(':')) {
-            const [minutes, seconds] = result.split(':').map(Number);
-            totalSeconds = (minutes * 60) + (seconds || 0);
-        } else {
-            totalSeconds = numericValue;
-        }
-        
+        let totalSeconds = numericValue;
         if (totalSeconds <= 360) return 100;
         if (totalSeconds <= 420) return 95;
         if (totalSeconds <= 480) return 90;
@@ -1317,7 +1628,6 @@ function calculateTestScore(testName, result, testTarget = null) {
         if (totalSeconds <= 720) return 70;
         if (totalSeconds <= 780) return 65;
         return 60;
-        
     } else if (normalized.includes('sit-and-reach')) {
         const distance = numericValue;
         if (distance >= 25) return 100;
@@ -1328,7 +1638,6 @@ function calculateTestScore(testName, result, testTarget = null) {
         if (distance >= 0) return 75;
         if (distance >= -5) return 70;
         return 65;
-        
     } else if (normalized.includes('grip')) {
         const strength = numericValue;
         if (strength >= 60) return 100;
@@ -1351,28 +1660,7 @@ function calculateTestScore(testName, result, testTarget = null) {
             return { text: 'Needs Improvement', class: 'text-red-600' };
         }
 
-        window.startTest = function(testId) {
-            const test = availableTests.find(t => t.id === testId);
-            if (test) {
-                window.location.href = `./testdetails.html?testId=${testId}&testName=${encodeURIComponent(test.testName)}`;
-            }
-        };
-
-        window.viewResult = function(resultId) {
-            window.location.href = `./studentresult.html?resultId=${resultId}`;
-        };
-
-        window.handleLogout = async function() {
-            if (confirm('Are you sure you want to logout?')) {
-                try {
-                    await signOut(auth);
-                    window.location.href = '../login/index.html';
-                } catch (error) {
-                    console.error('Error logging out:', error);
-                    alert('Error logging out. Please try again.');
-                }
-            }
-        };
+      
 
         onAuthStateChanged(auth, async (user) => {
     const loadingScreen = document.getElementById('loadingScreen');

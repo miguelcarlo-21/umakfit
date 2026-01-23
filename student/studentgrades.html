@@ -241,7 +241,36 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
+     
+        let cachedStudentData = null;
+        let cachedTestResults = null;
 
+        
+        async function loadEssentialData(user) {
+            try {
+                // Load student data and test results in parallel
+                const [studentDataResult, assignedTestsResult] = await Promise.allSettled([
+                    loadStudentData(user),
+                    // Pre-load assigned tests count
+                    getDocs(query(
+                        collection(db, 'scheduledTests'),
+                        where('section', '==', studentData?.section || ''),
+                        where('isVisible', '==', true),
+                        where('isActive', '==', true)
+                    ))
+                ]);
+                
+                // Cache the data
+                if (studentDataResult.status === 'fulfilled') {
+                    cachedStudentData = studentDataResult.value;
+                }
+                
+                return cachedStudentData;
+            } catch (error) {
+                console.error('Error in parallel loading:', error);
+                return null;
+            }
+        }
         let currentUser = null;
 
                 // Toggle notification dropdown
@@ -434,14 +463,28 @@
             return 'Cardio Endurance';
         }
 
-        function calculateScore(testName, result, testTarget) {
+        function calculateScore(testName, result, testTarget = null) {
     const normalized = testName.toLowerCase().trim();
+    
+    // ⭐ CRITICAL: Check if this is a professor override with pre-calculated score
+    if (result && typeof result === 'object' && result !== null) {
+        // If professor already set a final score, use it directly
+        if (result.score !== undefined && result.score !== null) {
+            const score = parseFloat(result.score);
+            if (!isNaN(score) && score >= 0 && score <= 100) {
+                console.log(`✅ Using stored professor score: ${score} for ${testName}`);
+                return score;
+            }
+        }
+    }
     
     // Extract numeric value from result
     let numericValue = 0;
     
     if (typeof result === 'object' && result !== null) {
-        numericValue = result.repetitions || result.time || result.distance || result.value || result.score || 0;
+        numericValue = result.repetitions || result.time || result.distance || 
+                      result.value || result.result || result.count || 
+                      result.score || 0;
     } else if (typeof result === 'string') {
         const match = result.match(/(\d+\.?\d*)/);
         if (match) {
@@ -453,16 +496,22 @@
         numericValue = parseFloat(result) || 0;
     }
     
-    // Use test target if available for more accurate scoring
+    console.log(`🎯 Calculating: ${testName} | Value: ${numericValue} | Target: ${testTarget}`);
+    
+    // Use test target if available - THIS IS THE KEY SECTION
     if (testTarget && testTarget > 0) {
+        // REPETITION TESTS (push-ups, sit-ups, curl-ups)
         if (normalized.includes('push-up') || normalized.includes('pushup') || 
             normalized.includes('sit-up') || normalized.includes('situp') ||
             normalized.includes('curl-up')) {
+            
             const reps = numericValue;
+            if (reps >= testTarget) return 100;
+            
             const percentage = (reps / testTarget) * 100;
             let score = Math.min(100, Math.max(50, percentage));
             
-            // Apply grading curve for better distribution
+            // Apply grading scale
             if (percentage >= 100) score = 100;
             else if (percentage >= 90) score = 95;
             else if (percentage >= 80) score = 90;
@@ -471,15 +520,12 @@
             else if (percentage >= 50) score = 75;
             
             return Math.round(score);
-            
-        } else if (normalized.includes('plank')) {
-            let seconds = 0;
-            if (typeof result === 'string' && result.includes(':')) {
-                const [mins, secs] = result.split(':').map(Number);
-                seconds = (mins * 60) + (secs || 0);
-            } else {
-                seconds = numericValue;
-            }
+        }
+        
+        // PLANK (time-based in seconds)
+        if (normalized.includes('plank')) {
+            let seconds = numericValue;
+            if (seconds >= testTarget) return 100;
             
             const percentage = (seconds / testTarget) * 100;
             let score = Math.min(100, Math.max(50, percentage));
@@ -492,9 +538,13 @@
             else if (percentage >= 50) score = 75;
             
             return Math.round(score);
-            
-        } else if (normalized.includes('sit-and-reach')) {
+        }
+        
+        // SIT-AND-REACH (flexibility in cm)
+        if (normalized.includes('sit-and-reach')) {
             const distance = numericValue;
+            if (distance >= testTarget) return 100;
+            
             const percentage = (distance / testTarget) * 100;
             let score = Math.min(100, Math.max(50, percentage));
             
@@ -507,128 +557,59 @@
             
             return Math.round(score);
         }
-    }
-    
-    // Fallback to standard scoring if no target available
-    if (normalized.includes('push-up') || normalized.includes('pushup')) {
-        const reps = numericValue;
-        if (reps >= 40) return 100;
-        if (reps >= 35) return 95;
-        if (reps >= 30) return 90;
-        if (reps >= 25) return 85;
-        if (reps >= 20) return 80;
-        if (reps >= 15) return 75;
-        if (reps >= 10) return 70;
-        if (reps >= 5) return 65;
-        return 60;
         
-    } else if (normalized.includes('sit-up') || normalized.includes('situp')) {
-        const reps = numericValue;
-        if (reps >= 50) return 100;
-        if (reps >= 45) return 95;
-        if (reps >= 40) return 90;
-        if (reps >= 35) return 85;
-        if (reps >= 30) return 80;
-        if (reps >= 25) return 75;
-        if (reps >= 20) return 70;
-        if (reps >= 15) return 65;
-        return 60;
-        
-    } else if (normalized.includes('curl-up')) {
-        const reps = numericValue;
-        if (reps >= 75) return 100;
-        if (reps >= 60) return 95;
-        if (reps >= 50) return 90;
-        if (reps >= 40) return 85;
-        if (reps >= 30) return 80;
-        if (reps >= 25) return 75;
-        if (reps >= 20) return 70;
-        return 65;
-        
-    } else if (normalized.includes('plank')) {
-        let seconds = 0;
-        if (typeof result === 'string' && result.includes(':')) {
-            const [mins, secs] = result.split(':').map(Number);
-            seconds = (mins * 60) + (secs || 0);
-        } else {
-            seconds = numericValue;
+        // GRIP STRENGTH (kg)
+        if (normalized.includes('grip')) {
+            if (numericValue >= testTarget) return 100;
+            
+            const percentage = (numericValue / testTarget) * 100;
+            let score = Math.min(100, Math.max(50, percentage));
+            
+            if (percentage >= 90) score = 95;
+            else if (percentage >= 80) score = 90;
+            else if (percentage >= 70) score = 85;
+            else if (percentage >= 60) score = 80;
+            else if (percentage >= 50) score = 75;
+            
+            return Math.round(score);
         }
         
-        if (seconds >= 180) return 100;
-        if (seconds >= 150) return 95;
-        if (seconds >= 120) return 90;
-        if (seconds >= 100) return 85;
-        if (seconds >= 80) return 80;
-        if (seconds >= 60) return 75;
-        if (seconds >= 45) return 70;
-        if (seconds >= 30) return 65;
-        return 60;
-        
-    } else if (normalized.includes('step test') || normalized.includes('3-minute')) {
-        const heartRate = numericValue;
-        if (heartRate <= 70) return 100;
-        if (heartRate <= 80) return 95;
-        if (heartRate <= 90) return 90;
-        if (heartRate <= 100) return 85;
-        if (heartRate <= 110) return 80;
-        if (heartRate <= 120) return 75;
-        if (heartRate <= 130) return 70;
-        return 65;
-        
-    } else if (normalized.includes('mile') || normalized.includes('run')) {
-        let totalSeconds = 0;
-        if (typeof result === 'string' && result.includes(':')) {
-            const [minutes, seconds] = result.split(':').map(Number);
-            totalSeconds = (minutes * 60) + (seconds || 0);
-        } else {
-            totalSeconds = numericValue;
+        // 1-MILE RUN (seconds - LOWER IS BETTER)
+        if (normalized.includes('mile') || normalized.includes('run')) {
+            if (numericValue <= testTarget) return 100;
+            
+            const percentage = (testTarget / numericValue) * 100;
+            let score = Math.min(100, Math.max(50, percentage));
+            
+            if (percentage >= 90) score = 95;
+            else if (percentage >= 80) score = 90;
+            else if (percentage >= 70) score = 85;
+            else if (percentage >= 60) score = 80;
+            else if (percentage >= 50) score = 75;
+            
+            return Math.round(score);
         }
         
-        if (totalSeconds <= 360) return 100;
-        if (totalSeconds <= 420) return 95;
-        if (totalSeconds <= 480) return 90;
-        if (totalSeconds <= 540) return 85;
-        if (totalSeconds <= 600) return 80;
-        if (totalSeconds <= 660) return 75;
-        if (totalSeconds <= 720) return 70;
-        if (totalSeconds <= 780) return 65;
-        return 60;
-        
-    } else if (normalized.includes('sit-and-reach')) {
-        const distance = numericValue;
-        if (distance >= 25) return 100;
-        if (distance >= 20) return 95;
-        if (distance >= 15) return 90;
-        if (distance >= 10) return 85;
-        if (distance >= 5) return 80;
-        if (distance >= 0) return 75;
-        if (distance >= -5) return 70;
-        return 65;
-        
-    } else if (normalized.includes('grip')) {
-        const strength = numericValue;
-        if (strength >= 60) return 100;
-        if (strength >= 55) return 95;
-        if (strength >= 50) return 90;
-        if (strength >= 45) return 85;
-        if (strength >= 40) return 80;
-        if (strength >= 35) return 75;
-        if (strength >= 30) return 70;
-        return 65;
-    } else if (normalized.includes('bmi')) {
-        const bmi = numericValue;
-        // Healthy BMI range is 18.5-24.9
-        if (bmi >= 18.5 && bmi <= 24.9) return 100;
-        if (bmi >= 17.5 && bmi < 18.5) return 85;
-        if (bmi >= 25 && bmi <= 27) return 85;
-        if (bmi >= 15 && bmi < 17.5) return 70;
-        if (bmi > 27 && bmi <= 30) return 70;
-        return 60;
+        // STEP TEST (heart rate - LOWER IS BETTER)
+        if (normalized.includes('step test') || normalized.includes('3-minute')) {
+            if (numericValue <= testTarget) return 100;
+            
+            const percentage = (testTarget / numericValue) * 100;
+            let score = Math.min(100, Math.max(50, percentage));
+            
+            if (percentage >= 90) score = 95;
+            else if (percentage >= 80) score = 90;
+            else if (percentage >= 70) score = 85;
+            else if (percentage >= 60) score = 80;
+            else if (percentage >= 50) score = 75;
+            
+            return Math.round(score);
+        }
     }
     
-    return 75;
+    // Fallback to default scoring if no target set
+    return calculateDefaultScore(normalized, numericValue);
 }
-
         function getGradeLetter(score) {
             if (score >= 95) return 'A+';
             if (score >= 90) return 'A';
@@ -675,103 +656,56 @@
             return;
         }
 
-        // Set up real-time listener for scheduled tests (total count)
+        // Get all assigned tests (including overdue ones)
         const assignedTestsQuery = query(
             collection(db, 'scheduledTests'),
-            where('section', '==', studentData.section)
+            where('section', '==', studentData.section),
+            where('isVisible', '==', true),
+            where('isActive', '==', true)
         );
         
         let totalAssignedTests = 0;
+        let overdueTests = 0;
+        let completedTests = 0;
         
-        // Listen to total assigned tests
-        onSnapshot(assignedTestsQuery, (assignedSnapshot) => {
+        // Set up listener for assigned tests
+        onSnapshot(assignedTestsQuery, async (assignedSnapshot) => {
             totalAssignedTests = assignedSnapshot.size;
+            overdueTests = 0;
+            
+            // Check for overdue tests
+            const now = new Date();
+            assignedSnapshot.forEach((doc) => {
+                const test = doc.data();
+                if (test.dueDate) {
+                    const dueDate = test.dueDate.toDate();
+                    if (dueDate < now) {
+                        overdueTests++;
+                    }
+                }
+            });
+            
             document.getElementById('totalTests').textContent = `/${totalAssignedTests}`;
             
-            console.log('📋 Total assigned tests updated:', totalAssignedTests);
+            // Now load the completed tests to calculate completion rate
+            const resultsQuery = query(
+                collection(db, 'testResults'),
+                where('studentEmail', '==', studentData.email),
+                where('status', 'in', ['completed', 'overdue']) // Include overdue status
+            );
             
-            // Recalculate completion rate with current completed count
-            const currentCompleted = parseInt(document.getElementById('completedTests').textContent) || 0;
-            const completionRate = totalAssignedTests > 0 ? Math.round((currentCompleted / totalAssignedTests) * 100) : 0;
+            const resultsSnapshot = await getDocs(resultsQuery);
+            completedTests = resultsSnapshot.size;
+            
+            // Calculate actual completion rate (completed / total)
+            const completionRate = totalAssignedTests > 0 ? 
+                Math.round((completedTests / totalAssignedTests) * 100) : 0;
+            
+            document.getElementById('completedTests').textContent = completedTests;
             document.getElementById('completionRate').textContent = completionRate + '%';
-        });
-
-        // Set up real-time listener for test results
-        const resultsQuery = query(
-            collection(db, 'testResults'),
-            where('studentEmail', '==', studentData.email),
-            where('status', '==', 'completed')
-        );
-        
-        onSnapshot(resultsQuery, (resultsSnapshot) => {
-            console.log('🔄 Real-time grade update detected!');
             
-            const testResults = [];
-            const categoryScores = {};
-            
-            // Initialize categories
-            Object.keys(testCategories).forEach(cat => {
-                categoryScores[cat] = { scores: [], tests: [] };
-            });
-            
-            let totalScore = 0;
-            let testCount = 0;
-            
-            const testGroups = {};
-
-        resultsSnapshot.forEach((doc) => {
-            const result = doc.data();
-            const score = calculateScore(result.testName, result.result, result.testTarget);
-            const category = getCategoryForTest(result.testName);
-            
-            const testId = result.testId || doc.id;
-            
-            // Keep only the highest score for each test
-            if (!testGroups[testId] || score > testGroups[testId].score) {
-                testGroups[testId] = {
-                    ...result,
-                    score,
-                    category,
-                    id: doc.id
-                };
-            }
-        });
-
-        // Convert grouped results to array and calculate totals
-        Object.values(testGroups).forEach(result => {
-            testResults.push(result);
-            
-            categoryScores[result.category].scores.push(result.score);
-            categoryScores[result.category].tests.push(result.testName);
-            
-            totalScore += result.score;
-            testCount++;
-        });
-            
-            // Update overall summary
-            const avgScore = testCount > 0 ? (totalScore / testCount).toFixed(1) : '0.0';
-            document.getElementById('completedTests').textContent = testCount;
-            document.getElementById('finalGrade').textContent = avgScore;
-
-            // Calculate completion rate
-            const completionRate = totalAssignedTests > 0 ? Math.round((testCount / totalAssignedTests) * 100) : 0;
-            document.getElementById('completionRate').textContent = completionRate + '%';
-
-            console.log('📊 Stats Updated:', {
-                avgScore,
-                completedTests: testCount,
-                totalAssigned: totalAssignedTests,
-                completionRate: completionRate + '%'
-            });
-
-            // Render category grades
-            renderCategoryGrades(categoryScores);
-
-            // Render detailed test results
-            renderTestResults(testResults);
-            
-            document.getElementById('loadingScreen').classList.add('hidden');
-            document.getElementById('mainContent').classList.remove('hidden');
+            // Load real-time updates for test results
+            setupRealTimeGradeListener(overdueTests);
         });
         
     } catch (error) {
@@ -781,6 +715,146 @@
     }
 }
 
+
+    async function setupRealTimeGradeListener(overdueCount) {
+    try {
+        const resultsQuery = query(
+            collection(db, 'testResults'),
+            where('studentEmail', '==', studentData.email),
+            where('status', 'in', ['completed', 'overdue', 'late'])
+        );
+        
+        onSnapshot(resultsQuery, (resultsSnapshot) => {
+            const testResults = [];
+            const categoryScores = {};
+            const OVERDUE_PENALTY = 0.10;
+            
+            // Initialize categories
+            Object.keys(testCategories).forEach(cat => {
+                categoryScores[cat] = { scores: [], tests: [] };
+            });
+            
+            let totalScore = 0;
+            let testCount = 0;
+            let hasOverdueWithPenalty = false;
+            let penaltyInfo = [];
+            
+            const testGroups = {};
+
+            resultsSnapshot.forEach((doc) => {
+    const result = doc.data();
+    
+    // ⭐ Check if professor override exists first
+    const isProfessorOverride = result.isProfessorOverride === true;
+    
+    let score = 0;
+    
+    if (isProfessorOverride && typeof result.score === 'number' && !isNaN(result.score)) {
+        // Use professor's score directly
+        score = result.score;
+        console.log(`✅ Professor override: ${score} for ${result.testName}`);
+    } else {
+        // Calculate normally
+        score = calculateScore(
+            result.testName, 
+            result.result || result.resultData, 
+            result.testTarget
+        );
+        
+        // ⭐ Apply penalty ONLY if overdue AND not professor override
+        const isOverdue = (result.status === 'overdue' || result.status === 'late');
+        if (isOverdue && !isProfessorOverride) {
+            const originalScore = score;
+            const penalty = score * OVERDUE_PENALTY;
+            score = Math.max(0, score - penalty);
+            hasOverdueWithPenalty = true;
+            console.log(`⚠️ Penalty: ${originalScore.toFixed(1)} → ${score.toFixed(1)}`);
+        }
+    }
+    
+    // Validate score
+    score = Math.max(0, Math.min(100, score));
+                
+                const category = getCategoryForTest(result.testName);
+                const testId = result.testId || doc.id;
+                
+                // Keep highest score per test
+                if (!testGroups[testId] || score > testGroups[testId].score) {
+                    testGroups[testId] = {
+                        ...result,
+                        score,
+                        category,
+                        id: doc.id,
+                        isProfessorOverride: isProfessorOverride,
+                        isOverdue: result.status === 'overdue' || result.status === 'late'
+                    };
+                }
+            });
+
+            // Calculate totals from best scores
+            Object.values(testGroups).forEach(result => {
+                // Ensure score is valid
+                if (typeof result.score === 'number' && !isNaN(result.score) && result.score >= 0) {
+                    testResults.push(result);
+                    
+                    if (categoryScores[result.category]) {
+                        categoryScores[result.category].scores.push(result.score);
+                        categoryScores[result.category].tests.push({
+                            name: result.testName,
+                            score: result.score,
+                            isOverdue: result.isOverdue
+                        });
+                    }
+                    
+                    totalScore += result.score;
+                    testCount++;
+                }
+            });
+            
+            // Update final grade - ensure no NaN
+            const avgScore = testCount > 0 ? (totalScore / testCount).toFixed(1) : '0.0';
+            const finalGrade = document.getElementById('finalGrade');
+            
+            if (hasOverdueWithPenalty) {
+                finalGrade.innerHTML = `
+                    ${avgScore}
+                    <div class="text-xs text-red-600 font-normal mt-2">
+                        ⚠️ 10% penalty applied to overdue test(s)<br>
+                        <span class="text-[10px]">Retake tests to remove penalty</span>
+                    </div>
+                `;
+            } else {
+                finalGrade.textContent = avgScore;
+            }
+            
+            document.getElementById('completedTests').textContent = testCount;
+            
+            renderCategoryGrades(categoryScores);
+            renderTestResults(testResults);
+            
+            document.getElementById('loadingScreen').classList.add('hidden');
+            document.getElementById('mainContent').classList.remove('hidden');
+        });
+        
+    } catch (error) {
+        console.error('Error in real-time listener:', error);
+        document.getElementById('loadingScreen').classList.add('hidden');
+        document.getElementById('mainContent').classList.remove('hidden');
+    }
+}
+        function validateScore(score) {
+    if (score === null || score === undefined || score === '' || isNaN(score)) {
+        return 0;
+    }
+    
+    const numScore = parseFloat(score);
+    if (isNaN(numScore)) {
+        return 0;
+    }
+    
+    // Ensure score is between 0 and 100
+    return Math.max(0, Math.min(100, numScore));
+}
         function renderCategoryGrades(categoryScores) {
     const container = document.getElementById('categoriesContainer');
     
@@ -801,18 +875,24 @@
                               parseFloat(avgScore) >= 75 ? 'text-blue-600' : 
                               parseFloat(avgScore) >= 65 ? 'text-yellow-600' : 'text-red-600';
             
+            // Count overdue tests in this category
+            const overdueCount = data.tests.filter(test => test.isOverdue).length;
+            
             html += `
-                <div class="px-6 py-4 hover:bg-gray-50 transition-colors">
+                <div class="px-4 py-4 md:px-6 hover:bg-gray-50 transition-colors">
                     <!-- Mobile Layout -->
                     <div class="block md:hidden">
-                        <div class="flex justify-between items-start">
-                            <div class="flex-1">
-                                <h3 class="font-semibold text-gray-900 text-sm mb-1">${category}</h3>
-                                <p class="text-xs text-gray-500">${data.scores.length} test${data.scores.length !== 1 ? 's' : ''}</p>
-                            </div>
-                            <div class="text-right">
-                                <div class="text-2xl font-bold ${scoreColor}">${avgScore}</div>
-                                <span class="text-xs text-gray-400">/ 100</span>
+                        <div class="flex items-center justify-between mb-2">
+                            <h4 class="font-semibold text-gray-900 text-sm">${category}</h4>
+                            ${overdueCount > 0 ? 
+                                `<span class="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full">${overdueCount} overdue</span>` 
+                                : ''}
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="text-xs text-gray-500 mb-1">${data.scores.length} test${data.scores.length !== 1 ? 's' : ''}</p>
+                                <span class="text-2xl font-bold ${scoreColor}">${avgScore}</span>
+                                <span class="text-xs text-gray-400 ml-1">/ 100</span>
                             </div>
                         </div>
                     </div>
@@ -820,14 +900,19 @@
                     <!-- Desktop Layout -->
                     <div class="hidden md:grid grid-cols-12 gap-4 items-center">
                         <div class="col-span-5">
-                            <h3 class="font-semibold text-gray-900">${category}</h3>
+                            <h4 class="font-semibold text-gray-900">${category}</h4>
+                            <p class="text-xs text-gray-500 mt-0.5">
+                                ${data.scores.length} test${data.scores.length !== 1 ? 's' : ''}
+                                ${overdueCount > 0 ? 
+                                    ` • <span class="text-red-600">${overdueCount} overdue</span>` 
+                                    : ''}
+                            </p>
                         </div>
                         <div class="col-span-3 text-center">
-                            <span class="text-gray-700">${data.scores.length} test${data.scores.length !== 1 ? 's' : ''}</span>
+                            <span class="text-gray-600">${data.scores.length} taken</span>
                         </div>
-                        <div class="col-span-4 text-right">
+                        <div class="col-span-4 text-right flex items-center justify-end gap-4">
                             <span class="text-3xl font-bold ${scoreColor}">${avgScore}</span>
-                            <span class="text-sm text-gray-500 ml-2">/ 100</span>
                         </div>
                     </div>
                 </div>
@@ -846,7 +931,6 @@
     }
     
     container.innerHTML = html;
-    console.log('Categories rendered:', hasData ? 'with data' : 'empty state');
 }
 
         function renderTestResults(testResults) {
@@ -878,31 +962,41 @@
     console.log('Rendering', testResults.length, 'test results');
     
     let html = '';
-    testResults.forEach((result, index) => {
+    testResults.forEach((result) => {
         const scoreColor = result.score >= 85 ? 'text-green-600' : 
                           result.score >= 75 ? 'text-blue-600' : 
                           result.score >= 65 ? 'text-yellow-600' : 'text-red-600';
         
         const date = result.submittedAt?.toDate 
-    ? result.submittedAt.toDate().toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric'
-    })
-    : (result.submittedAt ? new Date(result.submittedAt).toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric'
-    }) : 'N/A');
+            ? result.submittedAt.toDate().toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric'
+            })
+            : (result.submittedAt ? new Date(result.submittedAt).toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric'
+            }) : 'N/A');
         
-        console.log(`Result ${index + 1}:`, result.testName, result.score, date);
+        // Check if test is overdue
+        const isOverdue = result.status === 'overdue' || result.status === 'late';
+        const isProfessorOverride = result.isProfessorOverride === true;
         
         html += `
-            <div class="px-6 py-4 hover:bg-gray-50 transition-colors">
+            <div class="px-6 py-4 hover:bg-gray-50 transition-colors ${isOverdue && !isProfessorOverride ? 'bg-red-50/30' : ''}">
                 <!-- Mobile Layout -->
                 <div class="block md:hidden">
                     <div class="mb-3">
-                        <h4 class="font-semibold text-gray-900 text-sm mb-1">${result.testName}</h4>
+                        <h4 class="font-semibold text-gray-900 text-sm mb-1">
+                            ${result.testName}
+                            ${isProfessorOverride ? 
+                                '<span class="ml-2 text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">✓ Professor Set</span>' : 
+                                ''}
+                            ${isOverdue && !isProfessorOverride ? 
+                                '<span class="ml-2 text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full font-semibold">⚠️ Overdue (-10%)</span>' : 
+                                ''}
+                        </h4>
                         <p class="text-xs text-gray-500">${result.category}</p>
                         <p class="text-xs text-gray-400 mt-1">
                             <i class="bi bi-calendar3"></i> ${date}
@@ -912,6 +1006,9 @@
                         <div>
                             <span class="text-2xl font-bold ${scoreColor}">${result.score.toFixed(1)}</span>
                             <span class="text-xs text-gray-400 ml-1">/ 100</span>
+                            ${isOverdue && !isProfessorOverride ? 
+                                '<p class="text-xs text-red-600 mt-1">Penalty applied</p>' : 
+                                ''}
                         </div>
                         <a href="./studentresult.html?resultId=${result.id}" 
                            class="text-blue-600 hover:text-blue-700 text-sm font-medium inline-flex items-center gap-1">
@@ -923,22 +1020,43 @@
                 <!-- Desktop Layout -->
                 <div class="hidden md:grid grid-cols-12 gap-4 items-center">
                     <div class="col-span-4">
-                        <h4 class="font-semibold text-gray-900">${result.testName}</h4>
+                        <h4 class="font-semibold text-gray-900">
+                            ${result.testName}
+                            ${isProfessorOverride ? 
+                                '<span class="ml-2 text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">✓ Professor Set</span>' : 
+                                ''}
+                            ${isOverdue && !isProfessorOverride ? 
+                                '<span class="ml-2 text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full font-semibold">⚠️ Overdue (-10%)</span>' : 
+                                ''}
+                        </h4>
+                        <p class="text-xs text-gray-500 mt-1">${result.category}</p>
                     </div>
                     <div class="col-span-3">
-                        <span class="text-gray-600 text-sm">${result.category}</span>
+                        <div class="flex flex-col">
+                            <span class="text-gray-600 text-sm">${result.category}</span>
+                            ${isOverdue && !isProfessorOverride ? 
+                                '<span class="text-xs text-red-600 font-semibold mt-1">⚠️ Submitted Late</span>' : 
+                                ''}
+                        </div>
                     </div>
                     <div class="col-span-2 text-center">
-                        <span class="text-gray-600 text-sm">${date}</span>
+                        <span class="text-gray-600 text-sm">
+                            <i class="bi bi-calendar3"></i> ${date}
+                        </span>
                     </div>
                     <div class="col-span-2 text-right">
-                        <span class="text-3xl font-bold ${scoreColor}">${result.score.toFixed(1)}</span>
-                        <span class="text-xs text-gray-400 ml-1">/ 100</span>
+                        <div>
+                            <span class="text-3xl font-bold ${scoreColor}">${result.score.toFixed(1)}</span>
+                            <span class="text-xs text-gray-400 ml-1">/ 100</span>
+                            ${isOverdue && !isProfessorOverride ? 
+                                '<p class="text-xs text-red-600 mt-1 font-medium">With penalty</p>' : 
+                                ''}
+                        </div>
                     </div>
                     <div class="col-span-1 text-right">
                         <a href="./studentresult.html?resultId=${result.id}" 
                            class="text-blue-600 hover:text-blue-700 text-sm font-medium inline-flex items-center gap-1 hover:gap-2 transition-all">
-                            <i class="bi bi-arrow-right"></i>
+                            View <i class="bi bi-arrow-right"></i>
                         </a>
                     </div>
                 </div>
@@ -948,11 +1066,17 @@
     
     container.innerHTML = html;
 }
-
-        onAuthStateChanged(auth, async (user) => {
+onAuthStateChanged(auth, async (user) => {
     if (user) {
         currentUser = user;  
-        await loadStudentData(user);
+        // Hide loading screen faster by showing main content while loading data
+        setTimeout(() => {
+            document.getElementById('loadingScreen').classList.add('hidden');
+            document.getElementById('mainContent').classList.remove('hidden');
+        }, 1500); // Max 1.5 second loading screen
+        
+        // Load data in background
+        await loadEssentialData(user);
         await loadGrades();
         updateProfileUI();  
     } else {

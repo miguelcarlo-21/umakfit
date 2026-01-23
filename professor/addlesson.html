@@ -1031,12 +1031,12 @@ window.publishLesson = publishLesson;
             const professorData = professorsSnapshot.docs[0].data();
             currentProfessor = {
                 ...currentProfessor,
-                name: professorData.name,
-                fullName: professorData.name,
+                name: professorData.fullName || professorData.name,
+                fullName: professorData.fullName || professorData.name,
                 firstName: professorData.firstName,
                 lastName: professorData.lastName
             };
-            console.log('Professor data loaded:', currentProfessor);
+            console.log('✓ Professor data loaded:', currentProfessor);
         } else {
             // Try users collection
             const userRef = doc(db, 'users', currentProfessor.id);
@@ -1052,11 +1052,13 @@ window.publishLesson = publishLesson;
                 
                 currentProfessor = {
                     ...currentProfessor,
-                    name: userData.name,
-                    fullName: userData.name
+                    name: userData.name || userData.fullName,
+                    fullName: userData.name || userData.fullName
                 };
             }
         }
+        
+        console.log('Final professor data:', currentProfessor);
     } catch (error) {
         console.error('Error loading professor data:', error);
     }
@@ -1068,6 +1070,32 @@ window.publishLesson = publishLesson;
         
         console.log('Loading sections for professor:', currentProfessor.email);
         
+        // Get professor's full name from professors collection
+        let professorFullName = null;
+        
+        const professorsQuery = query(
+            collection(db, 'professors'),
+            where('email', '==', currentProfessor.email)
+        );
+        const professorsSnapshot = await getDocs(professorsQuery);
+        
+        if (!professorsSnapshot.empty) {
+            const profData = professorsSnapshot.docs[0].data();
+            professorFullName = profData.fullName || profData.name;
+        }
+        
+        // Fallback: try users collection
+        if (!professorFullName) {
+            const userRef = doc(db, 'users', currentProfessor.id);
+            const userDoc = await getDoc(userRef);
+            if (userDoc.exists()) {
+                const userData = userDoc.data();
+                professorFullName = userData.name || userData.fullName;
+            }
+        }
+        
+        console.log('Professor name for matching:', professorFullName);
+        
         // Get all sections
         const sectionsQuery = query(collection(db, 'sections'));
         const sectionsSnapshot = await getDocs(sectionsQuery);
@@ -1077,51 +1105,36 @@ window.publishLesson = publishLesson;
         for (const docSnap of sectionsSnapshot.docs) {
             const sectionData = docSnap.data();
             
-            // Check if current professor is assigned to this section
-            // Check both professorEmail field and professor field
-            const isProfessorAssigned = 
-                sectionData.professorEmail === currentProfessor.email ||
-                sectionData.professor === currentProfessor.email ||
-                (sectionData.professor && currentProfessor.name && 
-                 sectionData.professor.toLowerCase().includes(currentProfessor.name.toLowerCase()));
+            // Match professor name
+            const sectionProfessor = sectionData.professor || '';
+            const isProfessorMatch = 
+                sectionProfessor === professorFullName ||
+                sectionProfessor.toLowerCase() === professorFullName?.toLowerCase() ||
+                (professorFullName && sectionProfessor.toLowerCase().includes(professorFullName.toLowerCase()));
             
-            if (isProfessorAssigned) {
-                console.log(`✓ Section assigned: ${sectionData.name}`);
+            if (isProfessorMatch) {
+                console.log(`✓ Section matched: ${sectionData.name} → Professor: "${sectionProfessor}"`);
                 
-                // Get actual student count from students subcollection
-                let studentCount = 0;
-                let studentList = [];
+                // Get students - FIXED to ensure it's a number
+                const studentList = Array.isArray(sectionData.students) ? sectionData.students : [];
+                const studentCount = studentList.length;  // This is now guaranteed to be a NUMBER
                 
-                try {
-                    const studentsRef = collection(db, 'sections', docSnap.id, 'students');
-                    const studentsSnapshot = await getDocs(studentsRef);
-                    studentCount = studentsSnapshot.size;
-                    
-                    studentsSnapshot.forEach(studentDoc => {
-                        studentList.push({
-                            ...studentDoc.data(),
-                            id: studentDoc.id
-                        });
-                    });
-                } catch (err) {
-                    console.log('No students subcollection, using array');
-                    studentList = sectionData.students || [];
-                    studentCount = studentList.length;
-                }
+                console.log(`  → ${studentCount} students in section ${sectionData.name}`);
                 
                 assignedSections.push({
                     id: docSnap.id,
                     section: sectionData.name,
-                    students: studentCount,
-                    studentList: studentList,
-                    ...sectionData
+                    students: studentCount,  // NUMBER
+                    studentList: studentList,  // ARRAY
+                    courseCode: sectionData.courseCode || 'PE 3',
+                    professor: sectionProfessor
                 });
             }
         }
         
         console.log(`Found ${assignedSections.length} assigned sections`);
         
-        // Populate section dropdown
+        // Populate section dropdown - FIXED
         const sectionSelect = document.getElementById('lessonSection');
         if (!sectionSelect) return;
         
@@ -1134,8 +1147,13 @@ window.publishLesson = publishLesson;
             assignedSections.forEach(section => {
                 const option = document.createElement('option');
                 option.value = section.section;
-                option.textContent = `${section.section} (${section.students} students)`;
+                
+                // FIXED: Ensure proper number display
+                const count = section.students || 0;
+                option.textContent = `${section.section} (${count} student${count !== 1 ? 's' : ''})`;
                 sectionSelect.appendChild(option);
+                
+                console.log(`✓ Added dropdown option: ${section.section} with ${count} students`);
             });
         }
         
@@ -1144,23 +1162,29 @@ window.publishLesson = publishLesson;
     }
 }
             
-            // Add this in the onAuthStateChanged function after loadAssignedSections()
+           
         const sectionSelect = document.getElementById('lessonSection');
-        if (sectionSelect) {
-            sectionSelect.addEventListener('change', function() {
-                const selectedSection = this.value;
-                const sectionInfo = assignedSections.find(s => s.section === selectedSection);
-                const infoElement = document.getElementById('sectionStudentInfo');
-                
-                if (sectionInfo && infoElement) {
-                    infoElement.textContent = `This lesson will be available to ${sectionInfo.students} student${sectionInfo.students !== 1 ? 's' : ''} in this section`;
-                    infoElement.style.color = '#3b82f6';
-                    infoElement.style.fontWeight = '500';
-                } else if (infoElement) {
-                    infoElement.textContent = '';
-                }
-            });
+if (sectionSelect) {
+    sectionSelect.addEventListener('change', function() {
+        const selectedSection = this.value;
+        const sectionInfo = assignedSections.find(s => s.section === selectedSection);
+        const infoElement = document.getElementById('sectionStudentInfo');
+        
+        if (sectionInfo && infoElement) {
+            const studentCount = sectionInfo.students || 0;
+            if (studentCount > 0) {
+                infoElement.textContent = `✓ This lesson will be available to ${studentCount} student${studentCount !== 1 ? 's' : ''} in this section`;
+                infoElement.style.color = '#10b981';
+            } else {
+                infoElement.textContent = '⚠️ No students enrolled in this section';
+                infoElement.style.color = '#f59e0b';
+            }
+            infoElement.style.fontWeight = '500';
+        } else if (infoElement) {
+            infoElement.textContent = '';
         }
+    });
+}
         async function loadLessons() {
     try {
         allLessons = [];
@@ -1455,8 +1479,10 @@ window.publishLesson = publishLesson;
         saveBtn.disabled = true;
         saveBtn.textContent = 'Saving...';
 
-        // Convert NEW files to Base64
+        // Process files with size limit check
         let newUploadedFiles = [];
+        const MAX_FILE_SIZE = 50 * 1024; // 50KB limit for Base64 encoding
+        
         if (selectedFiles.length > 0) {
             console.log(`Processing ${selectedFiles.length} new files...`);
             saveBtn.textContent = `Processing files (0/${selectedFiles.length})...`;
@@ -1464,36 +1490,53 @@ window.publishLesson = publishLesson;
             for (let i = 0; i < selectedFiles.length; i++) {
                 const file = selectedFiles[i];
                 
-                if (file.size > 1024 * 1024) {
-                    alert(`File "${file.name}" is too large (${formatFileSize(file.size)}). Maximum size is 1MB.`);
-                    continue;
-                }
+                // Check file size before processing
+                if (file.size > MAX_FILE_SIZE) {
+                // For large files, store metadata only
+                newUploadedFiles.push({
+                    name: file.name,
+                    data: '', // Empty - file too large for embedding
+                    size: file.size,
+                    type: file.type || 'application/octet-stream',
+                    uploadedAt: new Date().toISOString(),
+                    note: 'File too large - please upload to cloud storage'
+                });
+                console.warn(`File ${file.name} exceeds size limit, metadata only stored`);
+                continue;
+            }
                 
-                console.log(`Processing file ${i + 1}: ${file.name}`);
+                console.log(`Processing file ${i + 1}: ${file.name} (${formatFileSize(file.size)})`);
                 
                 try {
                     const base64Data = await fileToBase64(file);
                     
-                    newUploadedFiles.push({
+                    // Create clean serializable object
+                    const fileObject = {
                         name: file.name,
                         data: base64Data,
                         size: file.size,
-                        type: file.type,
+                        type: file.type || 'application/octet-stream',
                         uploadedAt: new Date().toISOString()
-                    });
+                    };
                     
+                    // Verify object is serializable
+                    JSON.stringify(fileObject);
+                    
+                    newUploadedFiles.push(fileObject);
                     saveBtn.textContent = `Processing files (${i + 1}/${selectedFiles.length})...`;
+                    
                 } catch (fileError) {
                     console.error(`Error processing file ${file.name}:`, fileError);
-                    alert(`Failed to process file: ${file.name}`);
+                    alert(`Failed to process file: ${file.name}\nError: ${fileError.message}`);
                 }
             }
             
-            console.log(`Successfully processed ${newUploadedFiles.length} new files`);
+            console.log(`Successfully processed ${newUploadedFiles.length} files`);
         }
 
         saveBtn.textContent = 'Saving lesson...';
 
+        // Create lesson data object
         const lessonData = {
             title: title,
             section: section,
@@ -1505,6 +1548,7 @@ window.publishLesson = publishLesson;
             professorEmail: currentProfessor.email,
             professorName: currentProfessor.name || currentProfessor.fullName || 'Professor',
             professorId: currentProfessor.id,
+            materials: [],
             updatedAt: serverTimestamp()
         };
 
@@ -1514,26 +1558,30 @@ window.publishLesson = publishLesson;
         if (editingLessonId) {
             // EDITING EXISTING LESSON
             const lessonRef = doc(db, 'lessons', editingLessonId);
-            
             const existingDoc = await getDoc(lessonRef);
+            
             if (existingDoc.exists()) {
                 const existingData = existingDoc.data();
+                let existingMaterials = existingData.materials || [];
                 
-                // Keep existing materials and add new ones
-                let allMaterials = existingData.materials || [];
-                if (newUploadedFiles.length > 0) {
-                    allMaterials = [...allMaterials, ...newUploadedFiles];
-                }
+                // Clean existing materials
+                existingMaterials = existingMaterials.map(m => ({
+                    name: String(m.name || ''),
+                    data: String(m.data || ''),
+                    size: Number(m.size || 0),
+                    type: String(m.type || 'application/octet-stream'),
+                    uploadedAt: String(m.uploadedAt || new Date().toISOString())
+                }));
                 
-                lessonData.materials = allMaterials;
+                lessonData.materials = [...existingMaterials, ...newUploadedFiles];
             } else {
                 lessonData.materials = newUploadedFiles;
             }
             
             await updateDoc(lessonRef, lessonData);
             lessonId = editingLessonId;
-            
             console.log('✓ Lesson updated successfully');
+            
         } else {
             // CREATING NEW LESSON
             lessonData.createdAt = serverTimestamp();
@@ -1542,8 +1590,7 @@ window.publishLesson = publishLesson;
             const docRef = await addDoc(collection(db, 'lessons'), lessonData);
             lessonId = docRef.id;
             isNew = true;
-            
-            console.log('✓ New lesson created');
+            console.log('✓ New lesson created with ID:', lessonId);
         }
 
         // Send notification if published
@@ -1554,13 +1601,23 @@ window.publishLesson = publishLesson;
         closeLessonModal();
         selectedFiles = [];
         
-        alert(`Lesson ${isNew ? 'created' : 'updated'} successfully!${newUploadedFiles.length > 0 ? ` ${newUploadedFiles.length} file(s) added.` : ''}`);
+        const successMsg = `Lesson ${isNew ? 'created' : 'updated'} successfully!${newUploadedFiles.length > 0 ? ` ${newUploadedFiles.length} file(s) added.` : ''}`;
+        alert(successMsg);
         
         await loadLessons();
         
     } catch (error) {
         console.error('Error saving lesson:', error);
-        alert('Error saving lesson: ' + error.message);
+        
+        // More detailed error message
+        let errorMsg = 'Error saving lesson: ';
+        if (error.code === 'invalid-argument') {
+            errorMsg += 'One or more files are too large or contain invalid data. Please try with smaller files.';
+        } else {
+            errorMsg += error.message;
+        }
+        
+        alert(errorMsg);
         
         const saveBtn = document.getElementById('saveLessonBtn');
         saveBtn.disabled = false;

@@ -569,7 +569,7 @@
         box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
     }
 
-    .input-hint {
+        .input-hint {
         font-family: "Inter", Helvetica;
         font-weight: 500;
         color: #64748b;
@@ -577,8 +577,23 @@
         margin-top: 0.75rem;
         font-style: italic;
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         gap: 6px;
+        line-height: 1.6;
+        word-wrap: break-word;
+    }
+
+    .input-hint i {
+        flex-shrink: 0;
+        margin-top: 2px;
+    }
+
+    @media (max-width: 768px) {
+        .input-hint {
+            font-size: 11px;
+            margin-top: 0.5rem;
+            gap: 4px;
+        }
     }
 
     /* Notes Section */
@@ -712,6 +727,23 @@
         .btn-submit {
             width: 100%;
             justify-content: center;
+        }
+        .input-field {
+        font-size: 16px;
+        padding: 12px 14px;
+        }
+        
+        .input-label {
+            font-size: 14px;
+        }
+        
+        .input-section {
+            padding: 0 0.5rem;
+        }
+        
+        .notes-textarea {
+            font-size: 14px;
+            padding: 12px 14px;
         }
     }
     </style>
@@ -1109,7 +1141,7 @@ window.stopTimer = async function() {
                 html = `
                     <div class="input-group-custom">
                         <label class="input-label">💪 Number of Curl-Ups Completed <span style="color: #ef4444;">*</span></label>
-                        <input type="number" class="input-field" id="repetitionsInput" placeholder="Enter number of curl-ups${targetHint}" min="0" required>
+                        <input type="number" class="input-field" id="repetitionsInput" placeholder="Enter number of curl-ups">
                         <div class="input-hint">
                             <i class="bi bi-info-circle"></i>
                             Count only complete curl-ups at 1 per 3 seconds pace${targetHint}
@@ -1124,7 +1156,7 @@ window.stopTimer = async function() {
                 html = `
                     <div class="input-group-custom">
                         <label class="input-label">💪 Number of Push-ups Completed <span style="color: #ef4444;">*</span></label>
-                        <input type="number" class="input-field" id="repetitionsInput" placeholder="Enter number of push-ups${targetHint}" min="0" required>
+                        <input type="number" class="input-field" id="repetitionsInput" placeholder="Enter number of push-ups">
                         <div class="input-hint">
                             <i class="bi bi-info-circle"></i>
                             Count only complete push-ups with proper form${targetHint}
@@ -1196,7 +1228,7 @@ window.stopTimer = async function() {
                 html = `
                     <div class="input-group-custom">
                         <label class="input-label">📏 Distance Reached (cm) <span style="color: #ef4444;">*</span></label>
-                        <input type="number" class="input-field" id="distanceInput" placeholder="Enter distance in cm${targetHint}" step="0.1" required>
+                        <input type="number" class="input-field" id="distanceInput" placeholder="Enter distance in cm">
                         <div class="input-hint">
                             <i class="bi bi-info-circle"></i>
                             Measure how far you can reach past your toes (positive = past toes)${targetHint}

@@ -10,11 +10,70 @@
     <style>
         * { -webkit-font-smoothing: antialiased; box-sizing: border-box; }
         body { font-family: 'Inter', Helvetica, sans-serif; margin: 0; padding: 0; background-color: #f6f6f6; }
-        
+         .menu-toggle-btn {
+        display: none;
+        background: white;
+        border: none;
+        border-radius: 8px;
+        padding: 10px 15px;
+        cursor: pointer;
+        transition: all 0.3s;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .menu-toggle-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    .menu-toggle-btn i {
+        font-size: 24px;
+        color: #1e3a8a;
+    }
+    
+    /* Desktop Navigation */
+    .desktop-nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 0;
+        margin: 0;
+        list-style: none;
+    }
+    
+    /* Mobile Navigation Menu - Hidden by Default */
+    .mobile-nav-menu {
+        display: none;
+        margin-top: 20px;
+        padding: 0;
+    }
+    .mobile-nav-link {
+        display: block;
+        font-family: "Manrope", Helvetica;
+        font-weight: 600;
+        color: #000000;
+        font-size: 14px;
+        padding: 12px 18px;
+        margin-bottom: 8px;
+        border-radius: 8px;
+        background-color: #ffffff;
+        transition: all 0.3s;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .mobile-nav-link:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    .mobile-nav-link.mobile-nav-active {
+        background: linear-gradient(90deg, rgba(251, 191, 36, 1) 0%, rgba(245, 158, 11, 1) 100%);
+        box-shadow: 0 4px 8px rgba(245, 158, 11, 0.3);
+    }
         /* Header Styles */
         .header-top { 
             background-color: #ffffff; 
-            padding: 15px 0; 
+            padding: 8px 0; 
             box-shadow: 0 2px 10px rgba(0,0,0,0.08); 
             position: fixed; 
             top: 0; 
@@ -71,36 +130,38 @@
         }
         
         /* Navigation Styles */
-        .nav-section { 
-            background: linear-gradient(180deg, rgba(30, 58, 138, 1) 0%, rgba(59, 130, 246, 1) 100%); 
-            padding: 20px 0; 
-            margin-top: 74px; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        .nav-container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-        .nav-brand { 
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            font-family: "Manrope", Helvetica; 
-            font-weight: 800; 
-            font-size: 28px; 
-            background: linear-gradient(90deg, rgba(245, 158, 11, 1) 0%, rgba(255, 229, 0, 1) 100%); 
-            -webkit-background-clip: text; 
-            background-clip: text; 
-            -webkit-text-fill-color: transparent;
-            margin: 0;
-        }
-        .nav-brand-logo {
-            height: 60px;
-            width: auto;
-        }
+    .nav-section { 
+        background: linear-gradient(180deg, rgba(30, 58, 138, 1) 0%, rgba(59, 130, 246, 1) 100%); 
+        padding: 20px 0; 
+        margin-top: 72px; 
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .nav-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+    }
+
+    .nav-brand { 
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        font-family: "Manrope", Helvetica; 
+        font-weight: 800; 
+        font-size: 28px; 
+        background: linear-gradient(90deg, rgba(245, 158, 11, 1) 0%, rgba(255, 229, 0, 1) 100%); 
+        -webkit-background-clip: text; 
+        background-clip: text; 
+        -webkit-text-fill-color: transparent;
+        margin: 0;
+    }
+
+    .nav-brand-logo {
+        height: 60px;
+        width: auto;
+    }
         .nav-pills-custom { 
             display: flex; 
             flex-wrap: wrap; 
@@ -257,6 +318,7 @@
         /* Table Styles */
         .table-responsive {
             overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
         }
         .custom-table {
             width: 100%;
@@ -560,36 +622,196 @@
         
         /* Responsive */
         @media (max-width: 768px) {
-            .nav-container {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .nav-pills-custom {
-                width: 100%;
-                justify-content: center;
-            }
-            .info-banner {
-                flex-direction: column;
-                text-align: center;
-            }
-            .section-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .search-box input {
-                width: 100%;
-            }
-            .custom-table {
-                font-size: 12px;
-            }
-            .custom-table th,
-            .custom-table td {
-                padding: 8px 4px;
-            }
-            .modal-content {
-                margin: 10px;
-                max-height: calc(100vh - 20px);
-            }
+            .menu-toggle-btn {
+        display: block !important;
+    }
+    
+    /* Hide desktop navigation on mobile */
+    .desktop-nav {
+        display: none !important;
+    }
+    
+    /* Mobile Navigation adjustments */
+    .nav-brand {
+        font-size: 20px;
+    }
+    
+    .nav-brand-logo {
+        height: 45px;
+    }
+        .info-banner {
+            flex-direction: column;
+            text-align: center;
+        }
+        .section-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .search-box input {
+            width: 100%;
+        }
+        .modal-content {
+            margin: 10px;
+            max-height: calc(100vh - 20px);
+        }
+        
+        /* Mobile Table Styles */
+        .table-responsive {
+            overflow-x: visible;
+        }
+        
+        .custom-table {
+            display: block;
+            width: 100%;
+            font-size: 14px;
+        }
+        
+        .custom-table thead {
+            display: none;
+        }
+        
+        .custom-table tbody {
+            display: block;
+        }
+        
+        .custom-table tr {
+            display: block;
+            margin-bottom: 20px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .custom-table td {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #f1f5f9;
+            text-align: left;
+        }
+        
+        .custom-table td:last-child {
+            border-bottom: none;
+        }
+        
+        .custom-table td:before {
+            content: attr(data-label);
+            font-weight: 600;
+            color: #1e3a8a;
+            font-size: 12px;
+            text-transform: uppercase;
+            flex: 0 0 40%;
+        }
+        
+        .action-buttons {
+            flex-direction: row;
+            width: 100%;
+            gap: 8px;
+        }
+        
+        .btn-action {
+            flex: 1;
+            padding: 8px 12px;
+            font-size: 12px;
+        }
+
+        /* Mobile Navigation */
+        .nav-container {
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .nav-brand {
+            font-size: 20px;
+        }
+        
+        .nav-brand-logo {
+            height: 45px;
+        }
+        
+        .menu-toggle {
+            display: block;
+        }
+        
+        .nav-pills-custom {
+            display: none;
+            position: fixed;
+            top: 154px;
+            left: 0;
+            right: 0;
+            background: linear-gradient(180deg, rgba(30, 58, 138, 1) 0%, rgba(59, 130, 246, 1) 100%);
+            flex-direction: column;
+            width: 100%;
+            padding: 20px;
+            gap: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 999;
+            max-height: calc(100vh - 154px);
+            overflow-y: auto;
+        }
+        
+        .nav-pills-custom.active {
+            display: flex;
+        }
+        
+        .nav-pills-custom .nav-item {
+            width: 100%;
+        }
+        
+        .nav-pills-custom .nav-link {
+            width: 100%;
+            justify-content: flex-start;
+            padding: 15px 20px;
+            font-size: 16px;
+        }
+         .menu-toggle {
+        display: block !important; /* Force show on mobile */
+    }   
+            #mobileMenu {
+        margin-top: 15px;
+        display: none; /* Hidden by default */
+    }
+    
+    #mobileMenu a {
+        display: block;
+        padding: 12px 16px;
+        background-color: rgba(255, 255, 255, 0.2);
+        color: white;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 14px;
+        margin-bottom: 8px;
+        text-decoration: none;
+    }
+    
+    #mobileMenu a:hover {
+        background-color: rgba(255, 255, 255, 0.3);
+    }
+    }
+        
+
+            /* Hamburger Menu Button */
+        .menu-toggle {
+            display: none; /* Shows only on mobile */
+            background: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .menu-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        .menu-toggle i {
+            font-size: 24px;
+            color: #1e3a8a;
         }
     </style>
 </head>
@@ -615,14 +837,21 @@
             </div>
         </div>
         
-      <div class="nav-section">
+     <div class="nav-section">
     <div class="container">
         <div class="nav-container">
             <div class="nav-brand">
                 <img class="nav-brand-logo" src="logo.png" alt="UMakFit">
                 UMakFit
             </div>
-            <ul class="nav nav-pills-custom">
+            
+            <!-- Hamburger Button - Mobile Only -->
+            <button onclick="toggleMenu()" class="menu-toggle-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <!-- Desktop Navigation -->
+            <ul class="nav nav-pills-custom desktop-nav">
                 <li class="nav-item">
                     <a class="nav-link" href="professor.html">
                         <i class="fas fa-tachometer-alt"></i> Dashboard
@@ -655,9 +884,31 @@
                 </li>
             </ul>
         </div>
+        
+        <!-- Mobile Navigation Menu -->
+        <div id="mobileMenu" class="mobile-nav-menu">
+            <a href="professor.html" class="mobile-nav-link">
+                <i class="fas fa-tachometer-alt"></i> Dashboard
+            </a>
+            <a href="studentmanagement.html" class="mobile-nav-link">
+                <i class="fas fa-users"></i> Student Management
+            </a>
+            <a href="addactivities.html" class="mobile-nav-link mobile-nav-active">
+                <i class="fas fa-dumbbell"></i> Add Activities
+            </a>
+            <a href="addlesson.html" class="mobile-nav-link">
+                <i class="fas fa-book-open"></i> Add Lesson
+            </a>
+            <a href="monitoringactivities.html" class="mobile-nav-link">
+                <i class="fas fa-chart-bar"></i> Monitoring Activities
+            </a>
+            <a href="grades.html" class="mobile-nav-link">
+                <i class="fas fa-graduation-cap"></i> Grades
+            </a>
+        </div>
     </div>
 </div>
-        
+   
         <div class="main-content">
             <div class="container">
                 <div class="info-banner">
@@ -697,17 +948,17 @@
                                     <th>Action</th>
                                 </tr>
                             </thead>
-                            <tbody id="scheduleTableBody">
-                                <tr>
-                                    <td colspan="8">
-                                        <div class="empty-state">
-                                            <div class="empty-icon">📅</div>
-                                            <div class="empty-title">No Scheduled Tests</div>
-                                            <div class="empty-text">You haven't scheduled any tests yet. Click "Schedule New Test" to create your first fitness test schedule.</div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
+                           <tbody id="scheduleTableBody">
+                            <tr>
+                                <td colspan="8">
+                                    <div class="empty-state">
+                                        <div class="empty-icon">📅</div>
+                                        <div class="empty-title">No Scheduled Tests</div>
+                                        <div class="empty-text">You haven't scheduled any tests yet. Click "Schedule New Test" to create your first fitness test schedule.</div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
                         </table>
                     </div>
                 </div>
@@ -760,16 +1011,16 @@
                                 </tr>
                             </thead>
                             <tbody id="resultsTableBody">
-                                <tr>
-                                    <td colspan="8">
-                                        <div class="empty-state">
-                                            <div class="empty-icon">📊</div>
-                                            <div class="empty-title">No Test Results Yet</div>
-                                            <div class="empty-text">No students have completed tests yet. Test results will appear here once students start taking and completing their fitness assessments.</div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
+                            <tr>
+                                <td colspan="8">
+                                    <div class="empty-state">
+                                        <div class="empty-icon">📊</div>
+                                        <div class="empty-title">No Test Results Yet</div>
+                                        <div class="empty-text">No students have completed tests yet. Test results will appear here once students start taking and completing their fitness assessments.</div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
                         </table>
                     </div>
                 </div>
@@ -989,7 +1240,7 @@ function getRating(score) {
 
 async function loadScheduledTests(userEmail, userId) {
     try {
-        console.log('=== LOADING SCHEDULED TESTS ===');
+        console.log('=== LOADING SCHEDULED TESTS (INCLUDING ENABLED OVERDUE) ===');
         console.log('Professor email:', userEmail);
         console.log('Professor UID:', userId);
         
@@ -1107,6 +1358,22 @@ async function loadScheduledTests(userEmail, userId) {
             testsSnapshot = await getDocs(testsQuery);
         }
         
+        // **NEW: Load enabled test permissions**
+        const permissionsQuery = query(
+            collection(db, 'testPermissions'),
+            where('grantedBy', '==', userEmail)
+        );
+        const permissionsSnapshot = await getDocs(permissionsQuery);
+        const enabledTestsMap = new Map();
+        
+        permissionsSnapshot.forEach(doc => {
+            const perm = doc.data();
+            if (!enabledTestsMap.has(perm.testId)) {
+                enabledTestsMap.set(perm.testId, []);
+            }
+            enabledTestsMap.get(perm.testId).push(perm.studentEmail);
+        });
+        
         const tableBody = document.getElementById('scheduleTableBody');
 
         if (!testsSnapshot.empty) {
@@ -1116,41 +1383,51 @@ async function loadScheduledTests(userEmail, userId) {
             testsSnapshot.forEach((docSnap) => {
                 const test = docSnap.data();
                 
-                // Skip tests that have passed their deadline
                 const deadlineDateTime = new Date(test.deadlineDateTime);
                 const now = new Date();
-                if (deadlineDateTime < now) {
-                    return;
+                
+                // **MODIFIED: Show test if it's either not overdue OR enabled for students**
+                const isOverdue = deadlineDateTime < now;
+                const isEnabled = enabledTestsMap.has(docSnap.id);
+                const enabledCount = isEnabled ? enabledTestsMap.get(docSnap.id).length : 0;
+                
+                // Show if: not overdue, OR is enabled
+                if (!isOverdue || isEnabled) {
+                    hasVisibleTests = true;
+                    
+                    const status = test.status || 'scheduled';
+                    const statusClass = status === 'active' ? 'status-active' : 
+                                       status === 'completed' ? 'status-completed' : 
+                                       'status-scheduled';
+                    
+                    const totalStudents = test.totalStudents || 0;
+                    const completedStudents = test.completedStudents || 0;
+                    const progress = totalStudents > 0 ? `${completedStudents}/${totalStudents}` : '0/0';
+                    
+                    html += `
+                    <tr style="${isEnabled && isOverdue ? 'background-color: #f0f9ff;' : ''}">
+                        <td data-label="Test Name">
+                            ${test.testName || 'Unnamed Test'}
+                            ${isEnabled && isOverdue ? `<br><small style="color: #3b82f6; font-weight: 600;">✓ Enabled for ${enabledCount} student${enabledCount > 1 ? 's' : ''}</small>` : ''}
+                        </td>
+                        <td data-label="Section">${test.section || 'N/A'}</td>
+                        <td data-label="Date">${test.date || 'N/A'}</td>
+                        <td data-label="Deadline">${test.deadline || 'N/A'} ${test.deadlineTime || ''}</td>
+                        <td data-label="Progress" class="progress-cell">${progress}</td>
+                        <td data-label="Attempts">${test.attemptsAllowed || '1'}</td>
+                        <td data-label="Status">
+                            <span class="status-badge ${statusClass}">${status.charAt(0).toUpperCase() + status.slice(1)}</span>
+                            ${isOverdue ? '<br><small style="color: #ef4444;">⚠️ Overdue</small>' : ''}
+                        </td>
+                        <td data-label="Actions">
+                            <div class="action-buttons">
+                                <button class="btn-action btn-edit" onclick="editTest('${docSnap.id}')">Edit</button>
+                                <button class="btn-action btn-cancel" onclick="deleteTest('${docSnap.id}')">Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
                 }
-                
-                hasVisibleTests = true;
-                
-                const status = test.status || 'scheduled';
-                const statusClass = status === 'active' ? 'status-active' : 
-                                   status === 'completed' ? 'status-completed' : 
-                                   'status-scheduled';
-                
-                const totalStudents = test.totalStudents || 0;
-                const completedStudents = test.completedStudents || 0;
-                const progress = totalStudents > 0 ? `${completedStudents}/${totalStudents}` : '0/0';
-                
-                html += `
-                <tr>
-                <td>${test.testName || 'Unnamed Test'}</td>
-                <td>${test.section || 'N/A'}</td>
-                <td>${test.date || 'N/A'}</td>
-                <td>${test.deadline || 'N/A'} ${test.deadlineTime || ''}</td>
-                <td class="progress-cell">${progress}</td>
-                <td>${test.attemptsAllowed || '1'}</td>
-                <td><span class="status-badge ${statusClass}">${status.charAt(0).toUpperCase() + status.slice(1)}</span></td>
-                <td>
-                    <div class="action-buttons">
-                        <button class="btn-action btn-edit" onclick="editTest('${docSnap.id}')">Edit</button>
-                        <button class="btn-action btn-cancel" onclick="deleteTest('${docSnap.id}')">Delete</button>
-                    </div>
-                </td>
-                </tr>
-            `;
             });
             
            if (!hasVisibleTests) {
@@ -1381,19 +1658,19 @@ function setupRealTimeUpdates(userEmail, userId) {
                     'N/A';
                 
                 html += `
-                    <tr>
-                        <td>${result.studentName || 'Unknown'}</td>
-                        <td>${result.section || 'N/A'}</td>
-                        <td>${date}</td>
-                        <td>${result.testName || 'N/A'}<br><small class="text-muted">${attemptInfo}</small></td>
-                        <td><strong>${score}</strong></td>
-                        <td>${bmi}</td>
-                        <td><span class="rating-badge ${rating.class}">${rating.text}</span></td>
-                        <td>
-                            <button class="btn-action btn-view" onclick="viewDetails('${result.id}', '${result.testName}', '${result.result}', '${result.studentName}', '${date}', '${score}', '${result.timerValue || 'N/A'}', '${(result.notes || 'No notes').replace(/'/g, "\\'")}', '${attemptInfo}')">View Details</button>
-                        </td>
-                    </tr>
-                `;
+                <tr>
+                    <td data-label="Student">${result.studentName || 'Unknown'}</td>
+                    <td data-label="Section">${result.section || 'N/A'}</td>
+                    <td data-label="Date">${date}</td>
+                    <td data-label="Test">${result.testName || 'N/A'}<br><small class="text-muted">${attemptInfo}</small></td>
+                    <td data-label="Score"><strong>${score}</strong></td>
+                    <td data-label="BMI">${bmi}</td>
+                    <td data-label="Rating"><span class="rating-badge ${rating.class}">${rating.text}</span></td>
+                    <td data-label="Actions">
+                        <button class="btn-action btn-view" onclick="viewDetails('${result.id}', '${result.testName}', '${result.result}', '${result.studentName}', '${date}', '${score}', '${result.timerValue || 'N/A'}', '${(result.notes || 'No notes').replace(/'/g, "\\'")}', '${attemptInfo}')">View Details</button>
+                    </td>
+                </tr>
+            `;
             });
             
             if (filteredResults.length > 0) {
@@ -2373,6 +2650,39 @@ function closeResultModal() {
         loadScheduledTests(window.currentUser.email, window.currentUser.uid);
     }
 }
+     // Toggle mobile menu
+    function toggleMenu() {
+    const menu = document.getElementById('mobileMenu');
+    if (menu.style.display === 'none' || menu.style.display === '') {
+        menu.style.display = 'block';
+    } else {
+        menu.style.display = 'none';
+    }
+}
+    // Close menu when clicking outside
+    document.addEventListener('click', function(event) {
+        const navMenu = document.getElementById('navMenu');
+        const menuToggle = document.querySelector('.menu-toggle');
+        const navContainer = document.querySelector('.nav-container');
+        
+        if (navMenu.classList.contains('active') && 
+            !navContainer.contains(event.target)) {
+            toggleMenu();
+        }
+    });
+    
+    // Close menu on window resize to desktop
+    window.addEventListener('resize', function() {
+        const navMenu = document.getElementById('navMenu');
+        const menuToggle = document.querySelector('.menu-toggle');
+        const icon = menuToggle.querySelector('i');
+        
+        if (window.innerWidth > 768 && navMenu.classList.contains('active')) {
+            navMenu.classList.remove('active');
+            icon.classList.remove('fa-times');
+            icon.classList.add('fa-bars');
+        }
+    });
     </script>
 </body>
 </html>
